@@ -1,4 +1,4 @@
-package h3o.ender.mixin;
+package h3o.ender.mixin.client;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

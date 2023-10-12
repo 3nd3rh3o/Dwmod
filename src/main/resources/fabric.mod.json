@@ -19,13 +19,13 @@
 			"h3o.ender.DwMod"
 		],
 		"client": [
-			"com.example.ExampleModClient"
+			"h3o.ender.DwModClient"
 		]
 	},
 	"mixins": [
-		"modid.mixins.json",
+		"dwmod.mixins.json",
 		{
-			"config": "modid.client.mixins.json",
+			"config": "dwmod.client.mixins.json",
 			"environment": "client"
 		}
 	],
