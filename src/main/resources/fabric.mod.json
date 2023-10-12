@@ -1,8 +1,8 @@
 {
 	"schemaVersion": 1,
-	"id": "modid",
+	"id": "dwmod",
 	"version": "${version}",
-	"name": "Example mod",
+	"name": "DwMod",
 	"description": "This is an example description! Tell everyone what your mod is about!",
 	"authors": [
 		"Me!"
@@ -16,7 +16,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.example.ExampleMod"
+			"h3o.ender.DwMod"
 		],
 		"client": [
 			"com.example.ExampleModClient"
