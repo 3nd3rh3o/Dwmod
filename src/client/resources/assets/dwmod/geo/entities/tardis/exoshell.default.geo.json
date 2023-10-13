@@ -80,7 +80,7 @@
 				{
 					"name": "rightDoor",
 					"parent": "body",
-					"pivot": [0, 0, 0],
+					"pivot": [7, 16, -6.5],
 					"cubes": [
 						{
 							"origin": [0, 0.2, -7],
@@ -99,7 +99,7 @@
 				{
 					"name": "leftDoor",
 					"parent": "body",
-					"pivot": [0, 0, 0],
+					"pivot": [-7, 16, -6.5],
 					"cubes": [
 						{
 							"origin": [-7, 0.2, -7],

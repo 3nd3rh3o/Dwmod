@@ -103,8 +103,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
 
     @Override
     public void registerControllers(ControllerRegistrar controllers) {
-        //TODO animationController here
-        return;
+        //TODO controller goes here
     }
 
     @Override
