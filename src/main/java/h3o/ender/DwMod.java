@@ -15,8 +15,6 @@ public class DwMod implements ModInitializer {
     public static final String MODID = "dwmod";
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 
-	//TODO call registers here
-
 	@Override
 	public void onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -25,7 +23,6 @@ public class DwMod implements ModInitializer {
 		
 		LOGGER.info("Hello Fabric world!");
 
-		//TODO hook model and texture here, might need to be on client side tho
 		FabricDefaultAttributeRegistry.register(RegisterEntities.TARDIS, Tardis.createLivingAttributes());
 	}
 }

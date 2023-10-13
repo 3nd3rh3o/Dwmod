@@ -1,5 +1,5 @@
 package h3o.ender.structures.tardis;
 
-public interface Room {
-    
+public abstract class Room {
+
 }
