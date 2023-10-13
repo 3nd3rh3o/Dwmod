@@ -12,7 +12,6 @@ public class TardisModel extends GeoModel<Tardis> {
         return new Identifier(DwMod.MODID, "geo/entities/tardis/exoshell.default.geo.json");
     }
 
-    //BUG wrong UV mapping???? investigate ASAP
     @Override
     public Identifier getTextureResource(Tardis animatable) {
         return new Identifier(DwMod.MODID, "textures/entities/tardis/exoshell.default.png");
