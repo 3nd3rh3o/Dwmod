@@ -2,12 +2,11 @@ package h3o.ender;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import h3o.ender.entities.RegisterEntities;
+import h3o.ender.entities.Tardis;
 
 public class DwMod implements ModInitializer {
 	// This logger is used to write text to the console and the log file.
@@ -27,6 +26,6 @@ public class DwMod implements ModInitializer {
 		LOGGER.info("Hello Fabric world!");
 
 		//TODO hook model and texture here, might need to be on client side tho
-		FabricDefaultAttributeRegistry.register(RegisterEntities.TARDIS, DefaultAttributeContainer.builder());
+		FabricDefaultAttributeRegistry.register(RegisterEntities.TARDIS, Tardis.createLivingAttributes());
 	}
 }

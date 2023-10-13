@@ -25,6 +25,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
 
     private static final TrackedData<Byte> MOB_FLAGS;
+    
     private int type;
     private ArrayList<Circuit> circuits;
     private HashMap<Integer, Room> internalScheme;
@@ -34,7 +35,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
     private final DefaultedList<ItemStack> handItems;
 
     protected Tardis(EntityType<? extends LivingEntity> entityType, World world) {
-        super(entityType, world);
+        super(RegisterEntities.TARDIS , world);
         this.handDropChances = new float[2];
         this.armorItems = DefaultedList.ofSize(4, ItemStack.EMPTY);
         this.handItems = DefaultedList.ofSize(2, ItemStack.EMPTY);
@@ -56,13 +57,20 @@ public class Tardis extends LivingEntity implements GeoEntity {
         
     }
 
+    
+
 
     @Override
     public void equipStack(EquipmentSlot slot, ItemStack stack) {
         this.processEquippedStack(stack);
-        switch (slot.getType().ordinal()) {
-            case 1 -> this.handDropChances[slot.getEntitySlotId()] = 2.0F;
-            case 2 -> this.handDropChances[slot.getEntitySlotId()] = 2.0F;
+        switch (slot.getType()) {
+            case HAND: {
+                this.onEquipStack(slot, this.handItems.set(slot.getEntitySlotId(), stack), stack);
+                break;
+            }
+            case ARMOR: {
+                this.onEquipStack(slot, this.armorItems.set(slot.getEntitySlotId(), stack), stack);
+            }
         }
     }
 
@@ -73,14 +81,15 @@ public class Tardis extends LivingEntity implements GeoEntity {
 
     @Override
     public ItemStack getEquippedStack(EquipmentSlot slot) {
-        switch (slot.getType().ordinal()) {
-            case 1:
-                return (ItemStack)this.handItems.get(slot.getEntitySlotId());
-            case 2:
-                return (ItemStack)this.armorItems.get(slot.getEntitySlotId());
-            default:
-                return ItemStack.EMPTY;
+        switch (slot.getType()) {
+            case HAND: {
+                return this.handItems.get(slot.getEntitySlotId());
+            }
+            case ARMOR: {
+                return this.armorItems.get(slot.getEntitySlotId());
+            }
         }
+        return ItemStack.EMPTY;
     }
 
     @Override
