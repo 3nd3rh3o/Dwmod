@@ -179,9 +179,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
 
     }
 
-    // TODO test with normal interraction. If too fast, find another way to check
-    // for timed out animation
-    // FIXME MAKE IT WORK!
+
     protected <E extends Tardis> PlayState commonAnimController(final AnimationState<E> event) {
         if (event.getController().getAnimationState().equals(State.TRANSITIONING)) {
             event.setControllerSpeed(10f);
