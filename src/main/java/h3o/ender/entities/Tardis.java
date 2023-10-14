@@ -3,10 +3,8 @@ package h3o.ender.entities;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import h3o.ender.DwMod;
 import h3o.ender.components.Circuit;
 import h3o.ender.structures.tardis.Room;
-import net.minecraft.block.entity.StructureBlockBlockEntity.Action;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -47,8 +45,8 @@ public class Tardis extends LivingEntity implements GeoEntity {
     private static final TrackedData<Byte> MOB_FLAGS = DataTracker.registerData(Tardis.class,
             TrackedDataHandlerRegistry.BYTE);;
 
-    private boolean leftOpen = true;
-    private boolean rightOpen = true;
+    private boolean leftOpen = false;
+    private boolean rightOpen = false;
 
     private int type;
     private ArrayList<Circuit> circuits;
@@ -65,22 +63,21 @@ public class Tardis extends LivingEntity implements GeoEntity {
         this.handItems = DefaultedList.ofSize(2, ItemStack.EMPTY);
     }
 
-    // TODO nbt save/load
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
+        byte[] temp = nbt.getByteArray("Doors");
+        if (temp.length == 2) {
+            leftOpen = temp[0] == 1 ? true : false;
+            rightOpen = temp[1] == 1 ? true : false;
+        }
         super.readCustomDataFromNbt(nbt);
-        /*
-         * this.setType(nbt.getInt("Type"));
-         * this.setCircuits(nbt.getCompound("Circuits"));
-         * this.setRoom(nbt.getCompound("InternalScheme"));
-         */
+
     }
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
+        nbt.putByteArray("Doors", new byte[] { leftOpen ? (byte) 1 : (byte) 0, rightOpen ? (byte) 1 : (byte) 0 });
         super.writeCustomDataToNbt(nbt);
-        /* nbt.putInt("Type", this.getType()); */
-
     }
 
     @Override
@@ -168,7 +165,6 @@ public class Tardis extends LivingEntity implements GeoEntity {
 
     @Override
     public void registerControllers(ControllerRegistrar controllers) {
-        // TODO controller goes here
         controllers
                 .add(new AnimationController<>(this, "left", this::commonAnimController)
                         .triggerableAnim("left_open", LEFT_OPEN)
@@ -178,7 +174,6 @@ public class Tardis extends LivingEntity implements GeoEntity {
                         .triggerableAnim("right_close", RIGHT_CLOSE));
 
     }
-
 
     protected <E extends Tardis> PlayState commonAnimController(final AnimationState<E> event) {
         if (event.getController().getAnimationState().equals(State.TRANSITIONING)) {
