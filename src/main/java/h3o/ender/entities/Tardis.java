@@ -3,18 +3,24 @@ package h3o.ender.entities;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import h3o.ender.DwMod;
 import h3o.ender.components.Circuit;
 import h3o.ender.structures.tardis.Room;
+import net.minecraft.block.entity.StructureBlockBlockEntity.Action;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
+import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -38,7 +44,8 @@ public class Tardis extends LivingEntity implements GeoEntity {
     private static final RawAnimation RIGHT_CLOSE = RawAnimation.begin()
             .thenPlayAndHold("animation.exoshell.default.right.close");
 
-    private static final TrackedData<Byte> MOB_FLAGS;
+    private static final TrackedData<Byte> MOB_FLAGS = DataTracker.registerData(Tardis.class,
+            TrackedDataHandlerRegistry.BYTE);;
 
     private boolean leftOpen = true;
     private boolean rightOpen = true;
@@ -96,6 +103,35 @@ public class Tardis extends LivingEntity implements GeoEntity {
     }
 
     @Override
+    public boolean isPushable() {
+        return false;
+    }
+
+    @Override
+    public boolean isPushedByFluids() {
+        return false;
+    }
+
+    @Override
+    public ActionResult interactAt(PlayerEntity player, Vec3d hitPos, Hand hand) {
+        if (hand == Hand.MAIN_HAND && !player.getWorld().isClient) {
+            Vec3d relPos = hitPos.rotateY((float) (this.bodyYaw * Math.PI / 180f));
+            if (relPos.getZ() >= 0.499d) {
+                if (relPos.getX() <= 0.0d) {
+                    leftOpen = !leftOpen;
+                    this.updateAnim("left", leftOpen);
+                } else {
+                    rightOpen = !rightOpen;
+                    this.updateAnim("right", rightOpen);
+                }
+                return ActionResult.SUCCESS;
+            }
+        }
+
+        return ActionResult.PASS;
+    }
+
+    @Override
     public ItemStack getEquippedStack(EquipmentSlot slot) {
         switch (slot.getType()) {
             case HAND: {
@@ -106,6 +142,14 @@ public class Tardis extends LivingEntity implements GeoEntity {
             }
         }
         return ItemStack.EMPTY;
+    }
+
+    private void updateAnim(String controllerName, boolean value) {
+        if (value) {
+            this.triggerAnim(controllerName, controllerName + "_open");
+        } else {
+            this.triggerAnim(controllerName, controllerName + "_close");
+        }
     }
 
     @Override
@@ -122,10 +166,6 @@ public class Tardis extends LivingEntity implements GeoEntity {
         this.dataTracker.startTracking(MOB_FLAGS, (byte) 0);
     }
 
-    static {
-        MOB_FLAGS = DataTracker.registerData(Tardis.class, TrackedDataHandlerRegistry.BYTE);
-    }
-
     @Override
     public void registerControllers(ControllerRegistrar controllers) {
         // TODO controller goes here
@@ -136,26 +176,26 @@ public class Tardis extends LivingEntity implements GeoEntity {
                 .add(new AnimationController<>(this, "right", this::commonAnimController)
                         .triggerableAnim("right_open", RIGHT_OPEN)
                         .triggerableAnim("right_close", RIGHT_CLOSE));
-        
-        
+
     }
 
-    //TODO test with normal interraction. If too fast, find another way to check for timed out animation
-    //FIXME MAKE IT WORK!
+    // TODO test with normal interraction. If too fast, find another way to check
+    // for timed out animation
+    // FIXME MAKE IT WORK!
     protected <E extends Tardis> PlayState commonAnimController(final AnimationState<E> event) {
         if (event.getController().getAnimationState().equals(State.TRANSITIONING)) {
             event.setControllerSpeed(10f);
         }
-        if (leftOpen) {
+        if (event.getController().getName() == "left" && leftOpen) {
             this.triggerAnim("left", "left_open");
         }
-        if (rightOpen) {
+        if (event.getController().getName() == "right" && rightOpen) {
             this.triggerAnim("right", "right_open");
         }
         if (event.getController().getAnimationState().equals(State.TRANSITIONING)) {
             event.setControllerSpeed(1f);
         }
-        if (event.getController().getAnimationState().equals(State.PAUSED)) {
+        if (event.getController().getAnimationState().equals(State.TRANSITIONING)) {
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
