@@ -1,0 +1,5 @@
+{
+    "variants" : {
+        "" : { "model" : "dwmod:block/tardis.default.floor"}
+    }
+}
