@@ -8,12 +8,14 @@ import h3o.ender.structures.tardis.Room;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
@@ -163,6 +165,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
         this.dataTracker.startTracking(MOB_FLAGS, (byte) 0);
     }
 
+    //FIXME anim not launched on world load
     @Override
     public void registerControllers(ControllerRegistrar controllers) {
         controllers
@@ -192,6 +195,18 @@ public class Tardis extends LivingEntity implements GeoEntity {
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
+    }
+    
+    
+
+    @Override
+    public boolean isCollidable() {
+        return true;
+    }
+
+    @Override
+    public boolean isInvulnerableTo(DamageSource damageSource) {
+        return this.isRemoved() || !damageSource.isIn(DamageTypeTags.BYPASSES_INVULNERABILITY);
     }
 
     @Override

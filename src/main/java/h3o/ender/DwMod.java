@@ -1,10 +1,15 @@
 package h3o.ender;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.block.v1.FabricBlock;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import h3o.ender.blocks.RegisterBlocks;
 import h3o.ender.entities.RegisterEntities;
 import h3o.ender.entities.Tardis;
 
@@ -21,8 +26,9 @@ public class DwMod implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 		
-		LOGGER.info("Hello Fabric world!");
+		LOGGER.info("DwMod init!");
 
 		FabricDefaultAttributeRegistry.register(RegisterEntities.TARDIS, Tardis.createLivingAttributes());
+		RegisterBlocks.register();
 	}
 }
