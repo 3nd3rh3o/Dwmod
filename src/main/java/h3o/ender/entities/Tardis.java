@@ -64,13 +64,6 @@ public class Tardis extends LivingEntity implements GeoEntity {
         this.handDropChances = new float[2];
         this.armorItems = DefaultedList.ofSize(4, ItemStack.EMPTY);
         this.handItems = DefaultedList.ofSize(2, ItemStack.EMPTY);
-        //FIXME null here? inv
-        this.portal = TardisPortal.entityType.create(world);
-        this.portal.setOriginPos(this.getPos());
-        this.portal.setDestinationDimension(World.NETHER);
-        this.portal.setDestination(new Vec3d(0, 64, 0));
-        this.portal.setOrientationAndSize(new Vec3d(1, 0, 0), new Vec3d(0, 1, 0), 1, 2);
-        this.portal.getWorld().spawnEntity(portal);
     }
 
     @Override
@@ -105,6 +98,19 @@ public class Tardis extends LivingEntity implements GeoEntity {
     }
 
     @Override
+    public void tick() {
+        super.tick();
+        if (getWorld().getEntitiesByClass(TardisPortal.class, this.getBoundingBox().expand(1), entity -> true).isEmpty()) {
+            this.portal = TardisPortal.entityType.create(this.getWorld());
+            this.portal.setOriginPos(this.getBlockPos().toCenterPos().add(0, 0.5, 0));
+            this.portal.setDestinationDimension(World.NETHER);
+            this.portal.setDestination(new Vec3d(0, 64, 0));
+            this.portal.setOrientationAndSize(new Vec3d(1, 0, 0), new Vec3d(0, 1, 0), 1, 2);
+            this.portal.getWorld().spawnEntity(portal);
+        }
+    }
+
+    @Override
     public Iterable<ItemStack> getArmorItems() {
         return this.armorItems;
     }
@@ -118,8 +124,6 @@ public class Tardis extends LivingEntity implements GeoEntity {
     public boolean isPushedByFluids() {
         return false;
     }
-
-    
 
     @Override
     public void onRemoved() {
@@ -181,7 +185,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
         this.dataTracker.startTracking(MOB_FLAGS, (byte) 0);
     }
 
-    //FIXME anim not launched on world load
+    // FIXME anim not launched on world load
     @Override
     public void registerControllers(ControllerRegistrar controllers) {
         controllers
@@ -212,8 +216,6 @@ public class Tardis extends LivingEntity implements GeoEntity {
         }
         return PlayState.STOP;
     }
-    
-    
 
     @Override
     public boolean isCollidable() {

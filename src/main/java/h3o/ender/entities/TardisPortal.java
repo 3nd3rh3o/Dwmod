@@ -22,7 +22,6 @@ public class TardisPortal extends Portal {
     @Override
     public void tick() {
         super.tick();
-        
         if (!getWorld().isClient) {
             updateState();
         }
@@ -30,7 +29,7 @@ public class TardisPortal extends Portal {
 
 
     private void updateState() {
-        if (getWorld().getEntitiesByClass(Tardis.class, this.getBoundingBox().expand(1), null).isEmpty()) {
+        if (getWorld().getEntitiesByClass(Tardis.class, this.getBoundingBox().expand(1), entity -> true).isEmpty()) {
             kill();
         }
     }
