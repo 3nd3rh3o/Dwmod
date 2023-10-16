@@ -105,25 +105,36 @@ public class Tardis extends LivingEntity implements GeoEntity {
     @Override
     public void tick() {
         super.tick();
-        if (getWorld().getEntitiesByClass(TardisPortal.class, this.getBoundingBox().expand(1), entity -> true).isEmpty()) {
-            this.portal = TardisPortal.entityType.create(this.getWorld());
-            this.portal.setOriginPos(this.getBlockPos().toCenterPos().add(0, 0.5, 0));
-            this.portal.setDestinationDimension(World.NETHER);
-            this.portal.setDestination(new Vec3d(0, 64, 0));
-            this.portal.setOrientationAndSize(new Vec3d(1, 0, 0), new Vec3d(0, 1, 0), 1, 2);
-            this.portal.getWorld().spawnEntity(portal);
+        if (!getWorld().isClient) {
+            if (getWorld().getEntitiesByClass(TardisPortal.class, this.getBoundingBox().expand(1), entity -> true)
+                    .isEmpty()) {
+                this.portal = TardisPortal.entityType.create(this.getWorld());
+                this.portal.setOriginPos(this.getBlockPos().toCenterPos().add(0, 0.5, 0));
+                this.portal.setDestinationDimension(World.NETHER);
+                this.portal.setDestination(new Vec3d(0, 64, 0));
+                this.portal.setOrientationAndSize(new Vec3d(1, 0, 0), new Vec3d(0, 1, 0), 1, 2);
+                this.portal.getWorld().spawnEntity(portal);
+            }
+            if (!this.isOnGround() && this.getWorld().getBlockState(getBlockPos()).getBlock()
+                    .equals(RegisterBlocks.TARDIS_DEFAULT_HITBOX.getDefaultState().getBlock())) {
+                this.getWorld().setBlockState(getBlockPos().up(), Blocks.AIR.getDefaultState(), 3);
+            }
+            if (!this.isOnGround() && this.getWorld().getBlockState(getBlockPos().up()).getBlock()
+                    .equals(RegisterBlocks.TARDIS_DEFAULT_HITBOX.getDefaultState().getBlock())) {
+                this.getWorld().setBlockState(getBlockPos().up().up(), Blocks.AIR.getDefaultState(), 3);
+            }
+            if (this.isOnGround()) {
+                getWorld().setBlockState(getBlockPos(),
+                        RegisterBlocks.TARDIS_DEFAULT_HITBOX.getDefaultState()
+                                .with(TardisDefaultHitbox.OPENNED, (leftOpen || rightOpen))
+                                .with(TardisDefaultHitbox.UPPER, false),
+                        3);
+                getWorld().setBlockState(getBlockPos().up(),
+                        RegisterBlocks.TARDIS_DEFAULT_HITBOX.getDefaultState().with(TardisDefaultHitbox.UPPER, true)
+                                .with(TardisDefaultHitbox.OPENNED, (leftOpen || rightOpen)),
+                        3);
+            }
         }
-        if (!this.isOnGround() && this.getWorld().getBlockState(getBlockPos()).getBlock().equals(RegisterBlocks.TARDIS_DEFAULT_HITBOX.getDefaultState().getBlock())) {
-            this.getWorld().setBlockState(getBlockPos().up(), Blocks.AIR.getDefaultState());
-        }
-        if (!this.isOnGround() && this.getWorld().getBlockState(getBlockPos().up()).getBlock().equals(RegisterBlocks.TARDIS_DEFAULT_HITBOX.getDefaultState().getBlock())) {
-            this.getWorld().setBlockState(getBlockPos().up().up(), Blocks.AIR.getDefaultState());
-        }
-        if (this.isOnGround()) {
-            getWorld().setBlockState(getBlockPos(), RegisterBlocks.TARDIS_DEFAULT_HITBOX.getDefaultState().with(TardisDefaultHitbox.UPPER, false));
-            getWorld().setBlockState(getBlockPos().up(), RegisterBlocks.TARDIS_DEFAULT_HITBOX.getDefaultState().with(TardisDefaultHitbox.UPPER, true));
-        }
-
     }
 
     @Override
@@ -141,26 +152,23 @@ public class Tardis extends LivingEntity implements GeoEntity {
         return false;
     }
 
-    //BUG not removed correcty(ghost block)
+    // BUG not removed correcty(ghost block)
     @Override
     public void onRemoved() {
         super.onRemoved();
-        getWorld().setBlockState(getBlockPos(), Blocks.AIR.getDefaultState(), 1);
-        getWorld().setBlockState(getBlockPos().up(), Blocks.AIR.getDefaultState(), 1);
+        getWorld().setBlockState(getBlockPos(), Blocks.AIR.getDefaultState(), 3);
+        getWorld().setBlockState(getBlockPos().up(), Blocks.AIR.getDefaultState(), 3);
     }
 
     @Override
     public ActionResult interactAt(PlayerEntity player, Vec3d hitPos, Hand hand) {
         if (hand == Hand.MAIN_HAND && !player.getWorld().isClient) {
             Vec3d relPos = hitPos.rotateY((float) (this.bodyYaw * Math.PI / 180f));
-            if (relPos.getZ() >= 0.499d) {
-                if (relPos.getX() <= 0.0d) {
-                    leftOpen = !leftOpen;
-                    this.updateAnim("left", leftOpen);
-                } else {
-                    rightOpen = !rightOpen;
-                    this.updateAnim("right", rightOpen);
-                }
+            if (relPos.getX() <= 0.48d && relPos.getX() >= -0.48d && relPos.getZ() >= -0.499d) {
+                leftOpen = !leftOpen;
+                rightOpen = leftOpen;
+                this.updateAnim("right", rightOpen);
+                this.updateAnim("left", leftOpen);
                 return ActionResult.SUCCESS;
             }
         }
@@ -240,8 +248,6 @@ public class Tardis extends LivingEntity implements GeoEntity {
         return false;
     }
 
-    
-
     @Override
     public boolean collidesWith(Entity other) {
         return false;
@@ -257,5 +263,8 @@ public class Tardis extends LivingEntity implements GeoEntity {
         return geoCache;
     }
 
+    public boolean getDoorsOpenned() {
+        return leftOpen || rightOpen;
+    }
 
 }
