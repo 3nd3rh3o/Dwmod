@@ -3,8 +3,11 @@ package h3o.ender.entities;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import h3o.ender.blocks.RegisterBlocks;
+import h3o.ender.blocks.tardis.TardisDefaultHitbox;
 import h3o.ender.components.Circuit;
 import h3o.ender.structures.tardis.Room;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
@@ -17,7 +20,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.tag.DamageTypeTags;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
@@ -52,7 +54,6 @@ public class Tardis extends LivingEntity implements GeoEntity {
 
     private boolean leftOpen = false;
     private boolean rightOpen = false;
-    private boolean solid = true;
 
     private int type;
     private ArrayList<Circuit> circuits;
@@ -101,16 +102,6 @@ public class Tardis extends LivingEntity implements GeoEntity {
         }
     }
 
-    //TODO fiddle this
-    @Override
-    public boolean collidesWith(Entity other) {
-        if (other instanceof ServerPlayerEntity && (leftOpen || rightOpen)) {
-            this.solid = false;
-            return false;
-        }
-        return super.collidesWith(other);
-    }
-
     @Override
     public void tick() {
         super.tick();
@@ -122,6 +113,17 @@ public class Tardis extends LivingEntity implements GeoEntity {
             this.portal.setOrientationAndSize(new Vec3d(1, 0, 0), new Vec3d(0, 1, 0), 1, 2);
             this.portal.getWorld().spawnEntity(portal);
         }
+        if (!this.isOnGround() && this.getWorld().getBlockState(getBlockPos()).getBlock().equals(RegisterBlocks.TARDIS_DEFAULT_HITBOX.getDefaultState().getBlock())) {
+            this.getWorld().setBlockState(getBlockPos().up(), Blocks.AIR.getDefaultState());
+        }
+        if (!this.isOnGround() && this.getWorld().getBlockState(getBlockPos().up()).getBlock().equals(RegisterBlocks.TARDIS_DEFAULT_HITBOX.getDefaultState().getBlock())) {
+            this.getWorld().setBlockState(getBlockPos().up().up(), Blocks.AIR.getDefaultState());
+        }
+        if (this.isOnGround()) {
+            getWorld().setBlockState(getBlockPos(), RegisterBlocks.TARDIS_DEFAULT_HITBOX.getDefaultState().with(TardisDefaultHitbox.UPPER, false));
+            getWorld().setBlockState(getBlockPos().up(), RegisterBlocks.TARDIS_DEFAULT_HITBOX.getDefaultState().with(TardisDefaultHitbox.UPPER, true));
+        }
+
     }
 
     @Override
@@ -139,10 +141,12 @@ public class Tardis extends LivingEntity implements GeoEntity {
         return false;
     }
 
+    //BUG not removed correcty(ghost block)
     @Override
     public void onRemoved() {
         super.onRemoved();
-        this.portal.setRemoved(getRemovalReason());
+        getWorld().setBlockState(getBlockPos(), Blocks.AIR.getDefaultState(), 1);
+        getWorld().setBlockState(getBlockPos().up(), Blocks.AIR.getDefaultState(), 1);
     }
 
     @Override
@@ -233,7 +237,14 @@ public class Tardis extends LivingEntity implements GeoEntity {
 
     @Override
     public boolean isCollidable() {
-        return solid;
+        return false;
+    }
+
+    
+
+    @Override
+    public boolean collidesWith(Entity other) {
+        return false;
     }
 
     @Override
@@ -245,4 +256,6 @@ public class Tardis extends LivingEntity implements GeoEntity {
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return geoCache;
     }
+
+
 }

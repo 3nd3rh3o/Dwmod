@@ -2,6 +2,7 @@ package h3o.ender.entities.renderer;
 
 import h3o.ender.entities.Tardis;
 import h3o.ender.entities.model.TardisModel;
+import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
@@ -20,6 +21,14 @@ public class TardisRenderer extends GeoEntityRenderer<Tardis> {
     public GeoModel<Tardis> getGeoModel() {
         return super.getGeoModel();
     }
+
+
+    @Override
+    public boolean shouldRender(Tardis entity, Frustum frustum, double x, double y, double z) {
+        return true;
+    }
+
+    
 
     
     
