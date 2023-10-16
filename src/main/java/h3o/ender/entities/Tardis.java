@@ -53,6 +53,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
     private int type;
     private ArrayList<Circuit> circuits;
     private HashMap<Integer, Room> internalScheme;
+    private TardisPortal portal;
 
     protected final float[] handDropChances;
     private final DefaultedList<ItemStack> armorItems;
@@ -63,6 +64,13 @@ public class Tardis extends LivingEntity implements GeoEntity {
         this.handDropChances = new float[2];
         this.armorItems = DefaultedList.ofSize(4, ItemStack.EMPTY);
         this.handItems = DefaultedList.ofSize(2, ItemStack.EMPTY);
+        //FIXME null here? inv
+        this.portal = TardisPortal.entityType.create(world);
+        this.portal.setOriginPos(this.getPos());
+        this.portal.setDestinationDimension(World.NETHER);
+        this.portal.setDestination(new Vec3d(0, 64, 0));
+        this.portal.setOrientationAndSize(new Vec3d(1, 0, 0), new Vec3d(0, 1, 0), 1, 2);
+        this.portal.getWorld().spawnEntity(portal);
     }
 
     @Override
@@ -109,6 +117,14 @@ public class Tardis extends LivingEntity implements GeoEntity {
     @Override
     public boolean isPushedByFluids() {
         return false;
+    }
+
+    
+
+    @Override
+    public void onRemoved() {
+        super.onRemoved();
+        this.portal.setRemoved(getRemovalReason());
     }
 
     @Override

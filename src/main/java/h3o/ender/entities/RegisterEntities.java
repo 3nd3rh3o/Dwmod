@@ -12,4 +12,6 @@ public class RegisterEntities {
     public static final EntityType<Tardis> TARDIS = Registry.register(Registries.ENTITY_TYPE, 
             new Identifier(DwMod.MODID, "tardis"),
             FabricEntityTypeBuilder.create(null, Tardis::new).dimensions(EntityDimensions.fixed(1, 2)).build());
+
+    public static final EntityType<TardisPortal> TARDIS_PORTAL = Registry.register(Registries.ENTITY_TYPE, new Identifier(DwMod.MODID, "tardis_portal"), TardisPortal.entityType);
 }
