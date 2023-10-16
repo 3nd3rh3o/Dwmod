@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import h3o.ender.components.Circuit;
 import h3o.ender.structures.tardis.Room;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -16,6 +17,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.tag.DamageTypeTags;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
@@ -32,6 +34,7 @@ import software.bernie.geckolib.core.animation.AnimationController.State;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+//TODO MAKE A BLOCK FOR THE HIT BOX!!!! hook the entity interract and remove it's AABB!!!
 public class Tardis extends LivingEntity implements GeoEntity {
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
 
@@ -49,6 +52,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
 
     private boolean leftOpen = false;
     private boolean rightOpen = false;
+    private boolean solid = true;
 
     private int type;
     private ArrayList<Circuit> circuits;
@@ -95,6 +99,16 @@ public class Tardis extends LivingEntity implements GeoEntity {
                 this.onEquipStack(slot, this.armorItems.set(slot.getEntitySlotId(), stack), stack);
             }
         }
+    }
+
+    //TODO fiddle this
+    @Override
+    public boolean collidesWith(Entity other) {
+        if (other instanceof ServerPlayerEntity && (leftOpen || rightOpen)) {
+            this.solid = false;
+            return false;
+        }
+        return super.collidesWith(other);
     }
 
     @Override
@@ -219,7 +233,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
 
     @Override
     public boolean isCollidable() {
-        return true;
+        return solid;
     }
 
     @Override
