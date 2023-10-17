@@ -6,6 +6,9 @@ import java.util.HashMap;
 import h3o.ender.blocks.RegisterBlocks;
 import h3o.ender.blocks.tardis.TardisDefaultHitbox;
 import h3o.ender.components.Circuit;
+import h3o.ender.dimensions.RegisterDimensions;
+import h3o.ender.persistantState.StateSaverAndLoader;
+import h3o.ender.structures.tardis.DimensionalStorageHelper;
 import h3o.ender.structures.tardis.Room;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
@@ -20,6 +23,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.tag.DamageTypeTags;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
@@ -55,7 +59,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
     private boolean leftOpen = false;
     private boolean rightOpen = false;
 
-    private int type;
+    private int index = -1;
     private ArrayList<Circuit> circuits;
     private HashMap<Integer, Room> internalScheme;
     private TardisPortal portal;
@@ -67,6 +71,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
     protected Tardis(EntityType<? extends LivingEntity> entityType, World world) {
         super(RegisterEntities.TARDIS, world);
         this.handDropChances = new float[2];
+        this.index = -1;
         this.armorItems = DefaultedList.ofSize(4, ItemStack.EMPTY);
         this.handItems = DefaultedList.ofSize(2, ItemStack.EMPTY);
     }
@@ -78,6 +83,9 @@ public class Tardis extends LivingEntity implements GeoEntity {
             leftOpen = temp[0] == 1 ? true : false;
             rightOpen = temp[1] == 1 ? true : false;
         }
+        if (nbt.contains("Index")) {
+            this.index = nbt.getInt("Index");
+        }
         super.readCustomDataFromNbt(nbt);
 
     }
@@ -85,6 +93,9 @@ public class Tardis extends LivingEntity implements GeoEntity {
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         nbt.putByteArray("Doors", new byte[] { leftOpen ? (byte) 1 : (byte) 0, rightOpen ? (byte) 1 : (byte) 0 });
+        if (this.index != -1) {
+            nbt.putInt("Index", this.index);
+        }
         super.writeCustomDataToNbt(nbt);
     }
 
@@ -150,14 +161,6 @@ public class Tardis extends LivingEntity implements GeoEntity {
     @Override
     public boolean isPushedByFluids() {
         return false;
-    }
-
-    // BUG not removed correcty(ghost block)
-    @Override
-    public void onRemoved() {
-        super.onRemoved();
-        getWorld().setBlockState(getBlockPos(), Blocks.AIR.getDefaultState(), 3);
-        getWorld().setBlockState(getBlockPos().up(), Blocks.AIR.getDefaultState(), 3);
     }
 
     @Override
@@ -265,6 +268,22 @@ public class Tardis extends LivingEntity implements GeoEntity {
 
     public boolean getDoorsOpenned() {
         return leftOpen || rightOpen;
+    }
+
+	public int getIndex() {
+		return index;
+	}
+
+    public void setIndex(int i) {
+        this.index = i;
+    }
+
+    public void structureInit() {
+        //TODO gen struct here
+        if (!getWorld().isClient) {
+            ServerWorld vortex = getWorld().getServer().getWorld(RegisterDimensions.VORTEX);
+            vortex.setBlockState(DimensionalStorageHelper.getBasePosFromTardisIndex(this.index), Blocks.STONE.getDefaultState(), 3);
+        }
     }
 
 }

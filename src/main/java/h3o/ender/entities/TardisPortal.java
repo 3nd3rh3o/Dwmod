@@ -1,6 +1,8 @@
 package h3o.ender.entities;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -30,6 +32,8 @@ public class TardisPortal extends Portal {
 
     private void updateState() {
         if (getWorld().getEntitiesByClass(Tardis.class, this.getBoundingBox().expand(1), entity -> true).isEmpty()) {
+            getWorld().setBlockState(getBlockPos().down(), Blocks.AIR.getDefaultState(), Block.FORCE_STATE+Block.REDRAW_ON_MAIN_THREAD+Block.NOTIFY_ALL);
+			getWorld().setBlockState(getBlockPos(), Blocks.AIR.getDefaultState(), Block.FORCE_STATE+Block.REDRAW_ON_MAIN_THREAD+Block.NOTIFY_ALL);
             kill();
         }
     }
