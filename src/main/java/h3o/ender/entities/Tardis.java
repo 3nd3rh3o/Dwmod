@@ -7,7 +7,6 @@ import h3o.ender.blocks.RegisterBlocks;
 import h3o.ender.blocks.tardis.TardisDefaultHitbox;
 import h3o.ender.components.Circuit;
 import h3o.ender.dimensions.RegisterDimensions;
-import h3o.ender.persistantState.StateSaverAndLoader;
 import h3o.ender.structures.tardis.DimensionalStorageHelper;
 import h3o.ender.structures.tardis.Room;
 import net.minecraft.block.Blocks;

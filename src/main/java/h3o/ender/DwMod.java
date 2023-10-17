@@ -3,8 +3,6 @@ package h3o.ender;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.util.Identifier;
 import qouteall.q_misc_util.LifecycleHack;
 
@@ -82,8 +80,6 @@ public class DwMod implements ModInitializer {
 		ServerEntityEvents.ENTITY_UNLOAD.register((entity, world) -> {
 			if (entity instanceof Tardis && entity.isRemoved()) {
 				Tardis ent = (Tardis) entity;
-				world.setBlockState(ent.getBlockPos(), Blocks.AIR.getDefaultState(), Block.FORCE_STATE+Block.REDRAW_ON_MAIN_THREAD+Block.NOTIFY_ALL);
-				world.setBlockState(ent.getBlockPos().up(), Blocks.AIR.getDefaultState(), Block.FORCE_STATE+Block.REDRAW_ON_MAIN_THREAD+Block.NOTIFY_ALL);
 				if (!world.isClient) {
 					StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(world.getServer());
 					if (serverState.tardis == null) {

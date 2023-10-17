@@ -1,8 +1,8 @@
 package h3o.ender.structures.tardis;
 
 public class Room {
-    int id;
-    int size;
+    private int id;
+    private int size;
     int orientation;
     int vId;
     Name name;
@@ -11,5 +11,17 @@ public class Room {
 
     public enum Name {
 
+    }
+
+
+
+    public Integer getId() {
+        return id;
+    }
+
+
+
+    public int getSize() {
+        return size;
     }
 }
