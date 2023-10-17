@@ -3,7 +3,18 @@ package h3o.ender.structures.tardis;
 import java.util.ArrayList;
 import java.util.List;
 
+import h3o.ender.structures.tardis.Room.Name;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.structure.StructurePlacementData;
+import net.minecraft.structure.StructureTemplate;
+import net.minecraft.structure.StructureTemplateManager;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
+import qouteall.imm_ptl.core.portal.Mirror;
 
 public class DimensionalStorageHelper {
     // Tardis internal slots
@@ -21,7 +32,25 @@ public class DimensionalStorageHelper {
                 (Math.round(index / maxTx) % maxTz) * 2536);
     }
 
-    
+    public static BlockPos getRoomPosFromRoomIndex(int index) {
+        return new BlockPos(
+                (index % max_x) * 16,
+                Math.round(index / (max_x * max_z)) * 16,
+                Math.round(index / max_x) % max_z * 16);
+    }
+
+    public static void loadStructure(ServerWorld world, BlockPos pos, String structName, BlockRotation rot) {
+        loadStructure(world, pos, structName, new StructurePlacementData().setMirror(BlockMirror.NONE)
+                .setRotation(rot)
+                .setIgnoreEntities(false));
+    }
+
+    private static void loadStructure(ServerWorld level, BlockPos bPos, String structureName,
+            StructurePlacementData settings) {
+        StructureTemplateManager structureTemplateManager = level.getStructureTemplateManager();
+        StructureTemplate struct = structureTemplateManager.getTemplate(Identifier.tryParse(structureName)).get();
+        struct.place(level, bPos, bPos, settings, Random.create(Util.getEpochTimeMs()), 2);
+    }
 
     public static int getValidPos(int size, List<Room> intSh) {
         for (int n = 0; n < 73727; n++) {
@@ -76,13 +105,13 @@ public class DimensionalStorageHelper {
         return -1;
     }
 
-    private static boolean contain(List<Room> intSh, Integer id) {
+    public static boolean contain(List<Room> intSh, Integer id) {
         for (Room room : intSh) {
             if (room.getId() == id) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     private static int getSize(List<Room> intSh, Integer id) {
@@ -190,5 +219,12 @@ public class DimensionalStorageHelper {
         } else {
             return z_m(z - max_x, time - 1);
         }
+    }
+
+    public static void add(Name name, BlockRotation rot, int index, ServerWorld vortex,
+            List<Room> intSh) {
+        BlockPos basePos = getBasePosFromTardisIndex(index);
+        int id = getValidPos(name.getSize(), intSh);
+        loadStructure(vortex, basePos.add(getRoomPosFromRoomIndex(id)), Room.getStructName(name), rot);
     }
 }

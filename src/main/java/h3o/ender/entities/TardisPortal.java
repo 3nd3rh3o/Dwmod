@@ -19,7 +19,7 @@ public class TardisPortal extends Portal {
         super(entityType, world);
     }
 
-
+    
     @Override
     public void tick() {
         super.tick();

@@ -40,7 +40,6 @@ public class DwMod implements ModInitializer {
 		ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
 			if (!world.isClient && entity.getClass().equals(Tardis.class)) {
 				if (((Tardis) entity).getIndex() == -1) {
-					// TODO register here and trigger console room generation
 					StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(world.getServer());
 					if (serverState.tardis == null) {
 						serverState.tardis = new ArrayList<>();
@@ -52,6 +51,9 @@ public class DwMod implements ModInitializer {
 							((Tardis) entity).structureInit();
 							break;
 						}
+					}
+					if (((Tardis) entity).getIndex() == -1) {
+						entity.kill();
 					}
 
 					// not usefull in this case, no need to tell the client about server logic

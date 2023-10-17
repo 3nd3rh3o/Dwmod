@@ -37,7 +37,6 @@ public class TardisDefaultHitbox extends AbstractGlassBlock {
         builder.add(OPENNED).add(UPPER);
     }
 
-    //FIXME VoxelShapeNotReplaced
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
             BlockHitResult hit) {

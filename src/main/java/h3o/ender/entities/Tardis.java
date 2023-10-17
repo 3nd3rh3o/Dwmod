@@ -1,7 +1,7 @@
 package h3o.ender.entities;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 import h3o.ender.blocks.RegisterBlocks;
 import h3o.ender.blocks.tardis.TardisDefaultHitbox;
@@ -25,8 +25,10 @@ import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -39,7 +41,6 @@ import software.bernie.geckolib.core.animation.AnimationController.State;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-//TODO MAKE A BLOCK FOR THE HIT BOX!!!! hook the entity interract and remove it's AABB!!!
 public class Tardis extends LivingEntity implements GeoEntity {
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
 
@@ -60,8 +61,9 @@ public class Tardis extends LivingEntity implements GeoEntity {
 
     private int index = -1;
     private ArrayList<Circuit> circuits;
-    private HashMap<Integer, Room> internalScheme;
+    private List<Room> internalScheme = new ArrayList<>();
     private TardisPortal portal;
+    private int activeConsId = 0;
 
     protected final float[] handDropChances;
     private final DefaultedList<ItemStack> armorItems;
@@ -85,6 +87,18 @@ public class Tardis extends LivingEntity implements GeoEntity {
         if (nbt.contains("Index")) {
             this.index = nbt.getInt("Index");
         }
+        NbtCompound room = nbt.getCompound("Room");
+        room.getKeys().forEach((key) -> {
+            this.internalScheme = new ArrayList<>();
+            NbtCompound tupple = room.getCompound(key);
+            int id = tupple.getInt("Id");
+            int size = tupple.getInt("Size");
+            int rot = tupple.getInt("Rot");
+            int vId = tupple.getInt("vId");
+            Room.Name name = Room.Name.valueOf(tupple.getString("Name"));
+
+            internalScheme.add(new Room(id, size, rot, vId, name));
+        });
         super.readCustomDataFromNbt(nbt);
 
     }
@@ -95,6 +109,18 @@ public class Tardis extends LivingEntity implements GeoEntity {
         if (this.index != -1) {
             nbt.putInt("Index", this.index);
         }
+        NbtCompound rooms = new NbtCompound();
+        for (Room room : internalScheme) {
+            NbtCompound tupple = new NbtCompound();
+
+            tupple.putString("Name", room.getName().toString());
+            tupple.putInt("Id", room.getId());
+            tupple.putInt("Size", room.getSize());
+            tupple.putInt("Rot", room.getOrientation());
+            tupple.putInt("vId", room.getVId());
+            rooms.put(String.valueOf(internalScheme.indexOf(room)), tupple);
+        }
+        nbt.put("InternalScheme", rooms);
         super.writeCustomDataToNbt(nbt);
     }
 
@@ -118,12 +144,17 @@ public class Tardis extends LivingEntity implements GeoEntity {
         if (!getWorld().isClient) {
             if (getWorld().getEntitiesByClass(TardisPortal.class, this.getBoundingBox().expand(1), entity -> true)
                     .isEmpty()) {
-                this.portal = TardisPortal.entityType.create(this.getWorld());
-                this.portal.setOriginPos(this.getBlockPos().toCenterPos().add(0, 0.5, 0));
-                this.portal.setDestinationDimension(World.NETHER);
-                this.portal.setDestination(new Vec3d(0, 64, 0));
-                this.portal.setOrientationAndSize(new Vec3d(1, 0, 0), new Vec3d(0, 1, 0), 1, 2);
-                this.portal.getWorld().spawnEntity(portal);
+                if (DimensionalStorageHelper.contain(internalScheme, activeConsId)) {
+                    BlockPos dest = DimensionalStorageHelper.getRoomPosFromRoomIndex(activeConsId);
+                    dest = dest.add(DimensionalStorageHelper.getBasePosFromTardisIndex(this.index));
+                    dest = dest.add(Room.getById(internalScheme, activeConsId).getFeatures().get("RealWorldInterface"));
+                    this.portal = TardisPortal.entityType.create(this.getWorld());
+                    this.portal.setOriginPos(this.getBlockPos().toCenterPos().add(0, 0.5, 0));
+                    this.portal.setDestinationDimension(RegisterDimensions.VORTEX);
+                    this.portal.setDestination(dest.toCenterPos().add(0, 0.5, 0));
+                    this.portal.setOrientationAndSize(new Vec3d(1, 0, 0), new Vec3d(0, 1, 0), 1, 2);
+                    this.portal.getWorld().spawnEntity(portal);
+                }
             }
             if (!this.isOnGround() && this.getWorld().getBlockState(getBlockPos()).getBlock()
                     .equals(RegisterBlocks.TARDIS_DEFAULT_HITBOX.getDefaultState().getBlock())) {
@@ -269,19 +300,24 @@ public class Tardis extends LivingEntity implements GeoEntity {
         return leftOpen || rightOpen;
     }
 
-	public int getIndex() {
-		return index;
-	}
+    public int getIndex() {
+        return index;
+    }
 
     public void setIndex(int i) {
         this.index = i;
     }
 
     public void structureInit() {
-        //TODO gen struct here
+        // TODO gen struct here
         if (!getWorld().isClient) {
+            internalScheme = new ArrayList<>();
+            Room.Name name = Room.Name.DEFAULT_CONSOLE_ROOM;
             ServerWorld vortex = getWorld().getServer().getWorld(RegisterDimensions.VORTEX);
-            vortex.setBlockState(DimensionalStorageHelper.getBasePosFromTardisIndex(this.index), Blocks.STONE.getDefaultState(), 3);
+            BlockPos basePos = DimensionalStorageHelper.getBasePosFromTardisIndex(index);
+            int id = DimensionalStorageHelper.getValidPos(name.getSize(), internalScheme);
+            DimensionalStorageHelper.add(name, BlockRotation.NONE, this.index, vortex, internalScheme);
+            internalScheme.add(new Room(id, name.getSize(), 0, 0, name));
         }
     }
 
