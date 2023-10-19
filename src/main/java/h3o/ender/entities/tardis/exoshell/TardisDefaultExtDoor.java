@@ -1,7 +1,6 @@
 package h3o.ender.entities.tardis.exoshell;
 
 import h3o.ender.entities.Tardis;
-import h3o.ender.entities.TardisInternalPortal;
 import h3o.ender.entities.tardis.TardisExtDoor;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;

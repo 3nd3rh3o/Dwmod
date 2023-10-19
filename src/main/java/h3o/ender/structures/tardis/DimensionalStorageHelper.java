@@ -5,11 +5,9 @@ import java.util.List;
 
 import org.joml.Math;
 
-import h3o.ender.entities.RegisterEntities;
 import h3o.ender.entities.Tardis;
 import h3o.ender.entities.TardisInternalPortal;
 import h3o.ender.entities.tardis.TardisExtDoor;
-import h3o.ender.entities.tardis.exoshell.TardisDefaultExtDoor;
 import h3o.ender.structures.tardis.Room.Name;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePlacementData;
