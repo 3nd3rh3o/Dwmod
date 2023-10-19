@@ -82,7 +82,9 @@ public class DwMod implements ModInitializer {
 		ServerEntityEvents.ENTITY_UNLOAD.register((entity, world) -> {
 			if (entity instanceof Tardis && entity.isRemoved()) {
 				Tardis ent = (Tardis) entity;
+				ent.purgeIntPortals();
 				if (!world.isClient) {
+					//TODO kill each portal inside each rooms of the TARDIS removed (foreachroom -> purge room)
 					StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(world.getServer());
 					if (serverState.tardis == null) {
 						serverState.tardis = new ArrayList<>();

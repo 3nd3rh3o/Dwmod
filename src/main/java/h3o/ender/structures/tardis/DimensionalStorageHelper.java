@@ -3,6 +3,10 @@ package h3o.ender.structures.tardis;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Math;
+
+import h3o.ender.entities.Tardis;
+import h3o.ender.entities.TardisInternalPortal;
 import h3o.ender.structures.tardis.Room.Name;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePlacementData;
@@ -13,8 +17,9 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
-import qouteall.imm_ptl.core.portal.Mirror;
 
 public class DimensionalStorageHelper {
     // Tardis internal slots
@@ -222,9 +227,46 @@ public class DimensionalStorageHelper {
     }
 
     public static void add(Name name, BlockRotation rot, int index, ServerWorld vortex,
-            List<Room> intSh) {
+            List<Room> intSh, Tardis tardis) {
         BlockPos basePos = getBasePosFromTardisIndex(index);
         int id = getValidPos(name.getSize(), intSh);
+        summonPortals(vortex, name, basePos.add(getRoomPosFromRoomIndex(id)), tardis);
         loadStructure(vortex, basePos.add(getRoomPosFromRoomIndex(id)), Room.getStructName(name), rot);
+    }
+
+    private static void summonPortals(ServerWorld vortex, Name name, BlockPos origin, Tardis tardis) {
+        switch (name) {
+            case DEFAULT_CONSOLE_ROOM -> {
+                
+                //TODO in param pass the exoshell and give it to portal entity, portal entity will update it's dest at each tick!
+                TardisInternalPortal portal;
+                portal = TardisInternalPortal.entityType.create(vortex);
+                portal.setTardis(tardis);
+                portal.setOriginPos(origin.toCenterPos().add(9, 2.5, 12.5));
+                portal.setDestinationDimension(tardis.getWorld().getRegistryKey());
+                portal.setDestination(tardis.getPos());
+                portal.setOrientationAndSize(new Vec3d(-1, 0, 0), new Vec3d(0, 1, 0), 1, 2);
+                portal.getWorld().spawnEntity(portal);
+            }
+        }
+    }
+
+    public static int getIndex(BlockPos pos) {
+        int x = pos.getX();
+        int z = pos.getZ();
+        x = Math.round(x/2536);
+        z = Math.round(z/2536);
+        return x+(z*maxTx);
+    }
+
+    public static void removeRoom(int tardisIndex, int roomIndex, int roomSize, ServerWorld world) {
+        BlockPos pos = getBasePosFromTardisIndex(tardisIndex).add(getRoomPosFromRoomIndex(roomIndex));
+        for (int x = 0; x<roomSize; x++) {
+            for (int y = 0; y<roomSize; y++) {
+                for (int z = 0; z<roomSize; z++) {
+                    world.getEntitiesByClass(TardisInternalPortal.class, new Box(pos.getX()+16*x, pos.getY()+16*y, pos.getZ()+16*z, pos.getX()+16*x + 16, pos.getY()+16*y+16, pos.getZ()+16*z + 16), entity -> true).forEach(ent -> ent.kill());;
+                }
+            }
+        } 
     }
 }

@@ -151,7 +151,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
                     this.portal = TardisPortal.entityType.create(this.getWorld());
                     this.portal.setOriginPos(this.getBlockPos().toCenterPos().add(0, 0.5, 0));
                     this.portal.setDestinationDimension(RegisterDimensions.VORTEX);
-                    this.portal.setDestination(dest.toCenterPos().add(0, 0.5, 0));
+                    this.portal.setDestination(dest.toCenterPos().add(0, 0.5, -0.5));
                     this.portal.setOrientationAndSize(new Vec3d(1, 0, 0), new Vec3d(0, 1, 0), 1, 2);
                     this.portal.getWorld().spawnEntity(portal);
                 }
@@ -314,11 +314,16 @@ public class Tardis extends LivingEntity implements GeoEntity {
             internalScheme = new ArrayList<>();
             Room.Name name = Room.Name.DEFAULT_CONSOLE_ROOM;
             ServerWorld vortex = getWorld().getServer().getWorld(RegisterDimensions.VORTEX);
-            BlockPos basePos = DimensionalStorageHelper.getBasePosFromTardisIndex(index);
             int id = DimensionalStorageHelper.getValidPos(name.getSize(), internalScheme);
-            DimensionalStorageHelper.add(name, BlockRotation.NONE, this.index, vortex, internalScheme);
+            DimensionalStorageHelper.add(name, BlockRotation.NONE, this.index, vortex, internalScheme, this);
             internalScheme.add(new Room(id, name.getSize(), 0, 0, name));
         }
+    }
+
+    public void purgeIntPortals() {
+        internalScheme.forEach(room -> {
+            DimensionalStorageHelper.removeRoom(index, room.getId(), room.getSize(), getServer().getWorld(RegisterDimensions.VORTEX));
+        });
     }
 
 }

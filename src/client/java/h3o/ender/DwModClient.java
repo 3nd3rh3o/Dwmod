@@ -2,6 +2,7 @@ package h3o.ender;
 
 import h3o.ender.blocks.RegisterBlocks;
 import h3o.ender.entities.RegisterEntities;
+import h3o.ender.entities.renderer.TardisIntPortalRenderer;
 import h3o.ender.entities.renderer.TardisPortalRenderer;
 import h3o.ender.entities.renderer.TardisRenderer;
 import net.fabricmc.api.ClientModInitializer;
@@ -16,7 +17,7 @@ public class DwModClient implements ClientModInitializer {
         // This entrypoint is suitable for setting up client-specific logic, such as rendering.
         EntityRendererRegistry.register(RegisterEntities.TARDIS, TardisRenderer::new);
         EntityRendererRegistry.register(RegisterEntities.TARDIS_PORTAL, TardisPortalRenderer::new);
+        EntityRendererRegistry.register(RegisterEntities.TARDIS_INT_PORTAL, TardisIntPortalRenderer::new);
         BlockRenderLayerMap.INSTANCE.putBlock(RegisterBlocks.TARDIS_DEFAULT_HITBOX, RenderLayer.getTranslucent());
     }
-    
 }
