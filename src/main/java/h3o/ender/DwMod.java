@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import h3o.ender.blocks.RegisterBlocks;
 import h3o.ender.entities.RegisterEntities;
 import h3o.ender.entities.Tardis;
+import h3o.ender.entities.tardis.exoshell.TardisDefaultExtDoor;
 import h3o.ender.persistantState.StateSaverAndLoader;
 
 public class DwMod implements ModInitializer {
@@ -35,6 +36,7 @@ public class DwMod implements ModInitializer {
 		LifecycleHack.markNamespaceStable("dwmod");
 
 		FabricDefaultAttributeRegistry.register(RegisterEntities.TARDIS, Tardis.createLivingAttributes());
+		FabricDefaultAttributeRegistry.register(RegisterEntities.TARDIS_EXT_DOOR_DEFAULT, TardisDefaultExtDoor.createLivingAttributes());
 		RegisterBlocks.register();
 
 		ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
@@ -55,26 +57,6 @@ public class DwMod implements ModInitializer {
 					if (((Tardis) entity).getIndex() == -1) {
 						entity.kill();
 					}
-
-					// not usefull in this case, no need to tell the client about server logic
-					/*
-					 * MinecraftServer server = world.getServer();
-					 * PacketByteBuf data = PacketByteBufs.create();
-					 * 
-					 * int[] arr = new int[serverState.tardis.size()];
-					 * for (Integer val : serverState.tardis) {
-					 * arr[serverState.tardis.indexOf(val)] = val.intValue();
-					 * }
-					 * data.writeIntArray(arr);
-					 * 
-					 * List<ServerPlayerEntity> serverPlayerEntities =
-					 * server.getPlayerManager().getPlayerList();
-					 * for (ServerPlayerEntity serverPlayerEntity : serverPlayerEntities) {
-					 * server.execute(() -> {
-					 * ServerPlayNetworking.send(serverPlayerEntity, TARDIS, data);
-					 * });
-					 * }
-					 */
 				}
 			}
 		});
@@ -84,7 +66,6 @@ public class DwMod implements ModInitializer {
 				Tardis ent = (Tardis) entity;
 				ent.purgeIntPortals();
 				if (!world.isClient) {
-					//TODO kill each portal inside each rooms of the TARDIS removed (foreachroom -> purge room)
 					StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(world.getServer());
 					if (serverState.tardis == null) {
 						serverState.tardis = new ArrayList<>();

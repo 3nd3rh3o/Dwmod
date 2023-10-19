@@ -5,8 +5,11 @@ import java.util.List;
 
 import org.joml.Math;
 
+import h3o.ender.entities.RegisterEntities;
 import h3o.ender.entities.Tardis;
 import h3o.ender.entities.TardisInternalPortal;
+import h3o.ender.entities.tardis.TardisExtDoor;
+import h3o.ender.entities.tardis.exoshell.TardisDefaultExtDoor;
 import h3o.ender.structures.tardis.Room.Name;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePlacementData;
@@ -237,16 +240,19 @@ public class DimensionalStorageHelper {
     private static void summonPortals(ServerWorld vortex, Name name, BlockPos origin, Tardis tardis) {
         switch (name) {
             case DEFAULT_CONSOLE_ROOM -> {
-                
-                //TODO in param pass the exoshell and give it to portal entity, portal entity will update it's dest at each tick!
+
+                // TODO in param pass the exoshell and give it to portal entity, portal entity
+                // will update it's dest at each tick!
                 TardisInternalPortal portal;
                 portal = TardisInternalPortal.entityType.create(vortex);
                 portal.setTardis(tardis);
-                portal.setOriginPos(origin.toCenterPos().add(9, 2.5, 12.5));
+                portal.setOriginPos(origin.toCenterPos().add(9, 2.5, 13));
                 portal.setDestinationDimension(tardis.getWorld().getRegistryKey());
-                portal.setDestination(tardis.getPos());
+                portal.setDestination(tardis.getPos().add(0, 1, 0.5));
                 portal.setOrientationAndSize(new Vec3d(-1, 0, 0), new Vec3d(0, 1, 0), 1, 2);
                 portal.getWorld().spawnEntity(portal);
+
+                
             }
         }
     }
@@ -254,19 +260,31 @@ public class DimensionalStorageHelper {
     public static int getIndex(BlockPos pos) {
         int x = pos.getX();
         int z = pos.getZ();
-        x = Math.round(x/2536);
-        z = Math.round(z/2536);
-        return x+(z*maxTx);
+        x = Math.round(x / 2536);
+        z = Math.round(z / 2536);
+        return x + (z * maxTx);
     }
 
     public static void removeRoom(int tardisIndex, int roomIndex, int roomSize, ServerWorld world) {
         BlockPos pos = getBasePosFromTardisIndex(tardisIndex).add(getRoomPosFromRoomIndex(roomIndex));
-        for (int x = 0; x<roomSize; x++) {
-            for (int y = 0; y<roomSize; y++) {
-                for (int z = 0; z<roomSize; z++) {
-                    world.getEntitiesByClass(TardisInternalPortal.class, new Box(pos.getX()+16*x, pos.getY()+16*y, pos.getZ()+16*z, pos.getX()+16*x + 16, pos.getY()+16*y+16, pos.getZ()+16*z + 16), entity -> true).forEach(ent -> ent.kill());;
+        for (int x = 0; x < roomSize; x++) {
+            for (int y = 0; y < roomSize; y++) {
+                for (int z = 0; z < roomSize; z++) {
+                    world.getEntitiesByClass(TardisInternalPortal.class,
+                            new Box(pos.getX() + 16 * x, pos.getY() + 16 * y, pos.getZ() + 16 * z,
+                                    pos.getX() + 16 * x + 16, pos.getY() + 16 * y + 16, pos.getZ() + 16 * z + 16),
+                            entity -> true).forEach(ent -> {
+                                ent.kill();
+                                ent.reloadAndSyncToClient();
+                            });
+                    world.getEntitiesByClass(TardisExtDoor.class,
+                            new Box(pos.getX() + 16 * x, pos.getY() + 16 * y, pos.getZ() + 16 * z,
+                                    pos.getX() + 16 * x + 16, pos.getY() + 16 * y + 16, pos.getZ() + 16 * z + 16),
+                            entity -> true).forEach(ent -> {
+                                ent.kill();
+                            });
                 }
             }
-        } 
+        }
     }
 }

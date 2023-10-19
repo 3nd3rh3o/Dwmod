@@ -6,14 +6,15 @@
 				"identifier": "geometry.tardis.default.wall.lamp - Converted",
 				"texture_width": 128,
 				"texture_height": 128,
-				"visible_bounds_width": 2,
-				"visible_bounds_height": 3.5,
-				"visible_bounds_offset": [0, 1.25, 0]
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 4,
+				"visible_bounds_offset": [0, 1, 0]
 			},
 			"bones": [
 				{
-					"name": "bone3",
+					"name": "body",
 					"pivot": [0, 0, 0],
+					"rotation": [0, 180, 0],
 					"cubes": [
 						{"origin": [-8, 31, -8], "size": [16, 1, 16], "uv": [0, 0]},
 						{"origin": [-8, 1, -8], "size": [1, 30, 16], "uv": [34, 34]},
@@ -23,17 +24,17 @@
 					]
 				},
 				{
-					"name": "bone",
-					"parent": "bone3",
-					"pivot": [0, 0, 0],
+					"name": "leftDoor",
+					"parent": "body",
+					"pivot": [6.5, 16, -7],
 					"cubes": [
 						{"origin": [0, 1, -8], "size": [7, 30, 1], "uv": [68, 31]}
 					]
 				},
 				{
-					"name": "bone2",
-					"parent": "bone3",
-					"pivot": [0, 0, 0],
+					"name": "rightDoor",
+					"parent": "body",
+					"pivot": [-6.5, 16, -7],
 					"cubes": [
 						{"origin": [-7, 1, -8], "size": [7, 30, 1], "uv": [68, 62]}
 					]

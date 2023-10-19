@@ -54,7 +54,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
             .thenPlayAndHold("animation.exoshell.default.right.close");
 
     private static final TrackedData<Byte> MOB_FLAGS = DataTracker.registerData(Tardis.class,
-            TrackedDataHandlerRegistry.BYTE);;
+            TrackedDataHandlerRegistry.BYTE);
 
     private boolean leftOpen = false;
     private boolean rightOpen = false;
