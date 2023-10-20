@@ -82,7 +82,7 @@ public class TardisExtDoor extends LivingEntity {
     }
 
     protected Tardis initTardis() {
-        if (!getWorld().isClient) {
+        if (!getWorld().isClient()) {
             for (ServerWorld world : getServer().getWorlds()) {
                 List<Tardis> trds = world.getEntitiesByClass(Tardis.class,
                         Box.of(new Vec3d(0, 0, 0), World.HORIZONTAL_LIMIT * 2, World.MAX_Y - World.MIN_Y,

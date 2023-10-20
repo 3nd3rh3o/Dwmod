@@ -23,7 +23,7 @@ public class TardisPortal extends Portal {
     @Override
     public void tick() {
         super.tick();
-        if (!getWorld().isClient) {
+        if (!getWorld().isClient()) {
             updateState();
         }
     }

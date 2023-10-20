@@ -141,7 +141,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
     @Override
     public void tick() {
         super.tick();
-        if (!getWorld().isClient) {
+        if (!getWorld().isClient()) {
             if (getWorld().getEntitiesByClass(TardisPortal.class, this.getBoundingBox().expand(1), entity -> true)
                     .isEmpty()) {
                 if (DimensionalStorageHelper.contain(internalScheme, activeConsId)) {
@@ -310,7 +310,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
 
     public void structureInit() {
         // TODO gen struct here
-        if (!getWorld().isClient) {
+        if (!getWorld().isClient()) {
             internalScheme = new ArrayList<>();
             Room.Name name = Room.Name.DEFAULT_CONSOLE_ROOM;
             ServerWorld vortex = getWorld().getServer().getWorld(RegisterDimensions.VORTEX);

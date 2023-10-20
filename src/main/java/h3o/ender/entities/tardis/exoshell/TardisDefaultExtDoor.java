@@ -45,6 +45,14 @@ public class TardisDefaultExtDoor extends TardisExtDoor implements GeoEntity {
     public boolean isPushedByFluids() {
         return false;
     }
-    
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (!getWorld().isClient()) {
+            
+        }
+    }
+
     
 }

@@ -30,7 +30,7 @@ public class TardisInternalPortal extends Portal {
     @Override
     public void tick() {
         super.tick();
-        if (!getWorld().isClient && this.tardis != null) {
+        if (!getWorld().isClient() && this.tardis != null) {
             if (this.getDestPos() != tardis.getPos().add(0, 1, 0.5)
                     || getDestDim() != tardis.getWorld().getRegistryKey()) {
                 this.setDestinationDimension(tardis.getWorld().getRegistryKey());
@@ -51,7 +51,7 @@ public class TardisInternalPortal extends Portal {
     }
 
     private Tardis initTardis() {
-        if (!getWorld().isClient) {
+        if (!getWorld().isClient()) {
             for (ServerWorld world : getServer().getWorlds()) {
                 List<Tardis> trds = world.getEntitiesByClass(Tardis.class,
                         Box.of(new Vec3d(0, 0, 0), World.HORIZONTAL_LIMIT * 2, World.MAX_Y - World.MIN_Y,
