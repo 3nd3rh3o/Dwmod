@@ -22,15 +22,8 @@ public class TardisRenderer extends GeoEntityRenderer<Tardis> {
         return super.getGeoModel();
     }
 
-
     @Override
     public boolean shouldRender(Tardis entity, Frustum frustum, double x, double y, double z) {
         return true;
     }
-
-    
-
-    
-    
-
 }

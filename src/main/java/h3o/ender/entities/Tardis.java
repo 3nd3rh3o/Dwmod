@@ -34,11 +34,8 @@ import net.minecraft.world.World;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.animation.AnimatableManager.ControllerRegistrar;
-import software.bernie.geckolib.core.animation.AnimationController.State;
-import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class Tardis extends LivingEntity implements GeoEntity {
@@ -55,6 +52,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
 
     private static final TrackedData<Byte> MOB_FLAGS = DataTracker.registerData(Tardis.class,
             TrackedDataHandlerRegistry.BYTE);
+    private static final TrackedData<Boolean> DOORS = DataTracker.registerData(Tardis.class, TrackedDataHandlerRegistry.BOOLEAN);
 
     private boolean leftOpen = false;
     private boolean rightOpen = false;
@@ -99,6 +97,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
 
             internalScheme.add(new Room(id, size, rot, vId, name));
         });
+        getDataTracker().set(DOORS, getDoorsOpenned());
         super.readCustomDataFromNbt(nbt);
 
     }
@@ -200,8 +199,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
             if (relPos.getX() <= 0.48d && relPos.getX() >= -0.48d && relPos.getZ() >= -0.499d) {
                 leftOpen = !leftOpen;
                 rightOpen = leftOpen;
-                this.updateAnim("right", rightOpen);
-                this.updateAnim("left", leftOpen);
+                getDataTracker().set(DOORS, getDoorsOpenned());
                 return ActionResult.SUCCESS;
             }
         }
@@ -222,14 +220,6 @@ public class Tardis extends LivingEntity implements GeoEntity {
         return ItemStack.EMPTY;
     }
 
-    private void updateAnim(String controllerName, boolean value) {
-        if (value) {
-            this.triggerAnim(controllerName, controllerName + "_open");
-        } else {
-            this.triggerAnim(controllerName, controllerName + "_close");
-        }
-    }
-
     @Override
     public Arm getMainArm() {
         return this.isLeftHanded() ? Arm.LEFT : Arm.RIGHT;
@@ -242,38 +232,28 @@ public class Tardis extends LivingEntity implements GeoEntity {
     protected void initDataTracker() {
         super.initDataTracker();
         this.dataTracker.startTracking(MOB_FLAGS, (byte) 0);
+        this.dataTracker.startTracking(DOORS, (boolean) false);
     }
 
     // FIXME anim not launched on world load
     @Override
     public void registerControllers(ControllerRegistrar controllers) {
+
         controllers
-                .add(new AnimationController<>(this, "left", this::commonAnimController)
-                        .triggerableAnim("left_open", LEFT_OPEN)
-                        .triggerableAnim("left_close", LEFT_CLOSE))
-                .add(new AnimationController<>(this, "right", this::commonAnimController)
-                        .triggerableAnim("right_open", RIGHT_OPEN)
-                        .triggerableAnim("right_close", RIGHT_CLOSE));
-
-    }
-
-    protected <E extends Tardis> PlayState commonAnimController(final AnimationState<E> event) {
-        if (event.getController().getAnimationState().equals(State.TRANSITIONING)) {
-            event.setControllerSpeed(10f);
-        }
-        if (event.getController().getName() == "left" && leftOpen) {
-            this.triggerAnim("left", "left_open");
-        }
-        if (event.getController().getName() == "right" && rightOpen) {
-            this.triggerAnim("right", "right_open");
-        }
-        if (event.getController().getAnimationState().equals(State.TRANSITIONING)) {
-            event.setControllerSpeed(1f);
-        }
-        if (event.getController().getAnimationState().equals(State.TRANSITIONING)) {
-            return PlayState.CONTINUE;
-        }
-        return PlayState.STOP;
+                .add(new AnimationController<>(this, "left", state -> {
+                    if (getDataTracker().get(DOORS)) {
+                        return state.setAndContinue(LEFT_OPEN);
+                    } else {
+                        return state.setAndContinue(LEFT_CLOSE);
+                    }
+                }))
+                .add(new AnimationController<>(this, "right", state -> {
+                    if (getDataTracker().get(DOORS)) {
+                        return state.setAndContinue(RIGHT_OPEN);
+                    } else {
+                        return state.setAndContinue(RIGHT_CLOSE);
+                    }
+                }));
     }
 
     @Override
@@ -322,7 +302,8 @@ public class Tardis extends LivingEntity implements GeoEntity {
 
     public void purgeIntPortals() {
         internalScheme.forEach(room -> {
-            DimensionalStorageHelper.removeRoom(index, room.getId(), room.getSize(), getServer().getWorld(RegisterDimensions.VORTEX));
+            DimensionalStorageHelper.removeRoom(index, room.getId(), room.getSize(),
+                    getServer().getWorld(RegisterDimensions.VORTEX));
         });
     }
 

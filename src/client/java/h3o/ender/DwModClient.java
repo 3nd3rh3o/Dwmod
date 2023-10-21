@@ -21,5 +21,6 @@ public class DwModClient implements ClientModInitializer {
         EntityRendererRegistry.register(RegisterEntities.TARDIS_PORTAL, TardisPortalRenderer::new);
         EntityRendererRegistry.register(RegisterEntities.TARDIS_INT_PORTAL, TardisIntPortalRenderer::new);
         BlockRenderLayerMap.INSTANCE.putBlock(RegisterBlocks.TARDIS_DEFAULT_HITBOX, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(RegisterBlocks.TARDIS_EXT_DOOR_DEFAULT_HITBOX, RenderLayer.getTranslucent());
     }
 }

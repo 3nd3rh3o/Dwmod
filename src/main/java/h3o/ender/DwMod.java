@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.util.Identifier;
 import qouteall.q_misc_util.LifecycleHack;
-
+import software.bernie.geckolib.network.GeckoLibNetwork;
 import java.util.ArrayList;
 
 import org.slf4j.Logger;
@@ -39,8 +39,10 @@ public class DwMod implements ModInitializer {
 		FabricDefaultAttributeRegistry.register(RegisterEntities.TARDIS_EXT_DOOR_DEFAULT, TardisDefaultExtDoor.createLivingAttributes());
 		RegisterBlocks.register();
 
+
 		ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
 			if (!world.isClient && entity.getClass().equals(Tardis.class)) {
+				GeckoLibNetwork.registerSyncedAnimatable((Tardis)entity);
 				if (((Tardis) entity).getIndex() == -1) {
 					StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(world.getServer());
 					if (serverState.tardis == null) {

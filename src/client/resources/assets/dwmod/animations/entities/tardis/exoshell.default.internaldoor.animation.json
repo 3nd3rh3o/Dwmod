@@ -72,6 +72,78 @@
 					}
 				}
 			}
+		},
+		"animation.exoshell.default.int.left.open": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.5,
+			"override_previous_animation": true,
+			"bones": {
+				"leftDoor": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.5": {
+							"vector": [0, -90, 0],
+							"easing": "easeInCubic"
+						}
+					}
+				}
+			}
+		},
+		"animation.exoshell.default.int.right.open": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.5,
+			"override_previous_animation": true,
+			"bones": {
+				"rightDoor": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.5": {
+							"vector": [0, 90, 0],
+							"easing": "easeInCubic"
+						}
+					}
+				}
+			}
+		},
+		"animation.exoshell.default.int.left.close": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.5,
+			"override_previous_animation": true,
+			"bones": {
+				"leftDoor": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, -90, 0]
+						},
+						"0.5": {
+							"vector": [0, 0, 0],
+							"easing": "easeInCubic"
+						}
+					}
+				}
+			}
+		},
+		"animation.exoshell.default.int.right.close": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.5,
+			"override_previous_animation": true,
+			"bones": {
+				"rightDoor": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 90, 0]
+						},
+						"0.5": {
+							"vector": [0, 0, 0],
+							"easing": "easeInCubic"
+						}
+					}
+				}
+			}
 		}
 	}
 }

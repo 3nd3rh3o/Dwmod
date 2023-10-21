@@ -30,20 +30,27 @@ public class TardisInternalPortal extends Portal {
     @Override
     public void tick() {
         super.tick();
-        if (!getWorld().isClient() && this.tardis != null) {
-            if (this.getDestPos() != tardis.getPos().add(0, 1, 0.5)
-                    || getDestDim() != tardis.getWorld().getRegistryKey()) {
-                this.setDestinationDimension(tardis.getWorld().getRegistryKey());
-                this.setDestination(tardis.getPos().add(0, 1, 0.5));
-                reloadAndSyncToClientNextTick();
-            }
-            if (getWorld().getEntitiesByClass(TardisDefaultExtDoor.class, this.getBoundingBox().expand(1), entity -> true).isEmpty()) {
-                TardisDefaultExtDoor extDoor;
-                extDoor = TardisDefaultExtDoor.entityType.create(getOriginWorld());
-                extDoor.refreshPositionAndAngles(getPos().x, getPos().y-1, getPos().z, extDoor.getYaw(), extDoor.getPitch());
-                extDoor.getWorld().spawnEntity(extDoor);
+        if (!getWorld().isClient()) {
+            if (this.tardis != null) {
+                if (this.getDestPos() != tardis.getPos().add(0, 1, 0.5)
+                        || getDestDim() != tardis.getWorld().getRegistryKey()) {
+                    this.setDestinationDimension(tardis.getWorld().getRegistryKey());
+                    this.setDestination(tardis.getPos().add(0, 1, 0.5));
+                    reloadAndSyncToClientNextTick();
+                }
+                if (getWorld()
+                        .getEntitiesByClass(TardisDefaultExtDoor.class, this.getBoundingBox().expand(1), entity -> true)
+                        .isEmpty()) {
+                    TardisDefaultExtDoor extDoor;
+                    extDoor = TardisDefaultExtDoor.entityType.create(getOriginWorld());
+                    extDoor.refreshPositionAndAngles(getPos().x, getPos().y - 1, getPos().z, 0, 0);
+                    extDoor.getWorld().spawnEntity(extDoor);
+                }
+            } else {
+                this.tardis = initTardis();
             }
         }
+
     }
 
     public void setTardis(Tardis tardis2) {

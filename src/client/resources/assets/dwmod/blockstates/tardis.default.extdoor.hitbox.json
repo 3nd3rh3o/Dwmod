@@ -1,0 +1,9 @@
+{
+    "variants" : {
+        "openned=false,upper=false" : { "model" : "dwmod:block/tardis.default.extdoor.hitbox.down.closed"},
+        "openned=true,upper=false" : { "model" : "dwmod:block/tardis.default.extdoor.hitbox.down.openned"},
+        "openned=false,upper=true" : { "model" : "dwmod:block/tardis.default.extdoor.hitbox.up.closed"},
+        "openned=true,upper=true" : { "model" : "dwmod:block/tardis.default.extdoor.hitbox.up.openned"}
+    }
+}
+
