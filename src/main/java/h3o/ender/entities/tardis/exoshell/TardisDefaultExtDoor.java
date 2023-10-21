@@ -23,7 +23,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class TardisDefaultExtDoor extends TardisExtDoor implements GeoEntity {
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
-    private Tardis tardis = initTardis();
+    private Tardis tardis;
     private static final TrackedData<Boolean> DOORS = DataTracker.registerData(TardisDefaultExtDoor.class, TrackedDataHandlerRegistry.BOOLEAN);
     private boolean oldDoors;
     private static final RawAnimation LEFT_OPEN = RawAnimation.begin()

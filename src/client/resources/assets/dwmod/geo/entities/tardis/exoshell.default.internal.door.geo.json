@@ -26,17 +26,17 @@
 				{
 					"name": "leftDoor",
 					"parent": "body",
-					"pivot": [6.5, 16, -7],
+					"pivot": [6.5, 16, -1],
 					"cubes": [
-						{"origin": [0, 1, -8], "size": [7, 30, 1], "uv": [68, 31]}
+						{"origin": [0, 1, -2], "size": [7, 30, 1], "uv": [68, 31]}
 					]
 				},
 				{
 					"name": "rightDoor",
 					"parent": "body",
-					"pivot": [-6.5, 16, -7],
+					"pivot": [-6.5, 16, -1],
 					"cubes": [
-						{"origin": [-7, 1, -8], "size": [7, 30, 1], "uv": [68, 62]}
+						{"origin": [-7, 1, -2], "size": [7, 30, 1], "uv": [68, 62]}
 					]
 				}
 			]

@@ -16,7 +16,7 @@ import qouteall.imm_ptl.core.portal.Portal;
 
 public class TardisInternalPortal extends Portal {
 
-    private Tardis tardis = initTardis();;
+    private Tardis tardis;
 
     public static EntityType<TardisInternalPortal> entityType = FabricEntityTypeBuilder
             .create(SpawnGroup.MISC, TardisInternalPortal::new)
@@ -64,7 +64,7 @@ public class TardisInternalPortal extends Portal {
                         Box.of(new Vec3d(0, 0, 0), World.HORIZONTAL_LIMIT * 2, World.MAX_Y - World.MIN_Y,
                                 World.HORIZONTAL_LIMIT * 2),
                         (entities) -> ((Tardis) entities).getIndex() == DimensionalStorageHelper
-                                .getIndex(getBlockPos()));
+                                .getIndex(getOriginPos()));
                 if (trds.size() != 0) {
                     return trds.get(0);
                 }

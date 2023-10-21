@@ -99,5 +99,4 @@ public class TardisDefaultExtDoorHitBox extends AbstractGlassBlock {
         }
         return null;
     }
-
 }

@@ -41,7 +41,7 @@ public class DwMod implements ModInitializer {
 
 
 		ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
-			if (!world.isClient && entity.getClass().equals(Tardis.class)) {
+			if (!world.isClient() && entity.getClass().equals(Tardis.class)) {
 				GeckoLibNetwork.registerSyncedAnimatable((Tardis)entity);
 				if (((Tardis) entity).getIndex() == -1) {
 					StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(world.getServer());
@@ -67,12 +67,12 @@ public class DwMod implements ModInitializer {
 			if (entity instanceof Tardis && entity.isRemoved()) {
 				Tardis ent = (Tardis) entity;
 				ent.purgeIntPortals();
-				if (!world.isClient) {
+				if (!world.isClient()) {
 					StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(world.getServer());
-					if (serverState.tardis == null) {
-						serverState.tardis = new ArrayList<>();
+					if (((Tardis)entity).getIndex() != -1) {
+						serverState.tardis.removeIf(val -> val.equals(ent.getIndex()));
+						DwMod.LOGGER.debug(serverState.tardis.toString());
 					}
-					serverState.tardis.remove(ent.getIndex());
 				}
 			}
 

@@ -285,4 +285,11 @@ public class DimensionalStorageHelper {
             }
         }
     }
+
+    public static int getIndex(Vec3d originPos) {
+        int x = (int) Math.round(originPos.getX());
+        int y = (int) Math.round(originPos.getY());
+        int z = (int) Math.round(originPos.getZ());
+        return getIndex(new BlockPos(x, y, z));
+    }
 }
