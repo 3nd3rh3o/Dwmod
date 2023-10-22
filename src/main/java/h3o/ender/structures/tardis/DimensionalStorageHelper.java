@@ -238,9 +238,6 @@ public class DimensionalStorageHelper {
     private static void summonPortals(ServerWorld vortex, Name name, BlockPos origin, Tardis tardis) {
         switch (name) {
             case DEFAULT_CONSOLE_ROOM -> {
-
-                // TODO in param pass the exoshell and give it to portal entity, portal entity
-                // will update it's dest at each tick!
                 TardisInternalPortal portal;
                 portal = TardisInternalPortal.entityType.create(vortex);
                 portal.setTardis(tardis);
@@ -249,8 +246,6 @@ public class DimensionalStorageHelper {
                 portal.setDestination(tardis.getPos().add(0, 1, 0.5));
                 portal.setOrientationAndSize(new Vec3d(-1, 0, 0), new Vec3d(0, 1, 0), 1, 2);
                 portal.getWorld().spawnEntity(portal);
-
-                
             }
         }
     }

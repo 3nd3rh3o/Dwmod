@@ -1,0 +1,37 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [64, 64],
+	"textures": {
+		"0": "dwmod:block/gray_print",
+		"particle": "dwmod:block/gray_print"
+	},
+	"elements": [
+		{
+			"from": [2, 0.8, 2],
+			"to": [14, 18, 4],
+			"rotation": {"angle": 22.5, "axis": "x", "origin": [0, 0, 0]},
+			"faces": {
+				"north": {"uv": [1, 4.75, 7, 13.25], "texture": "#0"},
+				"east": {"uv": [0, 4.25, 0.5, 8.5], "texture": "#0"},
+				"south": {"uv": [3, 0, 6, 4.25], "texture": "#0"},
+				"west": {"uv": [0.5, 4.25, 1, 8.5], "texture": "#0"},
+				"up": {"uv": [4, 4.75, 1, 4.25], "texture": "#0"},
+				"down": {"uv": [7, 4.25, 4, 4.75], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"ground": {
+			"translation": [0, 2, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"gui": {
+			"rotation": [0, -180, 0]
+		}
+	}
+}

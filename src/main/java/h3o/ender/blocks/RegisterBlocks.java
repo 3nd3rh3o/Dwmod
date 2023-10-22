@@ -3,6 +3,7 @@ package h3o.ender.blocks;
 import h3o.ender.DwMod;
 import h3o.ender.blocks.tardis.DefaultFloor;
 import h3o.ender.blocks.tardis.DefaultWallLamp;
+import h3o.ender.blocks.tardis.GrayPrint;
 import h3o.ender.blocks.tardis.TardisDefaultHitbox;
 import h3o.ender.blocks.tardis.exoshellIntDoor.TardisDefaultExtDoorHitBox;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -18,6 +19,7 @@ public class RegisterBlocks {
     public static final Block TARDIS_DEFAULT_WALL_LAMP = new DefaultWallLamp(FabricBlockSettings.create().strength(-1.0f).nonOpaque().luminance(13));
     public static final Block TARDIS_DEFAULT_HITBOX = new TardisDefaultHitbox(FabricBlockSettings.create().strength(-1.0f).nonOpaque());
     public static final Block TARDIS_EXT_DOOR_DEFAULT_HITBOX = new TardisDefaultExtDoorHitBox(FabricBlockSettings.create().strength(-1.0f).nonOpaque());
+    public static final Block GRAY_PRINT = new GrayPrint(FabricBlockSettings.create().strength(1f));
 
 
     public static void register() {
@@ -28,6 +30,8 @@ public class RegisterBlocks {
         Registry.register(Registries.BLOCK, new Identifier(DwMod.MODID, "tardis.default.extdoor.hitbox"), TARDIS_EXT_DOOR_DEFAULT_HITBOX);
         Registry.register(Registries.BLOCK, new Identifier(DwMod.MODID, "tardis.default.wall.lamp"), TARDIS_DEFAULT_WALL_LAMP);
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.default.wall.lamp"), new BlockItem(TARDIS_DEFAULT_WALL_LAMP, new FabricItemSettings()));
+        Registry.register(Registries.BLOCK, new Identifier(DwMod.MODID, "gray_print"), GRAY_PRINT);
+        Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "gray_print"), new BlockItem(GRAY_PRINT, new FabricItemSettings()));
     }
     
 }

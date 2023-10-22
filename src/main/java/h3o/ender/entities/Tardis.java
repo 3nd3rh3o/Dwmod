@@ -85,7 +85,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
         if (nbt.contains("Index")) {
             this.index = nbt.getInt("Index");
         }
-        NbtCompound room = nbt.getCompound("Room");
+        NbtCompound room = nbt.getCompound("InternalScheme");
         room.getKeys().forEach((key) -> {
             this.internalScheme = new ArrayList<>();
             NbtCompound tupple = room.getCompound(key);
@@ -99,7 +99,6 @@ public class Tardis extends LivingEntity implements GeoEntity {
         });
         getDataTracker().set(DOORS, getDoorsOpenned());
         super.readCustomDataFromNbt(nbt);
-
     }
 
     @Override
@@ -235,7 +234,6 @@ public class Tardis extends LivingEntity implements GeoEntity {
         this.dataTracker.startTracking(DOORS, (boolean) false);
     }
 
-    // FIXME anim not launched on world load
     @Override
     public void registerControllers(ControllerRegistrar controllers) {
 
@@ -289,7 +287,6 @@ public class Tardis extends LivingEntity implements GeoEntity {
     }
 
     public void structureInit() {
-        // TODO gen struct here
         if (!getWorld().isClient()) {
             internalScheme = new ArrayList<>();
             Room.Name name = Room.Name.DEFAULT_CONSOLE_ROOM;

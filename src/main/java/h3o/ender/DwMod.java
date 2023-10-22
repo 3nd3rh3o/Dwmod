@@ -75,7 +75,6 @@ public class DwMod implements ModInitializer {
 					}
 				}
 			}
-
 		});
 	}
 }

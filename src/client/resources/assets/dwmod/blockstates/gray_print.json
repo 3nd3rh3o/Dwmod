@@ -1,0 +1,8 @@
+{
+    "variants" : {
+        "facing=north" : { "model" : "dwmod:block/gray_print", "y" : 0},
+        "facing=east" : { "model" : "dwmod:block/gray_print", "y" : 90},
+        "facing=south" : { "model" : "dwmod:block/gray_print", "y" : 180},
+        "facing=west" : { "model" : "dwmod:block/gray_print", "y" : 270}
+    }
+}

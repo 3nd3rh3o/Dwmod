@@ -1,0 +1,16 @@
+{
+    "replace": false,
+    "values": [
+      "minecraft:desert",
+      "minecraft:plains",
+      "minecraft:sunflower_plains",
+      "minecraft:snowy_plains",
+      "minecraft:snowy_taiga",
+      "minecraft:jungle",
+      "minecraft:bamboo_jungle",
+      "minecraft:swamp",
+      "minecraft:mangrove_swamp",
+      "#minecraft:is_forest"
+    ]
+  }
+  
