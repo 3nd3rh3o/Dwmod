@@ -1,38 +1,41 @@
 {
-    "display": {
-      "icon": {
-        "item": "dwmod:tardis.default.wall.lamp"
-      },
-      "title": "DwMod",
-      "description": "Thank you for installing !",
-      "background": "dwmod:textures/block/tardis.default.wall.lamp.png",
-      "frame": "task",
-      "show_toast": true,
-      "announce_to_chat": true,
-      "hidden": false
+  "display": {
+    "icon": {
+      "item": "dwmod:tardis.default.wall.lamp"
     },
-    "criteria": {
-      "test": {
-        "trigger": "minecraft:tick",
-        "conditions": {
-          "player": [
-            {
-              "condition": "minecraft:entity_properties",
-              "entity": "this",
-              "predicate": {
-                "location": {
-                  "dimension": "minecraft:overworld"
-                }
+    "title": "DwMod",
+    "description": "Thank you for installing !",
+    "background": "dwmod:textures/block/tardis.default.wall.lamp.png",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "installed": {
+      "trigger": "minecraft:tick",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "dimension": "minecraft:overworld"
               }
             }
-          ]
-        }
+          }
+        ]
       }
-    },
-    "requirements": [
-      [
-        "test"
-      ]
+    }
+  },
+  "requirements": [
+    [
+      "installed"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "dwmod:crystal_resonator"
     ]
   }
-  
+}

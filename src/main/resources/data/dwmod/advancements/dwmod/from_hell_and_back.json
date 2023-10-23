@@ -1,0 +1,40 @@
+{
+  "display": {
+    "icon": {
+      "item": "dwmod:crystal_resonator"
+    },
+    "title": "From hell and back...",
+    "description": "Go to the nether, and gather some quartz. then craft a crystal resonator",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "dwmod:dwmod/root",
+  "criteria": {
+    "crystal_resonator": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "nbt": "{Inventory:[{id:\"dwmod:crystal_resonator\"}]}"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "crystal_resonator"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "dwmod:tool_base"
+    ]
+  }
+}

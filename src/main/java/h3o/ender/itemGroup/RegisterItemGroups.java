@@ -13,13 +13,21 @@ import net.minecraft.util.Identifier;
 public class RegisterItemGroups {
     private static final ItemGroup TARDIS_BUILDING_BLOCK_GROUP = FabricItemGroup.builder()
             .icon(() -> new ItemStack(RegisterItems.TARDIS_DEFAULT_WALL_LAMP))
-            .displayName(Text.of("Tardis building block")).entries((context, entries) -> {
+            .displayName(Text.of("DwMod - Tardis building block")).entries((context, entries) -> {
                 entries.add(RegisterItems.TARDIS_DEFAULT_WALL_LAMP);
                 entries.add(RegisterItems.TARDIS_DEFAULT_FLOOR);
+            }).build();
+    private static final ItemGroup COMPONENT = FabricItemGroup.builder()
+            .icon(() -> new ItemStack(RegisterItems.CRYSTAL_RESONATOR))
+            .displayName(Text.of("DwMod - Components")).entries((context, entries) -> {
+                entries.add(RegisterItems.CRYSTAL_RESONATOR);
+                entries.add(RegisterItems.GRAY_PRING);
+                entries.add(RegisterItems.TOOL_BASE);
             }).build();
 
     public static void register() {
         Registry.register(Registries.ITEM_GROUP, new Identifier(DwMod.MODID, "tardis.building.block"),
                 TARDIS_BUILDING_BLOCK_GROUP);
+        Registry.register(Registries.ITEM_GROUP, new Identifier(DwMod.MODID, "components"), COMPONENT);
     }
 }

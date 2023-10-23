@@ -1,0 +1,35 @@
+{
+    "display": {
+        "icon": {
+            "item": "dwmod:tool_base"
+        },
+        "title": "It's missing something important, no?",
+        "description": "Craft a Tool base. It serve as a grip and as a power source for certain components, but useless alone",
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "parent": "dwmod:dwmod/from_hell_and_back",
+    "criteria": {
+        "tool_base": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "nbt": "{Inventory:[{id:\"dwmod:tool_base\"}]}"
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "tool_base"
+        ]
+    ]
+}

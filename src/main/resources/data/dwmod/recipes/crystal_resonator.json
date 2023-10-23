@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " AB",
+        "ACA",
+        "DA "
+    ],
+    "key": {
+        "A": {
+            "item": "minecraft:copper_ingot"
+        },
+        "B": {
+            "item": "minecraft:quartz"
+        },
+        "C": {
+            "item": "minecraft:emerald"
+        },
+        "D": {
+            "item": "minecraft:iron_ingot"
+        }
+    },
+    "result": {
+        "item": "dwmod:crystal_resonator"
+    }
+}

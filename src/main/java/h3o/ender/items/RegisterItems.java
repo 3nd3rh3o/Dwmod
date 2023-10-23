@@ -13,10 +13,14 @@ public class RegisterItems {
     public static final Item TARDIS_DEFAULT_WALL_LAMP = new BlockItem(RegisterBlocks.TARDIS_DEFAULT_WALL_LAMP, new FabricItemSettings());
     public static final Item TARDIS_DEFAULT_FLOOR = new BlockItem(RegisterBlocks.TARDIS_DEFAULT_FLOOR, new FabricItemSettings());
     public static final Item GRAY_PRING = new BlockItem(RegisterBlocks.GRAY_PRINT, new FabricItemSettings());
+    public static final Item CRYSTAL_RESONATOR = new Item(new FabricItemSettings());
+    public static final Item TOOL_BASE = new Item(new FabricItemSettings());
 
     public static void register() {
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.default.wall.lamp"), TARDIS_DEFAULT_WALL_LAMP);
-        Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.default.floor"), RegisterItems.TARDIS_DEFAULT_FLOOR);
-        Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "gray_print"), RegisterItems.GRAY_PRING);
+        Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.default.floor"), TARDIS_DEFAULT_FLOOR);
+        Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "gray_print"), GRAY_PRING);
+        Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "crystal_resonator"), CRYSTAL_RESONATOR);
+        Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tool_base"), TOOL_BASE);
     }
 }
