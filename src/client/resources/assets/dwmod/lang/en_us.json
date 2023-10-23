@@ -3,5 +3,6 @@
     "block.dwmod.tardis.default.wall.lamp" : "Wall lamp",
     "block.dwmod.tardis.default.floor" : "Floor",
     "block.dwmod.gray_print" : "Gray print",
-    "item.dwmod.tool_base" : "Tool base"
+    "item.dwmod.tool_base" : "Tool base",
+    "item.dwmod.frequency_detector" : "Frequency detector"
 }

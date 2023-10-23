@@ -24,10 +24,16 @@ public class RegisterItemGroups {
                 entries.add(RegisterItems.GRAY_PRING);
                 entries.add(RegisterItems.TOOL_BASE);
             }).build();
+    private static final ItemGroup TOOLS = FabricItemGroup.builder()
+            .icon(() -> new ItemStack(RegisterItems.FREQUENCY_DETECTOR))
+            .displayName(Text.of("DwMod - Tools")).entries((context, entries) -> {
+                entries.add(RegisterItems.FREQUENCY_DETECTOR);
+            }).build();
 
     public static void register() {
         Registry.register(Registries.ITEM_GROUP, new Identifier(DwMod.MODID, "tardis.building.block"),
                 TARDIS_BUILDING_BLOCK_GROUP);
         Registry.register(Registries.ITEM_GROUP, new Identifier(DwMod.MODID, "components"), COMPONENT);
+        Registry.register(Registries.ITEM_GROUP, new Identifier(DwMod.MODID, "tools"), TOOLS);
     }
 }

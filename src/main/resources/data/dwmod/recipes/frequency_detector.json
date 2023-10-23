@@ -1,0 +1,14 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "dwmod:tool_base"
+        },
+        {
+            "item": "dwmod:crystal_resonator"
+        }
+    ],
+    "result": {
+        "item": "dwmod:frequency_detector"
+    }
+}

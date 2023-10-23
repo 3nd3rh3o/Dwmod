@@ -15,6 +15,7 @@ public class RegisterItems {
     public static final Item GRAY_PRING = new BlockItem(RegisterBlocks.GRAY_PRINT, new FabricItemSettings());
     public static final Item CRYSTAL_RESONATOR = new Item(new FabricItemSettings());
     public static final Item TOOL_BASE = new Item(new FabricItemSettings());
+    public static final Item FREQUENCY_DETECTOR = new FrequencyDetector(new FabricItemSettings());
 
     public static void register() {
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.default.wall.lamp"), TARDIS_DEFAULT_WALL_LAMP);
@@ -22,5 +23,6 @@ public class RegisterItems {
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "gray_print"), GRAY_PRING);
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "crystal_resonator"), CRYSTAL_RESONATOR);
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tool_base"), TOOL_BASE);
+        Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "frequency_detector"), FREQUENCY_DETECTOR);
     }
 }
