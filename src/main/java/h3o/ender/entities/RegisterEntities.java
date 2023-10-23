@@ -2,6 +2,7 @@ package h3o.ender.entities;
 
 import h3o.ender.DwMod;
 import h3o.ender.entities.tardis.exoshell.TardisDefaultExtDoor;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -18,4 +19,9 @@ public class RegisterEntities {
     public static final EntityType<TardisDefaultExtDoor> TARDIS_EXT_DOOR_DEFAULT = Registry.register(Registries.ENTITY_TYPE, new Identifier(DwMod.MODID, "tardis_default_ext_door"), TardisDefaultExtDoor.entityType);
     public static final EntityType<TardisPortal> TARDIS_PORTAL = Registry.register(Registries.ENTITY_TYPE, new Identifier(DwMod.MODID, "tardis_portal"), TardisPortal.entityType);
     public static final EntityType<TardisInternalPortal> TARDIS_INT_PORTAL = Registry.register(Registries.ENTITY_TYPE, new Identifier(DwMod.MODID, "tardis_internal_portal"), TardisInternalPortal.entityType);
+
+    public static void register() {
+        FabricDefaultAttributeRegistry.register(RegisterEntities.TARDIS, Tardis.createLivingAttributes());
+		FabricDefaultAttributeRegistry.register(RegisterEntities.TARDIS_EXT_DOOR_DEFAULT, TardisDefaultExtDoor.createLivingAttributes());
+    }
 }

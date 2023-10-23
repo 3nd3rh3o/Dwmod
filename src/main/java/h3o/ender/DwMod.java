@@ -2,7 +2,6 @@ package h3o.ender;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.util.Identifier;
 import qouteall.q_misc_util.LifecycleHack;
 import software.bernie.geckolib.network.GeckoLibNetwork;
@@ -14,13 +13,11 @@ import org.slf4j.LoggerFactory;
 import h3o.ender.blocks.RegisterBlocks;
 import h3o.ender.entities.RegisterEntities;
 import h3o.ender.entities.Tardis;
-import h3o.ender.entities.tardis.exoshell.TardisDefaultExtDoor;
+import h3o.ender.itemGroup.RegisterItemGroups;
+import h3o.ender.items.RegisterItems;
 import h3o.ender.persistantState.StateSaverAndLoader;
 
 public class DwMod implements ModInitializer {
-	// This logger is used to write text to the console and the log file.
-	// It is considered best practice to use your mod id as the logger's name.
-	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final String MODID = "dwmod";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 
@@ -28,16 +25,14 @@ public class DwMod implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
 
 		LOGGER.info("DwMod init!");
 		LifecycleHack.markNamespaceStable("dwmod");
 
-		FabricDefaultAttributeRegistry.register(RegisterEntities.TARDIS, Tardis.createLivingAttributes());
-		FabricDefaultAttributeRegistry.register(RegisterEntities.TARDIS_EXT_DOOR_DEFAULT, TardisDefaultExtDoor.createLivingAttributes());
+		RegisterEntities.register();
 		RegisterBlocks.register();
+		RegisterItems.register();
+		RegisterItemGroups.register();
 
 
 		ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
