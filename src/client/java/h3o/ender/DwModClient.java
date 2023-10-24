@@ -6,9 +6,12 @@ import h3o.ender.entities.renderer.TardisDefaultExtDoorRenderer;
 import h3o.ender.entities.renderer.TardisIntPortalRenderer;
 import h3o.ender.entities.renderer.TardisPortalRenderer;
 import h3o.ender.entities.renderer.TardisRenderer;
+import h3o.ender.screen.FrequencyDetectorScreen;
+import h3o.ender.screenHandler.RegisterScreenHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
 
 public class DwModClient implements ClientModInitializer {
@@ -22,5 +25,6 @@ public class DwModClient implements ClientModInitializer {
         EntityRendererRegistry.register(RegisterEntities.TARDIS_INT_PORTAL, TardisIntPortalRenderer::new);
         BlockRenderLayerMap.INSTANCE.putBlock(RegisterBlocks.TARDIS_DEFAULT_HITBOX, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(RegisterBlocks.TARDIS_EXT_DOOR_DEFAULT_HITBOX, RenderLayer.getTranslucent());
+        HandledScreens.register(RegisterScreenHandler.FREQUENCY_DETECTOR_SCREEN_HANDLER, FrequencyDetectorScreen::new);
     }
 }

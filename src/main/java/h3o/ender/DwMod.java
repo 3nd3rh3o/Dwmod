@@ -1,5 +1,6 @@
 package h3o.ender;
 
+
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.minecraft.util.Identifier;
@@ -16,6 +17,7 @@ import h3o.ender.entities.Tardis;
 import h3o.ender.itemGroup.RegisterItemGroups;
 import h3o.ender.items.RegisterItems;
 import h3o.ender.persistantState.StateSaverAndLoader;
+import h3o.ender.screenHandler.RegisterScreenHandler;
 
 public class DwMod implements ModInitializer {
 	public static final String MODID = "dwmod";
@@ -29,10 +31,12 @@ public class DwMod implements ModInitializer {
 		LOGGER.info("DwMod init!");
 		LifecycleHack.markNamespaceStable("dwmod");
 
+
 		RegisterEntities.register();
 		RegisterBlocks.register();
 		RegisterItems.register();
 		RegisterItemGroups.register();
+		RegisterScreenHandler.register();
 
 
 		ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
