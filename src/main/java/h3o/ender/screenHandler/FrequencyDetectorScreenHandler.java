@@ -31,5 +31,9 @@ public class FrequencyDetectorScreenHandler extends ScreenHandler {
     @Override
     public boolean canUse(PlayerEntity player) {
         return this.inventory.canPlayerUse(player);
+    }
+
+    public String getDimKey() {
+        return this.dimKey;
     }    
 }

@@ -16,6 +16,7 @@ import h3o.ender.entities.RegisterEntities;
 import h3o.ender.entities.Tardis;
 import h3o.ender.itemGroup.RegisterItemGroups;
 import h3o.ender.items.RegisterItems;
+import h3o.ender.networking.ModMessages;
 import h3o.ender.persistantState.StateSaverAndLoader;
 import h3o.ender.screenHandler.RegisterScreenHandler;
 
@@ -37,6 +38,7 @@ public class DwMod implements ModInitializer {
 		RegisterItems.register();
 		RegisterItemGroups.register();
 		RegisterScreenHandler.register();
+		ModMessages.registerC2Spackets();
 
 
 		ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {

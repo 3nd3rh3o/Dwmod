@@ -1,0 +1,33 @@
+{
+    "display": {
+        "icon": {
+            "item": "dwmod:gray_print"
+        },
+        "title": "Carve a world in stone",
+        "description": "Find a gray print. It contain the base code of a TARDIS, could be usefull no?",
+        "frame": "goal",
+        "show_toast": true,
+        "announce_to_chat": true
+    },
+    "parent": "dwmod:dwmod/it_also_receive_radio",
+    "criteria": {
+        "gallifreyan_beacon": {
+            "trigger": "minecraft:location",
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:location_check",
+                        "predicate": {
+                            "structure": "dwmod:gallifreyan_beacon"
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "gallifreyan_beacon"
+        ]
+    ]
+}
