@@ -44,16 +44,14 @@ public class FrequencyDetectorScreen extends HandledScreen<FrequencyDetectorScre
                 ClientPlayNetworking.send(ModMessages.FREQUENCY_DETECTOR_SETTING_ID,
                         PacketByteBufs.create().writeInt(struct.indexOf(struc)));
             }).dimensions(imageStartx + 7, imageStarty + 7 + 17 * struct.indexOf(struc), backgroundWidth - 16,
-                    17 * struct.indexOf(struc))
+                    17 + 17 * struct.indexOf(struc))
                     .build());
-
         }
         button.forEach(but -> addDrawableChild(but));
     }
 
     @Override
     protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
-
     }
 
     @Override

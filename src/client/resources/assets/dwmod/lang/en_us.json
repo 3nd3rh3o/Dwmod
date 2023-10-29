@@ -4,5 +4,6 @@
     "block.dwmod.tardis.default.floor" : "Floor",
     "block.dwmod.gray_print" : "Gray print",
     "item.dwmod.tool_base" : "Tool base",
-    "item.dwmod.frequency_detector" : "Frequency detector"
+    "item.dwmod.frequency_detector" : "Frequency detector",
+    "item.dwmod.protyon_unit" : "Protyon unit"
 }

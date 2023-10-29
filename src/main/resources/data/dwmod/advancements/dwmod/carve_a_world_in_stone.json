@@ -29,5 +29,10 @@
         [
             "gallifreyan_beacon"
         ]
-    ]
+    ],
+    "rewards": {
+        "recipes": [
+            "dwmod:protyon_unit"
+        ]
+    }
 }
