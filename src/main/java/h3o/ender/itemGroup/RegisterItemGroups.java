@@ -20,9 +20,10 @@ public class RegisterItemGroups {
     private static final ItemGroup COMPONENT = FabricItemGroup.builder()
             .icon(() -> new ItemStack(RegisterItems.CRYSTAL_RESONATOR))
             .displayName(Text.of("DwMod - Components")).entries((context, entries) -> {
-                entries.add(RegisterItems.CRYSTAL_RESONATOR);
+                entries.add(RegisterItems.PROTYON_UNIT);
                 entries.add(RegisterItems.GRAY_PRING);
                 entries.add(RegisterItems.TOOL_BASE);
+                entries.add(RegisterItems.CRYSTAL_RESONATOR);
             }).build();
     private static final ItemGroup TOOLS = FabricItemGroup.builder()
             .icon(() -> new ItemStack(RegisterItems.FREQUENCY_DETECTOR))

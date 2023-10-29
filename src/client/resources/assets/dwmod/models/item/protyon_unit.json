@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:item/handheld",
-  "textures": {
-    "layer0": "dwmod:item/protyon_unit"
-  }
+    "parent": "minecraft:item/handheld",
+    "textures": {
+      "layer0": "dwmod:item/protyon_unit"
+    }
 }
