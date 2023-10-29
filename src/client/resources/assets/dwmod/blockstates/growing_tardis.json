@@ -1,8 +1,8 @@
 {
     "variants" : {
-        "facing=north" : { "model" : "dwmod:block/growing_tardis", "y" : 0},
-        "facing=east" : { "model" : "dwmod:block/growing_tardis", "y" : 90},
-        "facing=south" : { "model" : "dwmod:block/growing_tardis", "y" : 180},
-        "facing=west" : { "model" : "dwmod:block/growing_tardis", "y" : 270}
+        "facing=north,age=0" : { "model" : "dwmod:block/growing_tardis/growing_tardis_0", "y" : 0},
+        "facing=east,age=0" : { "model" : "dwmod:block/growing_tardis/growing_tardis_0", "y" : 90},
+        "facing=south,age=0" : { "model" : "dwmod:block/growing_tardis/growing_tardis_0", "y" : 180},
+        "facing=west,age=0" : { "model" : "dwmod:block/growing_tardis/growing_tardis_0", "y" : 270}
     }
 }

@@ -1,7 +1,6 @@
 package h3o.ender.items;
 
 import h3o.ender.blocks.RegisterBlocks;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
@@ -11,6 +10,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class ProtyonUnit extends Item {
+
+
+
+    public ProtyonUnit(Settings settings) {
+        super(settings);
+    }
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
@@ -24,10 +29,6 @@ public class ProtyonUnit extends Item {
             return ActionResult.CONSUME;
         }
         return ActionResult.PASS;
-    }
-
-    public ProtyonUnit(Settings settings) {
-        super(settings);
     }
 
 }
