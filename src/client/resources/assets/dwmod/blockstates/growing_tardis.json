@@ -1,0 +1,8 @@
+{
+    "variants" : {
+        "facing=north" : { "model" : "dwmod:block/growing_tardis", "y" : 0},
+        "facing=east" : { "model" : "dwmod:block/growing_tardis", "y" : 90},
+        "facing=south" : { "model" : "dwmod:block/growing_tardis", "y" : 180},
+        "facing=west" : { "model" : "dwmod:block/growing_tardis", "y" : 270}
+    }
+}

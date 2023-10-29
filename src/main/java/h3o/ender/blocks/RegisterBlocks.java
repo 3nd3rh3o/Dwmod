@@ -18,6 +18,7 @@ public class RegisterBlocks {
     public static final Block TARDIS_DEFAULT_HITBOX = new TardisDefaultHitbox(FabricBlockSettings.create().strength(-1.0f).nonOpaque());
     public static final Block TARDIS_EXT_DOOR_DEFAULT_HITBOX = new TardisDefaultExtDoorHitBox(FabricBlockSettings.create().strength(-1.0f).nonOpaque());
     public static final Block GRAY_PRINT = new GrayPrint(FabricBlockSettings.create().strength(1f));
+    public static final Block GROWING_TARDIS = new GrowingTardis(FabricBlockSettings.create().strength(-1f));
 
 
     public static void register() {
@@ -27,6 +28,7 @@ public class RegisterBlocks {
         Registry.register(Registries.BLOCK, new Identifier(DwMod.MODID, "tardis.default.extdoor.hitbox"), TARDIS_EXT_DOOR_DEFAULT_HITBOX);
         Registry.register(Registries.BLOCK, new Identifier(DwMod.MODID, "tardis.default.wall.lamp"), TARDIS_DEFAULT_WALL_LAMP);
         Registry.register(Registries.BLOCK, new Identifier(DwMod.MODID, "gray_print"), GRAY_PRINT);
+        Registry.register(Registries.BLOCK, new Identifier(DwMod.MODID, "growing_tardis"), GROWING_TARDIS);
     }
     
 }
