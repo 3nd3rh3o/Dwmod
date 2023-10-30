@@ -1,0 +1,9 @@
+{
+    "type": "minecraft:smelting",
+    "ingredient": {
+        "item": "dwmod:raw_exitonic_circuit"
+    },
+    "result": "dwmod:exitonic_circuit",
+    "experience": 2,
+    "cookingtime": 200
+}
