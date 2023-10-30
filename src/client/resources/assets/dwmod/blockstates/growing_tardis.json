@@ -15,6 +15,14 @@
         "facing=north,age=3" : { "model" : "dwmod:block/growing_tardis/growing_tardis_3", "y" : 0},
         "facing=east,age=3" : { "model" : "dwmod:block/growing_tardis/growing_tardis_3", "y" : 90},
         "facing=south,age=3" : { "model" : "dwmod:block/growing_tardis/growing_tardis_3", "y" : 180},
-        "facing=west,age=3" : { "model" : "dwmod:block/growing_tardis/growing_tardis_3", "y" : 270}
+        "facing=west,age=3" : { "model" : "dwmod:block/growing_tardis/growing_tardis_3", "y" : 270},
+        "facing=north,age=4" : { "model" : "dwmod:block/growing_tardis/growing_tardis_4", "y" : 0},
+        "facing=east,age=4" : { "model" : "dwmod:block/growing_tardis/growing_tardis_4", "y" : 90},
+        "facing=south,age=4" : { "model" : "dwmod:block/growing_tardis/growing_tardis_4", "y" : 180},
+        "facing=west,age=4" : { "model" : "dwmod:block/growing_tardis/growing_tardis_4", "y" : 270},
+        "facing=north,age=5" : { "model" : "dwmod:block/growing_tardis/growing_tardis_5", "y" : 0},
+        "facing=east,age=5" : { "model" : "dwmod:block/growing_tardis/growing_tardis_5", "y" : 90},
+        "facing=south,age=5" : { "model" : "dwmod:block/growing_tardis/growing_tardis_5", "y" : 180},
+        "facing=west,age=5" : { "model" : "dwmod:block/growing_tardis/growing_tardis_5", "y" : 270}
     }
 }
