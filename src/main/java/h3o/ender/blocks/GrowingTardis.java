@@ -16,7 +16,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 
 public class GrowingTardis extends HorizontalFacingBlock {
-    public static final IntProperty AGE = IntProperty.of("age", 0, 100);
+    public static final IntProperty AGE = IntProperty.of("age", 0, 20);
     protected GrowingTardis(Settings settings) {
         super(settings.nonOpaque().ticksRandomly());
         setDefaultState(getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(AGE, 0));
@@ -37,7 +37,7 @@ public class GrowingTardis extends HorizontalFacingBlock {
     //FIXME dont tick?
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        if(world.isClient() && !(state.get(AGE) != 0 && state.get(AGE) % 10 == 0) && random.nextBetween(0, 10) == 3) {
+        if(!world.isClient() && !(state.get(AGE) != 0 && state.get(AGE) % 5 == 0) && random.nextBetween(0, 9) <= 5) {
             world.setBlockState(pos, state.with(AGE, state.get(AGE)+1), Block.NOTIFY_ALL);
         }
     }
