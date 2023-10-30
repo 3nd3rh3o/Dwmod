@@ -1,0 +1,6 @@
+{
+    "parent": "minecraft:item/handheld",
+    "textures": {
+      "layer0": "dwmod:item/raw_exitonic_circuit"
+    }
+}

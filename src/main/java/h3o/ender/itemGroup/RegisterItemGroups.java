@@ -24,6 +24,8 @@ public class RegisterItemGroups {
                 entries.add(RegisterItems.GRAY_PRING);
                 entries.add(RegisterItems.TOOL_BASE);
                 entries.add(RegisterItems.CRYSTAL_RESONATOR);
+                entries.add(RegisterItems.RAW_EXITONIC_CIRCUIT);
+                entries.add(RegisterItems.EXITONIC_CIRCUIT);
             }).build();
     private static final ItemGroup TOOLS = FabricItemGroup.builder()
             .icon(() -> new ItemStack(RegisterItems.FREQUENCY_DETECTOR))

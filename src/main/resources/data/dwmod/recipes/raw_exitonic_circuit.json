@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:redstone"
+        },
+        {
+            "item": "minecraft:gold_ingot"
+        },
+        {
+            "item": "minecraft:copper_ingot"
+        },
+        {
+            "item": "minecraft:netherite_scrap"
+        }
+    ],
+    "result": {
+        "item": "dwmod:raw_exitonic_circuit",
+        "count": 1
+    }
+}
