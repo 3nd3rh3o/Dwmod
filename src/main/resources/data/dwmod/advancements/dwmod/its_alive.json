@@ -30,5 +30,11 @@
         [
             "protyon_unit"
         ]
-    ]
+    ],
+    "rewards": {
+        "recipes": [
+            "dwmod:raw_exitonic_circuit",
+            "dwmod:exitonic_circuit"
+        ]
+    }
 }
