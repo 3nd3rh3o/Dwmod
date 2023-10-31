@@ -3,54 +3,66 @@ package h3o.ender.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFacingBlock;
-import net.minecraft.block.ShapeContext;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager.Builder;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
 
 public class GrowingTardis extends HorizontalFacingBlock {
-    public static final IntProperty AGE = IntProperty.of("age", 0, 20);
+    public static final IntProperty AGE = IntProperty.of("age", 0, 9);
+    public static final BooleanProperty UP = BooleanProperty.of("up");
+
     protected GrowingTardis(Settings settings) {
         super(settings.nonOpaque().ticksRandomly());
-        setDefaultState(getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(AGE, 0));
+        setDefaultState(
+                getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(AGE, 0).with(UP, false));
     }
-    
+
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return super.getPlacementState(ctx).with(Properties.HORIZONTAL_FACING, ctx.getHorizontalPlayerFacing().getOpposite());
+        return super.getPlacementState(ctx).with(Properties.HORIZONTAL_FACING,
+                ctx.getHorizontalPlayerFacing().getOpposite());
     }
 
     @Override
     protected void appendProperties(Builder<Block, BlockState> builder) {
         builder.add(Properties.HORIZONTAL_FACING);
         builder.add(AGE);
+        builder.add(UP);
     }
 
-    
-    //FIXME dont tick?
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        if(!world.isClient() && !(state.get(AGE) != 0 && state.get(AGE) % 5 == 0) && random.nextBetween(0, 9) <= 5) {
-            world.setBlockState(pos, state.with(AGE, state.get(AGE)+1), Block.NOTIFY_ALL);
+        if (!world.isClient()) {
+            if (!state.get(UP) && !((state.get(AGE) + 1 ) % 5 == 0) && random.nextInt(10) <= 2) {
+                world.setBlockState(pos, state.with(AGE, state.get(AGE) + 1), Block.NOTIFY_ALL);
+                return;
+            }
+            if (state.get(UP) && !((state.get(AGE) + 1)% 5 == 0) && random.nextInt(10) <= 2) {
+                world.setBlockState(pos, state.with(AGE, state.get(AGE) + 1), Block.NOTIFY_ALL);
+            }
         }
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        
-        return switch (state.get(Properties.HORIZONTAL_FACING)) {
-            case NORTH -> Block.createCuboidShape(2, 0, 2, 14, 16, 11);
-            case EAST -> Block.createCuboidShape(5, 0, 2, 14, 16, 14);
-            case SOUTH -> Block.createCuboidShape(2, 0, 5, 14, 16, 14);
-            case WEST -> Block.createCuboidShape(2, 0, 2, 11, 16, 14);
-            default -> null;
-        };
+    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+        if (!((state.get(AGE) + 1) % 5 == 0)) {
+            double x = (double) pos.getX() + 1 - (double) (random.nextFloat());
+            double y = (double) pos.getY() + 1 - (double) (random.nextFloat());
+            double z = (double) pos.getZ() + 1 - (double) (random.nextFloat());
+            if (random.nextInt(5) >= 2) {
+                world.addParticle(ParticleTypes.END_ROD, x,
+                        y, z,
+                        random.nextGaussian() * 0.005, random.nextGaussian() * 0.005, random.nextGaussian() * 0.005);
+            }
+        }
     }
+
 }

@@ -20,7 +20,7 @@ public class RegisterItems {
     public static final Item FREQUENCY_DETECTOR = new FrequencyDetector(new FabricItemSettings());
     public static final Item PROTYON_UNIT = new ProtyonUnit(new FabricItemSettings());
     public static final Item RAW_EXITONIC_CIRCUIT = new Item(new FabricItemSettings());
-    public static final Item EXITONIC_CIRCUIT = new Item(new FabricItemSettings());
+    public static final Item EXITONIC_CIRCUIT = new ExitonicCircuit(new FabricItemSettings());
 
     public static void register() {
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.default.wall.lamp"),

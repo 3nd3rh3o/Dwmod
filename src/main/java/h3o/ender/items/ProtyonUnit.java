@@ -11,8 +11,6 @@ import net.minecraft.world.World;
 
 public class ProtyonUnit extends Item {
 
-
-
     public ProtyonUnit(Settings settings) {
         super(settings);
     }
@@ -24,8 +22,10 @@ public class ProtyonUnit extends Item {
             BlockPos pos = context.getBlockPos();
             World world = context.getWorld();
             world.setBlockState(pos, RegisterBlocks.GROWING_TARDIS.getDefaultState().with(Properties.HORIZONTAL_FACING,
-                    world.getBlockState(pos).get(Properties.HORIZONTAL_FACING)));
-            context.getPlayer().setStackInHand(context.getHand(), ItemStack.EMPTY);
+                    world.getBlockState(pos).get(Properties.HORIZONTAL_FACING)), 3);
+            ItemStack stack = context.getPlayer().getStackInHand(context.getHand());
+            stack.setCount(stack.getCount() - 1);
+            context.getPlayer().setStackInHand(context.getHand(), stack);
             return ActionResult.CONSUME;
         }
         return ActionResult.PASS;

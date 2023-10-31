@@ -1,0 +1,35 @@
+{
+    "display": {
+        "icon": {
+            "item": "dwmod:exitonic_circuit"
+        },
+        "title": "Base circuitry",
+        "description": "Craft a raw exitonic circuit, cook it and click on your growing exoshell to resume grow. It will spawn particles when it grow. You will need 4 of them in total",
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "parent": "dwmod:dwmod/its_alive",
+    "criteria": {
+        "exitonic_circuit": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "nbt": "{Inventory:[{id:\"dwmod:exitonic_circuit\"}]}"
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "exitonic_circuit"
+        ]
+    ]
+}
