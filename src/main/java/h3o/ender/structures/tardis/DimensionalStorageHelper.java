@@ -244,8 +244,8 @@ public class DimensionalStorageHelper {
                 portal.setTardis(tardis);
                 portal.setOriginPos(origin.toCenterPos().add(9, 2.5, 13));
                 portal.setDestinationDimension(tardis.getWorld().getRegistryKey());
-                portal.setDestination(tardis.getPos().add(new Vec3d(0, 1, -0.5).rotateY((float)(tardis.getDataTracker().get(Tardis.EXOSHELL_ROT) * Math.PI / 180f))));
-                portal.setRotationTransformation(DQuaternion.fromEulerAngle(new Vec3d(0, tardis.getDataTracker().get(Tardis.EXOSHELL_ROT), 0)));
+                portal.setDestination(tardis.getPos().add(new Vec3d(0, 1, 0.5).rotateY((float)(-tardis.getDataTracker().get(Tardis.EXOSHELL_ROT) * Math.PI / 180f))));
+                portal.setRotationTransformation(DQuaternion.fromEulerAngle(new Vec3d(0, -tardis.getDataTracker().get(Tardis.EXOSHELL_ROT), 0)));
                 portal.setOrientationAndSize(new Vec3d(-1, 0, 0), new Vec3d(0, 1, 0), 1, 2);
                 portal.getWorld().spawnEntity(portal);
             }
