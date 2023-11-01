@@ -13,6 +13,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import qouteall.imm_ptl.core.portal.Portal;
+import qouteall.q_misc_util.my_util.DQuaternion;
 
 public class TardisInternalPortal extends Portal {
 
@@ -35,7 +36,10 @@ public class TardisInternalPortal extends Portal {
                 if (this.getDestPos() != tardis.getPos().add(0, 1, 0.5)
                         || getDestDim() != tardis.getWorld().getRegistryKey()) {
                     this.setDestinationDimension(tardis.getWorld().getRegistryKey());
-                    this.setDestination(tardis.getPos().add(0, 1, 0.5));
+                    this.setDestination(tardis.getPos().add(new Vec3d(0, 1, -0.5)
+                            .rotateY((float) (tardis.getDataTracker().get(Tardis.EXOSHELL_ROT) * Math.PI / 180f))));
+                    this.setRotationTransformation(DQuaternion
+                            .fromEulerAngle(new Vec3d(0, tardis.getDataTracker().get(Tardis.EXOSHELL_ROT), 0)));
                     reloadAndSyncToClientNextTick();
                 }
                 if (getWorld()

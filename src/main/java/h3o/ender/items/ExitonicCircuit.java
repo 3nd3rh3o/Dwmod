@@ -2,6 +2,8 @@ package h3o.ender.items;
 
 import h3o.ender.blocks.GrowingTardis;
 import h3o.ender.blocks.RegisterBlocks;
+import h3o.ender.entities.RegisterEntities;
+import h3o.ender.entities.Tardis;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
@@ -38,7 +40,12 @@ public class ExitonicCircuit extends Item {
                                         .with(GrowingTardis.UP, true),
                                 Block.NOTIFY_ALL);
                     } else {
-                        //TODO spawn tardis here
+                        pos = pos.down();
+                        Tardis tardis;
+                        tardis = RegisterEntities.TARDIS.create(world);
+                        tardis.setRotation(oldState.get(Properties.HORIZONTAL_FACING).asRotation());
+                        tardis.refreshPositionAndAngles(pos.toCenterPos().getX(), pos.toCenterPos().getY() - 0.5, pos.toCenterPos().getZ(), oldState.get(Properties.HORIZONTAL_FACING).asRotation(), 0);
+                        tardis.getWorld().spawnEntity(tardis);
                     }
                 } else {
                     world.setBlockState(pos,

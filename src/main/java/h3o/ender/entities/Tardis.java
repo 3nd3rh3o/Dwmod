@@ -21,16 +21,20 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import qouteall.q_misc_util.my_util.DQuaternion;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimationController;
@@ -53,6 +57,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
     private static final TrackedData<Byte> MOB_FLAGS = DataTracker.registerData(Tardis.class,
             TrackedDataHandlerRegistry.BYTE);
     private static final TrackedData<Boolean> DOORS = DataTracker.registerData(Tardis.class, TrackedDataHandlerRegistry.BOOLEAN);
+    public static final TrackedData<Integer> EXOSHELL_ROT = DataTracker.registerData(Tardis.class, TrackedDataHandlerRegistry.INTEGER);
 
     private boolean leftOpen = false;
     private boolean rightOpen = false;
@@ -77,6 +82,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
+        getDataTracker().set(EXOSHELL_ROT, Math.round(nbt.getList("Rotation", NbtElement.FLOAT_TYPE).getFloat(0)));
         byte[] temp = nbt.getByteArray("Doors");
         if (temp.length == 2) {
             leftOpen = temp[0] == 1 ? true : false;
@@ -103,6 +109,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
+        nbt.put("Rotation", this.toNbtList((float)getDataTracker().get(EXOSHELL_ROT), this.getPitch()));
         nbt.putByteArray("Doors", new byte[] { leftOpen ? (byte) 1 : (byte) 0, rightOpen ? (byte) 1 : (byte) 0 });
         if (this.index != -1) {
             nbt.putInt("Index", this.index);
@@ -150,7 +157,8 @@ public class Tardis extends LivingEntity implements GeoEntity {
                     this.portal.setOriginPos(this.getBlockPos().toCenterPos().add(0, 0.5, 0));
                     this.portal.setDestinationDimension(RegisterDimensions.VORTEX);
                     this.portal.setDestination(dest.toCenterPos().add(0, 0.5, -0.5));
-                    this.portal.setOrientationAndSize(new Vec3d(1, 0, 0), new Vec3d(0, 1, 0), 1, 2);
+                    this.portal.setRotationTransformation(DQuaternion.fromEulerAngle(new Vec3d(0, -getDataTracker().get(EXOSHELL_ROT), 0)));
+                    this.portal.setOrientationAndSize(new Vec3d(1, 0, 0).rotateY((float)(-getDataTracker().get(EXOSHELL_ROT) * Math.PI / 180f)), new Vec3d(0, 1, 0), 1, 2);
                     this.portal.getWorld().spawnEntity(portal);
                 }
             }
@@ -166,13 +174,19 @@ public class Tardis extends LivingEntity implements GeoEntity {
                 getWorld().setBlockState(getBlockPos(),
                         RegisterBlocks.TARDIS_DEFAULT_HITBOX.getDefaultState()
                                 .with(TardisDefaultHitbox.OPENNED, (leftOpen || rightOpen))
-                                .with(TardisDefaultHitbox.UPPER, false),
+                                .with(TardisDefaultHitbox.UPPER, false)
+                                .with(Properties.HORIZONTAL_FACING, Direction.fromRotation(getDataTracker().get(EXOSHELL_ROT))),
                         3);
                 getWorld().setBlockState(getBlockPos().up(),
                         RegisterBlocks.TARDIS_DEFAULT_HITBOX.getDefaultState().with(TardisDefaultHitbox.UPPER, true)
-                                .with(TardisDefaultHitbox.OPENNED, (leftOpen || rightOpen)),
+                                .with(TardisDefaultHitbox.OPENNED, (leftOpen || rightOpen))
+                                .with(Properties.HORIZONTAL_FACING, Direction.fromRotation(getDataTracker().get(EXOSHELL_ROT))),
                         3);
             }
+        }
+        if (this.getBodyYaw() / 90 != 0 || this.getBodyYaw() != getDataTracker().get(EXOSHELL_ROT)) {
+            this.setBodyYaw(getDataTracker().get(EXOSHELL_ROT));
+            this.setHeadYaw(getDataTracker().get(EXOSHELL_ROT));
         }
     }
 
@@ -232,6 +246,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
         super.initDataTracker();
         this.dataTracker.startTracking(MOB_FLAGS, (byte) 0);
         this.dataTracker.startTracking(DOORS, (boolean) false);
+        this.dataTracker.startTracking(EXOSHELL_ROT, (int) 0);
     }
 
     @Override
@@ -302,6 +317,10 @@ public class Tardis extends LivingEntity implements GeoEntity {
             DimensionalStorageHelper.removeRoom(index, room.getId(), room.getSize(),
                     getServer().getWorld(RegisterDimensions.VORTEX));
         });
+    }
+
+    public void setRotation(float asRotation) {
+        this.getDataTracker().set(EXOSHELL_ROT, Math.round(asRotation));
     }
 
 }
