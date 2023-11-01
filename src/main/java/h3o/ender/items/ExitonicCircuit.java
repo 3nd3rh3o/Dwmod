@@ -1,7 +1,7 @@
 package h3o.ender.items;
 
-import h3o.ender.blocks.GrowingTardis;
 import h3o.ender.blocks.RegisterBlocks;
+import h3o.ender.blocks.tardis.GrowingTardis;
 import h3o.ender.entities.RegisterEntities;
 import h3o.ender.entities.Tardis;
 import net.minecraft.block.Block;

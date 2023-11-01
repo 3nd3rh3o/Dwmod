@@ -1,4 +1,4 @@
-package h3o.ender.blocks;
+package h3o.ender.blocks.tardis;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -19,7 +19,7 @@ public class GrowingTardis extends HorizontalFacingBlock {
     public static final IntProperty AGE = IntProperty.of("age", 0, 9);
     public static final BooleanProperty UP = BooleanProperty.of("up");
 
-    protected GrowingTardis(Settings settings) {
+    public GrowingTardis(Settings settings) {
         super(settings.nonOpaque().ticksRandomly());
         setDefaultState(
                 getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(AGE, 0).with(UP, false));

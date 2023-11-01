@@ -1,5 +1,7 @@
 package h3o.ender;
 
+import h3o.ender.blockEntities.renderer.RotorBaseBERenderer;
+import h3o.ender.blockEntity.RegisterBlockEntities;
 import h3o.ender.blocks.RegisterBlocks;
 import h3o.ender.entities.RegisterEntities;
 import h3o.ender.entities.renderer.TardisDefaultExtDoorRenderer;
@@ -13,12 +15,14 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 
 public class DwModClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
         // This entrypoint is suitable for setting up client-specific logic, such as rendering.
+        BlockEntityRendererFactories.register(RegisterBlockEntities.ROTOR_BASE_BE, RotorBaseBERenderer::new);
         EntityRendererRegistry.register(RegisterEntities.TARDIS, TardisRenderer::new);
         EntityRendererRegistry.register(RegisterEntities.TARDIS_EXT_DOOR_DEFAULT, TardisDefaultExtDoorRenderer::new);
         EntityRendererRegistry.register(RegisterEntities.TARDIS_PORTAL, TardisPortalRenderer::new);
