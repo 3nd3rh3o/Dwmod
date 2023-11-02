@@ -10,6 +10,7 @@ import java.util.Arrays;
 public class TardisOs {
     private static final HashMap<String, Command> commandMap = new HashMap<>();
 
+    //TODO use that as an entry point for TardisOS
     public static MutableText execute(String input) {
         String[] parts = input.split(" ");
         String commandName = parts[0];
