@@ -1,9 +1,5 @@
 package h3o.ender.entities.tardis;
 
-import java.util.List;
-
-import h3o.ender.entities.Tardis;
-import h3o.ender.structures.tardis.DimensionalStorageHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -11,11 +7,8 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Arm;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class TardisExtDoor extends LivingEntity {
@@ -79,21 +72,5 @@ public class TardisExtDoor extends LivingEntity {
     protected void initDataTracker() {
         super.initDataTracker();
         this.dataTracker.startTracking(MOB_FLAGS, (byte) 0);
-    }
-
-    protected Tardis initTardis() {
-        if (!getWorld().isClient()) {
-            for (ServerWorld world : getServer().getWorlds()) {
-                List<Tardis> trds = world.getEntitiesByClass(Tardis.class,
-                        Box.of(new Vec3d(0, 0, 0), World.HORIZONTAL_LIMIT * 2, World.MAX_Y - World.MIN_Y,
-                                World.HORIZONTAL_LIMIT * 2),
-                        (entities) -> ((Tardis) entities).getIndex() == DimensionalStorageHelper
-                                .getIndex(getBlockPos()));
-                if (trds.size() != 0) {
-                    return trds.get(0);
-                }
-            }
-        }
-        return null;
     }
 }

@@ -4,6 +4,7 @@ import h3o.ender.blocks.RegisterBlocks;
 import h3o.ender.blocks.tardis.exoshellIntDoor.TardisDefaultExtDoorHitBox;
 import h3o.ender.entities.Tardis;
 import h3o.ender.entities.tardis.TardisExtDoor;
+import h3o.ender.structures.tardis.DimensionalStorageHelper;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityDimensions;
@@ -116,7 +117,7 @@ public class TardisDefaultExtDoor extends TardisExtDoor implements GeoEntity {
                     oldDoors = tardis.getDoorsOpenned();
                 }
             } else {
-                this.tardis = initTardis();
+                this.tardis = DimensionalStorageHelper.getTardis(getServer(), getBlockPos());
             }
         }
         if (this.getBodyYaw() / 90 != 0) {

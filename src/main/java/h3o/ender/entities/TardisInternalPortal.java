@@ -1,15 +1,11 @@
 package h3o.ender.entities;
 
-import java.util.List;
-
 import h3o.ender.entities.tardis.exoshell.TardisDefaultExtDoor;
 import h3o.ender.structures.tardis.DimensionalStorageHelper;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import qouteall.imm_ptl.core.portal.Portal;
@@ -50,7 +46,7 @@ public class TardisInternalPortal extends Portal {
                     extDoor.getWorld().spawnEntity(extDoor);
                 }
             } else {
-                this.tardis = initTardis();
+                this.tardis = DimensionalStorageHelper.getTardis(getServer(), getBlockPos());
             }
         }
 
@@ -58,21 +54,5 @@ public class TardisInternalPortal extends Portal {
 
     public void setTardis(Tardis tardis2) {
         this.tardis = tardis2;
-    }
-
-    private Tardis initTardis() {
-        if (!getWorld().isClient()) {
-            for (ServerWorld world : getServer().getWorlds()) {
-                List<Tardis> trds = world.getEntitiesByClass(Tardis.class,
-                        Box.of(new Vec3d(0, 0, 0), World.HORIZONTAL_LIMIT * 2, World.MAX_Y - World.MIN_Y,
-                                World.HORIZONTAL_LIMIT * 2),
-                        (entities) -> ((Tardis) entities).getIndex() == DimensionalStorageHelper
-                                .getIndex(getOriginPos()));
-                if (trds.size() != 0) {
-                    return trds.get(0);
-                }
-            }
-        }
-        return null;
     }
 }
