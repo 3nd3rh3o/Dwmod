@@ -2,7 +2,9 @@ package h3o.ender.tardisOs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -67,4 +69,49 @@ public class FormattedText {
         return this.withColor(string, Formatting.WHITE);
     }
 
+    // TODO test later
+    public static List<Text> wrapStyledText(MutableText text, int maxWidth, TextRenderer textRenderer) {
+        List<Text> wrappedText = new ArrayList<>();
+        List<MutableText> words = new ArrayList<>();
+
+        text.visit((style, asString) -> {
+
+            String[] split = asString.split("\\s+");
+            for (String word : split) {
+                if (!word.isEmpty()) {
+                    MutableText wordText = Text.literal(word).setStyle(style);
+                    words.add(wordText);
+                }
+            }
+            return Optional.empty();
+        }, Style.EMPTY);
+
+        MutableText currentLine = Text.empty();
+        int currentLineWidth = 0;
+
+        for (MutableText wordText : words) {
+            int wordWidth = textRenderer.getWidth(wordText);
+            if (!currentLine.getString().isEmpty()) {
+                wordWidth += textRenderer.getWidth(" ");
+            }
+
+            if (currentLineWidth + wordWidth > maxWidth && !currentLine.getString().isEmpty()) {
+                wrappedText.add(currentLine);
+                currentLine = Text.empty().append(wordText);
+                currentLineWidth = wordWidth;
+            } else {
+                if (!currentLine.getString().isEmpty()) {
+                    currentLine.append(" ");
+                }
+                currentLine.append(wordText);
+                currentLineWidth += wordWidth;
+            }
+        }
+
+        if (!currentLine.getString().isEmpty()) {
+            wrappedText.add(currentLine);
+        }
+
+        return wrappedText;
+    }
 }
