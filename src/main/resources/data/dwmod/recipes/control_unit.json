@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "srs",
+        "cdc",
+        "srs"
+    ],
+    "key": {
+        "r": {
+            "item": "minecraft:redstone"
+        },
+        "c": {
+            "item": "minecraft:copper_ingot"
+        },
+        "d": {
+            "item": "minecraft:diamond"
+        },
+        "s": {
+            "item": "dwmod:silicon_ball"
+        }
+    },
+    "result": {
+        "item": "dwmod:control_unit",
+        "count": 1
+    }
+}

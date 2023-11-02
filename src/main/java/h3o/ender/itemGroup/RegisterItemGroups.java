@@ -26,6 +26,10 @@ public class RegisterItemGroups {
                 entries.add(RegisterItems.CRYSTAL_RESONATOR);
                 entries.add(RegisterItems.RAW_EXITONIC_CIRCUIT);
                 entries.add(RegisterItems.EXITONIC_CIRCUIT);
+                entries.add(RegisterItems.PCB);
+                entries.add(RegisterItems.SILICON_BALL);
+                entries.add(RegisterItems.CONTROL_UNIT);
+                entries.add(RegisterItems.ENERGY_CONDENSER);
                 entries.add(RegisterItems.LLOENERGY_DISTRIBUTOR);
             }).build();
     private static final ItemGroup TOOLS = FabricItemGroup.builder()

@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "pcp",
+        "mrm",
+        "pcp"
+    ],
+    "key": {
+        "p": {
+            "item": "minecraft:paper"
+        },
+        "c": {
+            "item": "minecraft:green_dye"
+        },
+        "m": {
+            "item": "minecraft:copper_ingot"
+        },
+        "r": {
+            "item": "minecraft:redstone"
+        }
+    },
+    "result": {
+        "item": "dwmod:pcb",
+        "count": 8
+    }
+}

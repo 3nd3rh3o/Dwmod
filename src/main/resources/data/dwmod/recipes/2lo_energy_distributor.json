@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "eee",
+        "ece",
+        "ppp"
+    ],
+    "key": {
+        "e": {
+            "item": "dwmod:energy_condenser"
+        },
+        "c": {
+            "item": "dwmod:control_unit"
+        },
+        "p": {
+            "item": "dwmod:pcb"
+        }
+    },
+    "result": {
+        "item": "dwmod:2lo_energy_distributor",
+        "count": 1
+    }
+}

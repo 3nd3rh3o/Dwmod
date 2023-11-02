@@ -1,0 +1,46 @@
+{
+    "display": {
+        "icon": {
+            "item": "dwmod:tardis.default.wall.lamp"
+        },
+        "title": "Bigger on the inside",
+        "description": "Entered the TARDIS for the first time!",
+        "frame": "challenge",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": true
+    },
+    "parent": "dwmod:dwmod/base_circuitry",
+    "criteria": {
+        "vortex": {
+            "trigger": "minecraft:tick",
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "location": {
+                                "dimension": "dwmod:vortex"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "vortex"
+        ]
+    ],
+    "rewards": {
+        "recipes": [
+            "dwmod:silicon_ball",
+            "dwmod:pcb",
+            "dwmod:control_unit",
+            "dwmod:energy_condenser",
+            "dwmod:2lo_energy_distributor"
+        ]
+    }
+}

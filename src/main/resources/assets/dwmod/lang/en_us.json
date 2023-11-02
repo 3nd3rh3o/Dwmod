@@ -7,5 +7,10 @@
     "item.dwmod.frequency_detector" : "Frequency detector",
     "item.dwmod.protyon_unit" : "Protyon unit",
     "item.dwmod.raw_exitonic_circuit" : "Raw exitonic circuit",
-    "item.dwmod.exitonic_circuit" : "Exitonic circuit"
+    "item.dwmod.exitonic_circuit" : "Exitonic circuit",
+    "item.dwmod.control_unit" : "Control unit",
+    "item.dwmod.silicon_ball" : "silicon_ball",
+    "item.dwmod.pcb" : "Printed circuit board",
+    "item.dwmod.energy_condenser" : "Energy condenser",
+    "item.dwmod.2lo_energy_distributor" : "2LO energy distributor"
 }

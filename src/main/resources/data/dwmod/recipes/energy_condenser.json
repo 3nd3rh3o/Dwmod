@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "srs",
+        "rdr",
+        "srs"
+    ],
+    "key": {
+        "r": {
+            "item": "minecraft:iron_ingot"
+        },
+        "d": {
+            "item": "minecraft:redstone_block"
+        },
+        "s": {
+            "item": "minecraft:glass"
+        }
+    },
+    "result": {
+        "item": "dwmod:energy_condenser",
+        "count": 1
+    }
+}

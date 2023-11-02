@@ -9,6 +9,8 @@ import h3o.ender.entities.Tardis;
 import h3o.ender.entities.TardisInternalPortal;
 import h3o.ender.entities.tardis.TardisExtDoor;
 import h3o.ender.structures.tardis.Room.Name;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
@@ -21,6 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.World;
 import qouteall.q_misc_util.my_util.DQuaternion;
 
 public class DimensionalStorageHelper {
@@ -244,8 +247,10 @@ public class DimensionalStorageHelper {
                 portal.setTardis(tardis);
                 portal.setOriginPos(origin.toCenterPos().add(9, 2.5, 13));
                 portal.setDestinationDimension(tardis.getWorld().getRegistryKey());
-                portal.setDestination(tardis.getPos().add(new Vec3d(0, 1, 0.5).rotateY((float)(-tardis.getDataTracker().get(Tardis.EXOSHELL_ROT) * Math.PI / 180f))));
-                portal.setRotationTransformation(DQuaternion.fromEulerAngle(new Vec3d(0, -tardis.getDataTracker().get(Tardis.EXOSHELL_ROT), 0)));
+                portal.setDestination(tardis.getPos().add(new Vec3d(0, 1, 0.5)
+                        .rotateY((float) (-tardis.getDataTracker().get(Tardis.EXOSHELL_ROT) * Math.PI / 180f))));
+                portal.setRotationTransformation(
+                        DQuaternion.fromEulerAngle(new Vec3d(0, -tardis.getDataTracker().get(Tardis.EXOSHELL_ROT), 0)));
                 portal.setOrientationAndSize(new Vec3d(-1, 0, 0), new Vec3d(0, 1, 0), 1, 2);
                 portal.getWorld().spawnEntity(portal);
             }
@@ -288,5 +293,33 @@ public class DimensionalStorageHelper {
         int y = (int) Math.round(originPos.getY());
         int z = (int) Math.round(originPos.getZ());
         return getIndex(new BlockPos(x, y, z));
+    }
+
+    public static Tardis getTardis(MinecraftServer server, BlockPos pos) {
+        for (ServerWorld world : server.getWorlds()) {
+            List<Tardis> trds = world.getEntitiesByClass(Tardis.class,
+                    Box.of(new Vec3d(0, 0, 0), World.HORIZONTAL_LIMIT * 2, World.MAX_Y - World.MIN_Y,
+                            World.HORIZONTAL_LIMIT * 2),
+                    (entities) -> ((Tardis) entities).getIndex() == DimensionalStorageHelper
+                            .getIndex(pos));
+            if (trds.size() != 0) {
+                return trds.get(0);
+            }
+        }
+        return null;
+    }
+
+    public static Tardis getTardis(MinecraftClient client, BlockPos pos) {
+        
+            List<Tardis> trds = client.world.getEntitiesByClass(Tardis.class,
+                    Box.of(new Vec3d(0, 0, 0), World.HORIZONTAL_LIMIT * 2, World.MAX_Y - World.MIN_Y,
+                            World.HORIZONTAL_LIMIT * 2),
+                    (entities) -> ((Tardis) entities).getIndex() == DimensionalStorageHelper
+                            .getIndex(pos));
+            if (trds.size() != 0) {
+                return trds.get(0);
+            }
+        
+        return null;
     }
 }

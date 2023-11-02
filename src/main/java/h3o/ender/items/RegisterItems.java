@@ -22,6 +22,10 @@ public class RegisterItems {
     public static final Item RAW_EXITONIC_CIRCUIT = new Item(new FabricItemSettings());
     public static final Item EXITONIC_CIRCUIT = new ExitonicCircuit(new FabricItemSettings());
     public static final Item LLOENERGY_DISTRIBUTOR = new LLOEnergyDistributor(new FabricItemSettings());
+    public static final Item PCB = new Item(new FabricItemSettings());
+    public static final Item SILICON_BALL = new Item(new FabricItemSettings());
+    public static final Item CONTROL_UNIT = new Item(new FabricItemSettings());
+    public static final Item ENERGY_CONDENSER = new Item(new FabricItemSettings());
 
     public static void register() {
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.default.wall.lamp"),
@@ -35,5 +39,9 @@ public class RegisterItems {
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "raw_exitonic_circuit"), RAW_EXITONIC_CIRCUIT);
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "exitonic_circuit"), EXITONIC_CIRCUIT);
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "2lo_energy_distributor"), LLOENERGY_DISTRIBUTOR);
+        Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "pcb"), PCB);
+        Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "silicon_ball"), SILICON_BALL);
+        Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "control_unit"), CONTROL_UNIT);
+        Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "energy_condenser"), ENERGY_CONDENSER);
     }
 }

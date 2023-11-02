@@ -80,7 +80,7 @@ public class TardisDefaultExtDoorHitBox extends AbstractGlassBlock {
                 return ActionResult.PASS;
             } else {
                 return trds.interactAt(player,
-                        hit.getPos().subtract(pos.toCenterPos()).rotateY((float)Math.toRadians(180)), hand);
+                        hit.getPos().subtract(pos.toCenterPos()).rotateY((float)(Math.toRadians(180) - Math.toRadians(trds.getDataTracker().get(Tardis.EXOSHELL_ROT)))), hand);
             }
         }
         return ActionResult.PASS;

@@ -58,12 +58,12 @@ public class Tardis extends LivingEntity implements GeoEntity {
             TrackedDataHandlerRegistry.BYTE);
     private static final TrackedData<Boolean> DOORS = DataTracker.registerData(Tardis.class, TrackedDataHandlerRegistry.BOOLEAN);
     public static final TrackedData<Integer> EXOSHELL_ROT = DataTracker.registerData(Tardis.class, TrackedDataHandlerRegistry.INTEGER);
+    public static final TrackedData<NbtCompound> CIRCUITS = DataTracker.registerData(Tardis.class, TrackedDataHandlerRegistry.NBT_COMPOUND);
 
     private boolean leftOpen = false;
     private boolean rightOpen = false;
 
     private int index = -1;
-    private ArrayList<Circuit> circuits;
     private List<Room> internalScheme = new ArrayList<>();
     private TardisPortal portal;
     private int activeConsId = 0;
@@ -104,6 +104,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
             internalScheme.add(new Room(id, size, rot, vId, name));
         });
         getDataTracker().set(DOORS, getDoorsOpenned());
+        getDataTracker().set(CIRCUITS, nbt.getCompound("Circuits"));
         super.readCustomDataFromNbt(nbt);
     }
 
@@ -126,6 +127,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
             rooms.put(String.valueOf(internalScheme.indexOf(room)), tupple);
         }
         nbt.put("InternalScheme", rooms);
+        nbt.put("Circuits", getDataTracker().get(CIRCUITS));
         super.writeCustomDataToNbt(nbt);
     }
 
@@ -247,6 +249,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
         this.dataTracker.startTracking(MOB_FLAGS, (byte) 0);
         this.dataTracker.startTracking(DOORS, (boolean) false);
         this.dataTracker.startTracking(EXOSHELL_ROT, (int) 0);
+        this.dataTracker.startTracking(CIRCUITS, new NbtCompound());
     }
 
     @Override
@@ -321,6 +324,17 @@ public class Tardis extends LivingEntity implements GeoEntity {
 
     public void setRotation(float asRotation) {
         this.getDataTracker().set(EXOSHELL_ROT, Math.round(asRotation));
+    }
+
+    public void addCircuit(Circuit circuit) {
+        NbtCompound nbt = getDataTracker().get(CIRCUITS);
+        if (nbt == null) {
+            nbt = new NbtCompound();
+        }
+        List<Circuit> circuits = Circuit.readFromNbt(nbt);
+        circuits.add(circuit);
+        nbt = Circuit.writeNbt(circuits);
+        getDataTracker().set(CIRCUITS, nbt);
     }
 
 }

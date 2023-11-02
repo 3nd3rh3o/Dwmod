@@ -19,6 +19,6 @@ public class LLOEnergyDistributorModel extends GeoModel<LLOEnergyDistributor> {
 
     @Override
     public Identifier getAnimationResource(LLOEnergyDistributor animatable) {
-        return null;
+        return new Identifier(DwMod.MODID, "animations/items/2lo_energy_distributor.animation.json");
     }
 }
