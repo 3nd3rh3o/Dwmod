@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "ipi",
+        "geg",
+        "ccc"
+    ],
+    "key": {
+        "c": {
+            "item": "dwmod:pcb"
+        },
+        "g": {
+            "item": "dwmod:rift_stimulator"
+        },
+        "e": {
+            "item": "minecraft:nether_star"
+        },
+        "p": {
+            "item": "dwmod:control_unit"
+        },
+        "i": {
+            "item": "minecraft:iron_ingot"
+        }
+    },
+    "result": {
+        "item": "dwmod:main_space_time_element"
+    }
+}

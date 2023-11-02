@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "crc",
+        "geg",
+        "cbc"
+    ],
+    "key": {
+        "c": {
+            "item": "minecraft:copper_ingot"
+        },
+        "r": {
+            "item": "minecraft:lightning_rod"
+        },
+        "g": {
+            "item": "minecraft:gold_ingot"
+        },
+        "b": {
+            "item": "minecraft:redstone_block"
+        },
+        "e": {
+            "item": "minecraft:ender_eye"
+        }
+    },
+    "result": {
+        "item": "dwmod:rift_stimulator"
+    }
+}

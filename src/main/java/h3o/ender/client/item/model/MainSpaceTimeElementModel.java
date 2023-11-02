@@ -19,7 +19,7 @@ public class MainSpaceTimeElementModel extends GeoModel<MainSpaceTimeElement> {
 
     @Override
     public Identifier getAnimationResource(MainSpaceTimeElement animatable) {
-        return null;       
+        return new Identifier(DwMod.MODID, "animations/items/main_space_time_element.animation.json");       
     }
     
 }

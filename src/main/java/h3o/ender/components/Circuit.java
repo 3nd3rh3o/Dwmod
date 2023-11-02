@@ -20,7 +20,7 @@ public class Circuit {
     }
 
     public enum NAME {
-        LLO_ENERGY_CONNECTOR
+        LLO_ENERGY_CONNECTOR, MAIN_SPACE_TIME_ELEMENT
     }
 
     public static LOCATION strToLoc(String loc) {
@@ -33,6 +33,7 @@ public class Circuit {
     public static NAME strToName(String name) {
         return switch (name) {
             case "2lo_energy_connector" -> NAME.LLO_ENERGY_CONNECTOR;
+            case "main_space_time_element" -> NAME.MAIN_SPACE_TIME_ELEMENT;
             default -> null;
         };
     }
@@ -45,6 +46,7 @@ public class Circuit {
     public static String nameToStr(NAME name) {
         return switch (name) {
             case LLO_ENERGY_CONNECTOR -> "2lo_energy_connector";
+            case MAIN_SPACE_TIME_ELEMENT -> "main_space_time_element";
         };
     }
 
@@ -98,6 +100,7 @@ public class Circuit {
     public static ItemStack getItemForName(String name) {
         return switch (strToName(name)) {
             case LLO_ENERGY_CONNECTOR -> new ItemStack(RegisterItems.LLOENERGY_DISTRIBUTOR, 1);
+            case MAIN_SPACE_TIME_ELEMENT -> new ItemStack(RegisterItems.MAIN_SPACE_TIME_ELEMENT, 1);
         };
     }
 
@@ -106,6 +109,7 @@ public class Circuit {
             case ROTOR_BASE -> {
                 switch (strToName(name)) {
                     case LLO_ENERGY_CONNECTOR -> poseStack.translate(0.25, 0.5625, 0.375);
+                    case MAIN_SPACE_TIME_ELEMENT -> poseStack.translate(0, 0.5625, 0);
                     default -> {}
                 }
             }

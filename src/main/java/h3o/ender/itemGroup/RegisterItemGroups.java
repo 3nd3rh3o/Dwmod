@@ -30,6 +30,7 @@ public class RegisterItemGroups {
                 entries.add(RegisterItems.SILICON_BALL);
                 entries.add(RegisterItems.CONTROL_UNIT);
                 entries.add(RegisterItems.ENERGY_CONDENSER);
+                entries.add(RegisterItems.RIFT_STIMULATOR);
                 entries.add(RegisterItems.LLOENERGY_DISTRIBUTOR);
                 entries.add(RegisterItems.MAIN_SPACE_TIME_ELEMENT);
             }).build();

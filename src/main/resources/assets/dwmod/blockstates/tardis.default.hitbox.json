@@ -1,9 +1,6 @@
 {
     "variants" : {
-        "openned=false,upper=false" : { "model" : "dwmod:block/tardis.default.hitbox.down.closed"},
-        "openned=true,upper=false" : { "model" : "dwmod:block/tardis.default.hitbox.down.openned"},
-        "openned=false,upper=true" : { "model" : "dwmod:block/tardis.default.hitbox.up.closed"},
-        "openned=true,upper=true" : { "model" : "dwmod:block/tardis.default.hitbox.up.openned"}
+        "" : { "model" : "dwmod:block/empty"}
     }
 }
 

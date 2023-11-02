@@ -9,8 +9,10 @@
     "item.dwmod.raw_exitonic_circuit" : "Raw exitonic circuit",
     "item.dwmod.exitonic_circuit" : "Exitonic circuit",
     "item.dwmod.control_unit" : "Control unit",
-    "item.dwmod.silicon_ball" : "silicon_ball",
+    "item.dwmod.silicon_ball" : "silicon ball",
     "item.dwmod.pcb" : "Printed circuit board",
     "item.dwmod.energy_condenser" : "Energy condenser",
+    "item.dwmod.rift_stimulator" : "Rift stimulator",
+    "item.dwmod.main_space_time_element" : "Main space-time element",
     "item.dwmod.2lo_energy_distributor" : "2LO energy distributor"
 }

@@ -26,6 +26,7 @@ public class RegisterItems {
     public static final Item PCB = new Item(new FabricItemSettings());
     public static final Item SILICON_BALL = new Item(new FabricItemSettings());
     public static final Item CONTROL_UNIT = new Item(new FabricItemSettings());
+    public static final Item RIFT_STIMULATOR = new Item(new FabricItemSettings());
     public static final Item ENERGY_CONDENSER = new Item(new FabricItemSettings());
 
     public static void register() {
@@ -44,6 +45,7 @@ public class RegisterItems {
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "pcb"), PCB);
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "silicon_ball"), SILICON_BALL);
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "control_unit"), CONTROL_UNIT);
+        Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "rift_stimulator"), RIFT_STIMULATOR);
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "energy_condenser"), ENERGY_CONDENSER);
     }
 }

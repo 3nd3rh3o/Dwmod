@@ -40,7 +40,9 @@
             "dwmod:pcb",
             "dwmod:control_unit",
             "dwmod:energy_condenser",
-            "dwmod:2lo_energy_distributor"
+            "dwmod:2lo_energy_distributor",
+            "dwmod:rift_stimulator",
+            "dwmod:main_space_time_element"
         ]
     }
 }
