@@ -1,6 +1,5 @@
 package h3o.ender.client.blockEntities.renderer;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,14 +40,12 @@ public class RotorBaseBERenderer extends GeoBlockRenderer<RotorBaseBE> {
             poseStack.push();
             Circuit.renderPos(poseStack, name, Circuit.LOCATION.ROTOR_BASE);
             poseStack.scale(0.125f, 0.125f, 0.125f);
-            MinecraftClient.getInstance().getItemRenderer().renderItem(Circuit.getItemForName(name), ModelTransformationMode.NONE, packedLight, packedOverlay, poseStack, bufferSource, animatable.getWorld(), 0);
+            MinecraftClient.getInstance().getItemRenderer().renderItem(Circuit.getItemForName(name),
+                    ModelTransformationMode.NONE, packedLight, packedOverlay, poseStack, bufferSource,
+                    animatable.getWorld(), 0);
             poseStack.pop();
         });
-        
+
     }
 
-    
-
-    //TODO learn how to use render layers and how to render items on block entity(or just switch the model if you can)
-    
 }

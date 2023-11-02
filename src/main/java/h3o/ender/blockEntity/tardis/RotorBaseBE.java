@@ -27,7 +27,6 @@ public class RotorBaseBE extends BlockEntity implements GeoBlockEntity {
 
     @Override
     public void registerControllers(ControllerRegistrar controllers) {
-        // TODO
         return;
     }
 
