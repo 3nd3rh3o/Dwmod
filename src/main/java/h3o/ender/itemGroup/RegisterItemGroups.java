@@ -26,6 +26,7 @@ public class RegisterItemGroups {
                 entries.add(RegisterItems.CRYSTAL_RESONATOR);
                 entries.add(RegisterItems.RAW_EXITONIC_CIRCUIT);
                 entries.add(RegisterItems.EXITONIC_CIRCUIT);
+                entries.add(RegisterItems.LLOENERGY_DISTRIBUTOR);
             }).build();
     private static final ItemGroup TOOLS = FabricItemGroup.builder()
             .icon(() -> new ItemStack(RegisterItems.FREQUENCY_DETECTOR))

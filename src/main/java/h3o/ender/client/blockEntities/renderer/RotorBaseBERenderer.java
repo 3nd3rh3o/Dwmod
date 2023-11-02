@@ -1,0 +1,17 @@
+package h3o.ender.client.blockEntities.renderer;
+
+
+import h3o.ender.blockEntity.tardis.RotorBaseBE;
+import h3o.ender.client.blockEntities.model.RotorBaseBEModel;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
+import software.bernie.geckolib.renderer.GeoBlockRenderer;
+
+public class RotorBaseBERenderer extends GeoBlockRenderer<RotorBaseBE> {
+
+    public RotorBaseBERenderer(BlockEntityRendererFactory.Context ctx) {
+        super(new RotorBaseBEModel());
+    }
+
+    //TODO learn how to use render layers and how to render items on block entity(or just switch the model if you can)
+    
+}

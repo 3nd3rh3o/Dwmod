@@ -21,6 +21,7 @@ public class RegisterItems {
     public static final Item PROTYON_UNIT = new ProtyonUnit(new FabricItemSettings());
     public static final Item RAW_EXITONIC_CIRCUIT = new Item(new FabricItemSettings());
     public static final Item EXITONIC_CIRCUIT = new ExitonicCircuit(new FabricItemSettings());
+    public static final Item LLOENERGY_DISTRIBUTOR = new LLOEnergyDistributor(new FabricItemSettings());
 
     public static void register() {
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.default.wall.lamp"),
@@ -33,5 +34,6 @@ public class RegisterItems {
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "protyon_unit"), PROTYON_UNIT);
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "raw_exitonic_circuit"), RAW_EXITONIC_CIRCUIT);
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "exitonic_circuit"), EXITONIC_CIRCUIT);
+        Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "2lo_energy_distributor"), LLOENERGY_DISTRIBUTOR);
     }
 }

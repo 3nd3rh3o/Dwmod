@@ -22,19 +22,6 @@ repositories {
     }
 	maven { url 'https://jitpack.io' }
 	maven { url 'https://maven.shedaniel.me' }
-
-}
-
-loom {
-    splitEnvironmentSourceSets()
-
-	mods {
-		"modid" {
-			sourceSet sourceSets.main
-			sourceSet sourceSets.client
-		}
-	}
-
 }
 
 dependencies {
@@ -42,13 +29,13 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	modImplementation 'software.bernie.geckolib:geckolib-fabric-1.20.2:4.2.3'
 	modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:v4.0.1-mc1.20.2")
 	modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:v4.0.1-mc1.20.2")
 	modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:build:v4.0.1-mc1.20.2")
+
+	// Fabric API. This is technically optional, but you probably want it anyway.
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	
 	// Uncomment the following line to enable the deprecated Fabric API modules. 
 	// These are included in the Fabric API production distribution and allow you to update your mod to the latest modules at a later more convenient time.
