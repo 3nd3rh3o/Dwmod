@@ -9,8 +9,10 @@ import net.minecraft.util.Identifier;
 
 public class RegisterScreenHandler {
     public static final ScreenHandlerType<FrequencyDetectorScreenHandler> FREQUENCY_DETECTOR_SCREEN_HANDLER = new ExtendedScreenHandlerType<>(FrequencyDetectorScreenHandler::new);
+    public static final ScreenHandlerType<TardisTerminalScreenHandler> TARDIS_TERMINAL_SCREEN_HANDLER = new ExtendedScreenHandlerType<>(TardisTerminalScreenHandler::new);
 
     public static void register() {
         Registry.register(Registries.SCREEN_HANDLER, new Identifier(DwMod.MODID, "frequency_detector"), FREQUENCY_DETECTOR_SCREEN_HANDLER);
+        Registry.register(Registries.SCREEN_HANDLER, new Identifier(DwMod.MODID, "tardis_terminal"), TARDIS_TERMINAL_SCREEN_HANDLER);
     }
 }

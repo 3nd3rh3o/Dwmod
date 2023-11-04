@@ -30,22 +30,23 @@ public class RotorBaseBERenderer extends GeoBlockRenderer<RotorBaseBE> {
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick,
                 packedLight, packedOverlay, red, green, blue, alpha);
         NbtList nbt = animatable.getTardisCircuits();
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < nbt.size(); i++) {
-            if (Circuit.strToLoc(nbt.getList(i).getString(1)).equals(Circuit.LOCATION.ROTOR_BASE)) {
-                list.add(nbt.getList(i).getString(0));
+        if (nbt != null) {
+            List<String> list = new ArrayList<>();
+            for (int i = 0; i < nbt.size(); i++) {
+                if (Circuit.strToLoc(nbt.getList(i).getString(1)).equals(Circuit.LOCATION.ROTOR_BASE)) {
+                    list.add(nbt.getList(i).getString(0));
+                }
             }
+            list.forEach((name) -> {
+                poseStack.push();
+                Circuit.renderPos(poseStack, name, Circuit.LOCATION.ROTOR_BASE);
+                poseStack.scale(0.125f, 0.125f, 0.125f);
+                MinecraftClient.getInstance().getItemRenderer().renderItem(Circuit.getItemForName(name),
+                        ModelTransformationMode.NONE, packedLight, packedOverlay, poseStack, bufferSource,
+                        animatable.getWorld(), 0);
+                poseStack.pop();
+            });
         }
-        list.forEach((name) -> {
-            poseStack.push();
-            Circuit.renderPos(poseStack, name, Circuit.LOCATION.ROTOR_BASE);
-            poseStack.scale(0.125f, 0.125f, 0.125f);
-            MinecraftClient.getInstance().getItemRenderer().renderItem(Circuit.getItemForName(name),
-                    ModelTransformationMode.NONE, packedLight, packedOverlay, poseStack, bufferSource,
-                    animatable.getWorld(), 0);
-            poseStack.pop();
-        });
-
     }
 
 }

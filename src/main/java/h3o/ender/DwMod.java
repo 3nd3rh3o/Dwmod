@@ -2,6 +2,7 @@ package h3o.ender;
 
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.minecraft.util.Identifier;
 import qouteall.q_misc_util.LifecycleHack;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import h3o.ender.blockEntity.tardis.TardisBentDependant;
 import h3o.ender.blocks.RegisterBlocks;
 import h3o.ender.entities.RegisterEntities;
 import h3o.ender.entities.Tardis;
@@ -64,6 +66,7 @@ public class DwMod implements ModInitializer {
 			}
 		});
 
+
 		ServerEntityEvents.ENTITY_UNLOAD.register((entity, world) -> {
 			if (entity instanceof Tardis && entity.isRemoved()) {
 				Tardis ent = (Tardis) entity;
@@ -75,6 +78,18 @@ public class DwMod implements ModInitializer {
 						DwMod.LOGGER.debug(serverState.tardis.toString());
 					}
 				}
+			}
+		});
+
+		ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register((bEnt, world) -> {
+			if (!world.isClient() && bEnt instanceof TardisBentDependant) {
+				((TardisBentDependant)bEnt).register();
+			}
+		});
+
+		ServerBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register((bEnt, world) -> {
+			if (!world.isClient() && bEnt instanceof TardisBentDependant) {
+				((TardisBentDependant)bEnt).unRegister();
 			}
 		});
 	}

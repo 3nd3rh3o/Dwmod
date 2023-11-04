@@ -61,8 +61,6 @@ public class LLOEnergyDistributor extends Item implements GeoItem {
                 ItemStack stack = context.getPlayer().getStackInHand(context.getHand());
                 stack.setCount(stack.getCount() - 1);
                 context.getPlayer().setStackInHand(context.getHand(), stack);
-                world.getBlockEntity(pos).markDirty();
-                world.getChunkManager().markForUpdate(pos);
                 return ActionResult.SUCCESS;
             }
         }

@@ -109,7 +109,7 @@ public class Circuit {
             case ROTOR_BASE -> {
                 switch (strToName(name)) {
                     case LLO_ENERGY_CONNECTOR -> poseStack.translate(0.25, 0.5625, 0.375);
-                    case MAIN_SPACE_TIME_ELEMENT -> poseStack.translate(0, 0.5625, 0);
+                    case MAIN_SPACE_TIME_ELEMENT -> poseStack.translate(-0.0635, 0.5625, 0);
                     default -> {}
                 }
             }

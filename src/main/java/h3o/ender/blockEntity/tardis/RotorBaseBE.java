@@ -15,15 +15,14 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager.ControllerRegistrar;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class RotorBaseBE extends BlockEntity implements GeoBlockEntity {
+public class RotorBaseBE extends BlockEntity implements GeoBlockEntity, TardisBentDependant {
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
     private NbtCompound tardisCircuits;
+    private Tardis trds;
 
     public RotorBaseBE(BlockPos pos, BlockState state) {
         super(RegisterBlockEntities.ROTOR_BASE_BE, pos, state);
     }
-    
-    
 
     @Override
     public void registerControllers(ControllerRegistrar controllers) {
@@ -35,21 +34,15 @@ public class RotorBaseBE extends BlockEntity implements GeoBlockEntity {
         return geoCache;
     }
 
-    
-
     @Override
     public NbtCompound toInitialChunkDataNbt() {
         return createNbt();
     }
 
-    
-
     @Override
     public BlockEntityUpdateS2CPacket toUpdatePacket() {
         return BlockEntityUpdateS2CPacket.create(this);
     }
-
-
 
     @Override
     public void readNbt(NbtCompound nbt) {
@@ -57,21 +50,34 @@ public class RotorBaseBE extends BlockEntity implements GeoBlockEntity {
         this.tardisCircuits = nbt.getCompound("Circuits");
     }
 
-
-
     @Override
     protected void writeNbt(NbtCompound nbt) {
-        nbt.put("Circuits", DimensionalStorageHelper.getTardis(world.getServer(), pos).getDataTracker().get(Tardis.CIRCUITS));
-        super.writeNbt(nbt);
+        Tardis tardis = DimensionalStorageHelper.getTardis(world.getServer(), pos);
+        if (tardis != null) {
+            nbt.put("Circuits", tardis.getDataTracker().get(Tardis.CIRCUITS));
+        }
     }
 
-
-
     public NbtList getTardisCircuits() {
+        if (tardisCircuits == null) {
+            return null;
+        }
         return tardisCircuits.getList("Circuits", NbtElement.LIST_TYPE);
     }
 
-    
-    
+    @Override
+    public void register() {
+        this.trds = DimensionalStorageHelper.getTardis(world.getServer(), pos);
+        if (this.trds != null) {
+            trds.registerBlock(this);
+        }
+    }
+
+    @Override
+    public void unRegister() {
+        if (this.trds != null) {
+            trds.unRegisterBlock(this);
+        }
+    }
 
 }

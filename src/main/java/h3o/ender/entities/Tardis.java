@@ -10,6 +10,7 @@ import h3o.ender.dimensions.RegisterDimensions;
 import h3o.ender.structures.tardis.DimensionalStorageHelper;
 import h3o.ender.structures.tardis.Room;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
@@ -44,6 +45,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class Tardis extends LivingEntity implements GeoEntity {
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
+    private final List<BlockEntity> depEntities = new ArrayList<>();
 
     private static final RawAnimation LEFT_OPEN = RawAnimation.begin()
             .thenPlayAndHold("animation.exoshell.default.left.open");
@@ -56,9 +58,12 @@ public class Tardis extends LivingEntity implements GeoEntity {
 
     private static final TrackedData<Byte> MOB_FLAGS = DataTracker.registerData(Tardis.class,
             TrackedDataHandlerRegistry.BYTE);
-    private static final TrackedData<Boolean> DOORS = DataTracker.registerData(Tardis.class, TrackedDataHandlerRegistry.BOOLEAN);
-    public static final TrackedData<Integer> EXOSHELL_ROT = DataTracker.registerData(Tardis.class, TrackedDataHandlerRegistry.INTEGER);
-    public static final TrackedData<NbtCompound> CIRCUITS = DataTracker.registerData(Tardis.class, TrackedDataHandlerRegistry.NBT_COMPOUND);
+    private static final TrackedData<Boolean> DOORS = DataTracker.registerData(Tardis.class,
+            TrackedDataHandlerRegistry.BOOLEAN);
+    public static final TrackedData<Integer> EXOSHELL_ROT = DataTracker.registerData(Tardis.class,
+            TrackedDataHandlerRegistry.INTEGER);
+    public static final TrackedData<NbtCompound> CIRCUITS = DataTracker.registerData(Tardis.class,
+            TrackedDataHandlerRegistry.NBT_COMPOUND);
 
     private boolean leftOpen = false;
     private boolean rightOpen = false;
@@ -110,7 +115,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
-        nbt.put("Rotation", this.toNbtList((float)getDataTracker().get(EXOSHELL_ROT), this.getPitch()));
+        nbt.put("Rotation", this.toNbtList((float) getDataTracker().get(EXOSHELL_ROT), this.getPitch()));
         nbt.putByteArray("Doors", new byte[] { leftOpen ? (byte) 1 : (byte) 0, rightOpen ? (byte) 1 : (byte) 0 });
         if (this.index != -1) {
             nbt.putInt("Index", this.index);
@@ -159,8 +164,11 @@ public class Tardis extends LivingEntity implements GeoEntity {
                     this.portal.setOriginPos(this.getBlockPos().toCenterPos().add(0, 0.5, 0));
                     this.portal.setDestinationDimension(RegisterDimensions.VORTEX);
                     this.portal.setDestination(dest.toCenterPos().add(0, 0.5, -0.5));
-                    this.portal.setRotationTransformation(DQuaternion.fromEulerAngle(new Vec3d(0, -getDataTracker().get(EXOSHELL_ROT), 0)));
-                    this.portal.setOrientationAndSize(new Vec3d(1, 0, 0).rotateY((float)(-getDataTracker().get(EXOSHELL_ROT) * Math.PI / 180f)), new Vec3d(0, 1, 0), 1, 2);
+                    this.portal.setRotationTransformation(
+                            DQuaternion.fromEulerAngle(new Vec3d(0, -getDataTracker().get(EXOSHELL_ROT), 0)));
+                    this.portal.setOrientationAndSize(
+                            new Vec3d(1, 0, 0).rotateY((float) (-getDataTracker().get(EXOSHELL_ROT) * Math.PI / 180f)),
+                            new Vec3d(0, 1, 0), 1, 2);
                     this.portal.getWorld().spawnEntity(portal);
                 }
             }
@@ -177,12 +185,14 @@ public class Tardis extends LivingEntity implements GeoEntity {
                         RegisterBlocks.TARDIS_DEFAULT_HITBOX.getDefaultState()
                                 .with(TardisDefaultHitbox.OPENNED, (leftOpen || rightOpen))
                                 .with(TardisDefaultHitbox.UPPER, false)
-                                .with(Properties.HORIZONTAL_FACING, Direction.fromRotation(getDataTracker().get(EXOSHELL_ROT))),
+                                .with(Properties.HORIZONTAL_FACING,
+                                        Direction.fromRotation(getDataTracker().get(EXOSHELL_ROT))),
                         3);
                 getWorld().setBlockState(getBlockPos().up(),
                         RegisterBlocks.TARDIS_DEFAULT_HITBOX.getDefaultState().with(TardisDefaultHitbox.UPPER, true)
                                 .with(TardisDefaultHitbox.OPENNED, (leftOpen || rightOpen))
-                                .with(Properties.HORIZONTAL_FACING, Direction.fromRotation(getDataTracker().get(EXOSHELL_ROT))),
+                                .with(Properties.HORIZONTAL_FACING,
+                                        Direction.fromRotation(getDataTracker().get(EXOSHELL_ROT))),
                         3);
             }
         }
@@ -326,6 +336,14 @@ public class Tardis extends LivingEntity implements GeoEntity {
         this.getDataTracker().set(EXOSHELL_ROT, Math.round(asRotation));
     }
 
+    public void registerBlock(BlockEntity ent) {
+        depEntities.add(ent);
+    }
+
+    public void unRegisterBlock(BlockEntity ent) {
+        depEntities.remove(ent);
+    }
+
     public void addCircuit(Circuit circuit) {
         NbtCompound nbt = getDataTracker().get(CIRCUITS);
         if (nbt == null) {
@@ -335,6 +353,14 @@ public class Tardis extends LivingEntity implements GeoEntity {
         circuits.add(circuit);
         nbt = Circuit.writeNbt(circuits);
         getDataTracker().set(CIRCUITS, nbt);
+        updateDependantBlocks();
+    }
+
+    private void updateDependantBlocks() {
+        depEntities.forEach((bEnt) -> {
+            bEnt.markDirty();
+            ((ServerWorld)bEnt.getWorld()).getChunkManager().markForUpdate(bEnt.getPos());;
+        });
     }
 
 }
