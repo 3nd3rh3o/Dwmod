@@ -33,8 +33,8 @@ public class Circuits implements Command {
 
     static {
         commandMap.put("", new ListCircuits());
-        commandMap.put("MSTE", new MainSpaceTimeElement());
-        commandMap.put("2LO_E_D", new LLOEnergyDistributor());
+        commandMap.put("mste", new MainSpaceTimeElement());
+        commandMap.put("2lo_e_d", new LLOEnergyDistributor());
     }
 
 }
