@@ -9,7 +9,6 @@ import java.util.Arrays;
 public class TardisOs {
     private static final HashMap<String, Command> commandMap = new HashMap<>();
 
-    //TODO use that as an entry point for TardisOS
     public static MutableText execute(String input) {
         String[] parts = input.split(" ");
         String commandName = parts[0];
@@ -17,10 +16,11 @@ public class TardisOs {
         if (!(parts.length == 0)) {
             args = Arrays.copyOfRange(parts, 1, parts.length);
         }
-        
+
         Command command = commandMap.get(commandName.toLowerCase());
         if (command == null) {
-            return FormattedText.empty().error("COMMAND : ").info(commandName).error(" NOT FOUND! USE HELP").endLine().assemble();
+            return FormattedText.empty().error("COMMAND : ").info(commandName).error(" NOT FOUND! USE HELP").endLine()
+                    .assemble();
         }
         return command.execute(args);
     }

@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import h3o.ender.blockEntity.tardis.TardisBentDependant;
 import h3o.ender.blocks.RegisterBlocks;
+import h3o.ender.commands.RegisterCommands;
 import h3o.ender.entities.RegisterEntities;
 import h3o.ender.entities.Tardis;
 import h3o.ender.itemGroup.RegisterItemGroups;
@@ -41,6 +42,7 @@ public class DwMod implements ModInitializer {
 		RegisterItemGroups.register();
 		RegisterScreenHandler.register();
 		ModMessages.registerC2Spackets();
+		RegisterCommands.register();
 
 
 		ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {

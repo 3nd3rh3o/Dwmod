@@ -13,7 +13,6 @@ public class HelpEmpty implements Command {
 
     @Override
     public void parse(String[] ars) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'parse'");
     }
     

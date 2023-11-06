@@ -72,7 +72,6 @@ public class FormattedText {
         return this.withColor(string, Formatting.WHITE);
     }
 
-    // TODO test later
     public static List<MutableText> wrapStyledText(MutableText text, int maxWidth, TextRenderer textRenderer) {
         List<MutableText> wrappedText = new ArrayList<>();
         List<MutableText> words = new ArrayList<>();

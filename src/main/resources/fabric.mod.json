@@ -3,13 +3,13 @@
 	"id": "dwmod",
 	"version": "${version}",
 	"name": "dwmod",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "DwMod (TARDIS PROJECT V11)",
 	"authors": [
-		"Me!"
+		"3nd3r_h3O"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "",
+		"sources": "https://github.com/3nd3rh3o/Dwmod"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/dwmod/icon.png",

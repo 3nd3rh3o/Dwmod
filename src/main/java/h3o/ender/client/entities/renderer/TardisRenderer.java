@@ -13,10 +13,10 @@ public class TardisRenderer extends GeoEntityRenderer<Tardis> {
         super(context, new TardisModel());
     }
 
-    
-    //TODO change that to change the model!! and don't forget to handle the animation's change.
+    // TODO change that to change the model!! and don't forget to handle the
+    // animation's change.
     // Maybe check if you need to notify of model change
-    
+
     @Override
     public GeoModel<Tardis> getGeoModel() {
         return super.getGeoModel();
