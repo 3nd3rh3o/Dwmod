@@ -8,7 +8,10 @@ public class HelpEmpty implements Command {
 
     @Override
     public MutableText execute(String[] args) {
-        return FormattedText.empty().normal("LIST OF CATEGORY :").endLine().assemble();
+        return FormattedText.empty().normal("LIST OF CATEGORY :").endLine()
+                .normal("-Circuits").endLine()
+                .normal("-CONSOLE_PANEL").endLine()
+                .assemble();
     }
 
     @Override
