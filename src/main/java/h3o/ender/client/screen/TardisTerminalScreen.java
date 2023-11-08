@@ -44,7 +44,6 @@ public class TardisTerminalScreen extends HandledScreen<TardisTerminalScreenHand
         super.render(context, mouseX, mouseY, delta);
         TerminalBE ent = (TerminalBE)this.client.world.getBlockEntity(handler.getPos());
         nbt = ent.getTardisCircuits();
-        prompt = ent.getPrompt();
         List<MutableText> list = TardisOs.errorDisplayOrNormal(((TerminalBE) this.client.world.getBlockEntity(handler.getPos())), nbt,
                 textRenderer);
         for (int i = 0; i < list.size(); i++) {
@@ -71,6 +70,7 @@ public class TardisTerminalScreen extends HandledScreen<TardisTerminalScreenHand
         if (keyCode == 257) {
             ClientPlayNetworking.send(ModMessages.TARDIS_TERMINAL_OPT_ID,
                     PacketByteBufs.create().writeString("exec"));
+            prompt=">";
             return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
