@@ -38,6 +38,7 @@ public class RegisterItemGroups {
             .icon(() -> new ItemStack(RegisterItems.FREQUENCY_DETECTOR))
             .displayName(Text.of("DwMod - Tools")).entries((context, entries) -> {
                 entries.add(RegisterItems.FREQUENCY_DETECTOR);
+                entries.add(RegisterItems.SCREWDRIVER);
             }).build();
 
     public static void register() {

@@ -18,6 +18,7 @@ public class RegisterItems {
     public static final Item CRYSTAL_RESONATOR = new Item(new FabricItemSettings());
     public static final Item TOOL_BASE = new Item(new FabricItemSettings());
     public static final Item FREQUENCY_DETECTOR = new FrequencyDetector(new FabricItemSettings());
+    public static final Item SCREWDRIVER = new Screwdriver(new FabricItemSettings());
     public static final Item PROTYON_UNIT = new ProtyonUnit(new FabricItemSettings());
     public static final Item RAW_EXITONIC_CIRCUIT = new Item(new FabricItemSettings());
     public static final Item EXITONIC_CIRCUIT = new ExitonicCircuit(new FabricItemSettings());
@@ -37,6 +38,7 @@ public class RegisterItems {
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "crystal_resonator"), CRYSTAL_RESONATOR);
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tool_base"), TOOL_BASE);
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "frequency_detector"), FREQUENCY_DETECTOR);
+        Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "screwdriver"), SCREWDRIVER);
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "protyon_unit"), PROTYON_UNIT);
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "raw_exitonic_circuit"), RAW_EXITONIC_CIRCUIT);
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "exitonic_circuit"), EXITONIC_CIRCUIT);
