@@ -15,7 +15,7 @@ public class ConsolePanel implements Command {
         String[] args = null;
         if (!(parts.length == 0)) {
             args = Arrays.copyOfRange(parts, 1, parts.length);
-        }        
+        }
 
         Command command = commandMap.get(commandName.toLowerCase());
         if (command == null) {
