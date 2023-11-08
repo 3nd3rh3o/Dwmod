@@ -20,7 +20,7 @@ public class Circuit {
     }
 
     public enum NAME {
-        LLO_ENERGY_CONNECTOR, MAIN_SPACE_TIME_ELEMENT
+        LLO_ENERGY_CONNECTOR, MAIN_SPACE_TIME_ELEMENT, DEFAULT_ROTOR
     }
 
     public static LOCATION strToLoc(String loc) {
@@ -34,6 +34,7 @@ public class Circuit {
         return switch (name) {
             case "2lo_energy_connector" -> NAME.LLO_ENERGY_CONNECTOR;
             case "main_space_time_element" -> NAME.MAIN_SPACE_TIME_ELEMENT;
+            case "default_rotor" -> NAME.DEFAULT_ROTOR;
             default -> null;
         };
     }
@@ -47,6 +48,7 @@ public class Circuit {
         return switch (name) {
             case LLO_ENERGY_CONNECTOR -> "2lo_energy_connector";
             case MAIN_SPACE_TIME_ELEMENT -> "main_space_time_element";
+            case DEFAULT_ROTOR -> "default_rotor";
         };
     }
 
@@ -101,6 +103,7 @@ public class Circuit {
         return switch (strToName(name)) {
             case LLO_ENERGY_CONNECTOR -> new ItemStack(RegisterItems.LLOENERGY_DISTRIBUTOR, 1);
             case MAIN_SPACE_TIME_ELEMENT -> new ItemStack(RegisterItems.MAIN_SPACE_TIME_ELEMENT, 1);
+            case DEFAULT_ROTOR -> new ItemStack(RegisterItems.DEFAULT_ROTOR, 1);
         };
     }
 

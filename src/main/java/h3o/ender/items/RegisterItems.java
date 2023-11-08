@@ -8,6 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
+import static h3o.ender.components.Circuit.strToName;
 
 public class RegisterItems {
     public static final Item TARDIS_DEFAULT_WALL_LAMP = new BlockItem(RegisterBlocks.TARDIS_DEFAULT_WALL_LAMP,
@@ -29,6 +30,7 @@ public class RegisterItems {
     public static final Item CONTROL_UNIT = new Item(new FabricItemSettings());
     public static final Item RIFT_STIMULATOR = new Item(new FabricItemSettings());
     public static final Item ENERGY_CONDENSER = new Item(new FabricItemSettings());
+    public static final Item DEFAULT_ROTOR = new Rotor(new FabricItemSettings(), strToName("default_rotor"));
 
     public static void register() {
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.default.wall.lamp"),
@@ -49,5 +51,6 @@ public class RegisterItems {
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "control_unit"), CONTROL_UNIT);
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "rift_stimulator"), RIFT_STIMULATOR);
         Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "energy_condenser"), ENERGY_CONDENSER);
+        Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "default_rotor"), DEFAULT_ROTOR);
     }
 }

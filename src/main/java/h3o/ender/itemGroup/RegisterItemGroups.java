@@ -33,6 +33,7 @@ public class RegisterItemGroups {
                 entries.add(RegisterItems.RIFT_STIMULATOR);
                 entries.add(RegisterItems.LLOENERGY_DISTRIBUTOR);
                 entries.add(RegisterItems.MAIN_SPACE_TIME_ELEMENT);
+                entries.add(RegisterItems.DEFAULT_ROTOR);
             }).build();
     private static final ItemGroup TOOLS = FabricItemGroup.builder()
             .icon(() -> new ItemStack(RegisterItems.FREQUENCY_DETECTOR))
