@@ -6,6 +6,7 @@ import java.util.List;
 import h3o.ender.blocks.RegisterBlocks;
 import h3o.ender.blocks.tardis.TardisDefaultHitbox;
 import h3o.ender.components.Circuit;
+import h3o.ender.components.Circuit.LOCATION;
 import h3o.ender.dimensions.RegisterDimensions;
 import h3o.ender.structures.tardis.DimensionalStorageHelper;
 import h3o.ender.structures.tardis.Room;
@@ -14,6 +15,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -24,6 +26,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.registry.tag.DamageTypeTags;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
@@ -361,6 +364,30 @@ public class Tardis extends LivingEntity implements GeoEntity {
             bEnt.markDirty();
             ((ServerWorld)bEnt.getWorld()).getChunkManager().markForUpdate(bEnt.getPos());;
         });
+    }
+
+    public void popCircuit(ServerPlayerEntity player, LOCATION loc) {
+        NbtCompound nbt = getDataTracker().get(CIRCUITS);
+        if (nbt == null) {
+            nbt = new NbtCompound();
+        }
+        List<Circuit> circuits = Circuit.readFromNbt(nbt);
+        for (Circuit circuit : circuits) {
+            if (circuit.getLoc().equals(Circuit.locToStr(loc))) {
+                ItemStack item = Circuit.getItemForName(circuit.getName());
+                if (!player.giveItemStack(item)) {
+                    player.getWorld().spawnEntity(new ItemEntity(player.getWorld(), player.getX(), player.getY(), player.getZ(), item));
+                }
+                
+                circuits.remove(circuit);
+                break;
+            }
+        }
+
+
+        nbt = Circuit.writeNbt(circuits);
+        getDataTracker().set(CIRCUITS, nbt);
+        updateDependantBlocks();
     }
 
 }
