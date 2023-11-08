@@ -42,7 +42,9 @@ public class TardisTerminalScreen extends HandledScreen<TardisTerminalScreenHand
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-        nbt = ((TerminalBE) this.client.world.getBlockEntity(handler.getPos())).getTardisCircuits();
+        TerminalBE ent = (TerminalBE)this.client.world.getBlockEntity(handler.getPos());
+        nbt = ent.getTardisCircuits();
+        prompt = ent.getPrompt();
         List<MutableText> list = TardisOs.errorDisplayOrNormal(((TerminalBE) this.client.world.getBlockEntity(handler.getPos())), nbt,
                 textRenderer);
         for (int i = 0; i < list.size(); i++) {
@@ -78,6 +80,7 @@ public class TardisTerminalScreen extends HandledScreen<TardisTerminalScreenHand
     public boolean charTyped(char chr, int modifiers) {
         ClientPlayNetworking.send(ModMessages.TARDIS_TERMINAL_CHAR_ID,
                 PacketByteBufs.create().writeString(String.valueOf(chr)));
+        prompt+=(String.valueOf(chr));
         return true;
     }
 }
