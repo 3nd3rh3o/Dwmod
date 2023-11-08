@@ -1,17 +1,14 @@
-package h3o.ender.tardisOs.help;
+package h3o.ender.tardisOs.help.consolePanel;
 
 import java.util.Arrays;
 import java.util.HashMap;
 
 import h3o.ender.tardisOs.Command;
 import h3o.ender.tardisOs.FormattedText;
-import h3o.ender.tardisOs.help.circuits.Circuits;
-import h3o.ender.tardisOs.help.consolePanel.ConsolePanel;
 import net.minecraft.text.MutableText;
 
-public class Help implements Command {
+public class ConsolePanel implements Command {
     private static final HashMap<String, Command> commandMap = new HashMap<>();
-
     @Override
     public MutableText execute(String[] parts) {
         String commandName = parts.length == 0 ? "" : parts[0];
@@ -22,21 +19,18 @@ public class Help implements Command {
 
         Command command = commandMap.get(commandName.toLowerCase());
         if (command == null) {
-            return FormattedText.empty().error("CATEGORY NAME ").info(commandName).error(" NOT KNOWN! USE HELP").endLine()
-                    .assemble();
+            return FormattedText.empty().error("No such console panel : ").info(commandName).error(". use HELP CONSOLE_PANEL").assemble();
         }
         return command.execute(args);
     }
 
     @Override
     public void parse(String[] ars) {
-        throw new UnsupportedOperationException("Unimplemented method 'parse'");
-    }
 
+    }
+    
     static {
-        commandMap.put("", new HelpEmpty());
-        commandMap.put("circuits", new Circuits());
-        commandMap.put("console_panel", new ConsolePanel());
+        commandMap.put("", new ConsolePanelEmpty());
+        commandMap.put("rotor_base", new RotorBase());
     }
-
 }
