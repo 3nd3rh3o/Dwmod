@@ -18,8 +18,8 @@ public class RegisterItems {
     public static final Item GRAY_PRING = new BlockItem(RegisterBlocks.GRAY_PRINT, new FabricItemSettings());
     public static final Item CRYSTAL_RESONATOR = new Item(new FabricItemSettings());
     public static final Item TOOL_BASE = new Item(new FabricItemSettings());
-    public static final Item FREQUENCY_DETECTOR = new FrequencyDetector(new FabricItemSettings());
-    public static final Item SCREWDRIVER = new Screwdriver(new FabricItemSettings());
+    public static final Item FREQUENCY_DETECTOR = new FrequencyDetector(new FabricItemSettings().maxCount(1));
+    public static final Item SCREWDRIVER = new Screwdriver(new FabricItemSettings().maxCount(1));
     public static final Item PROTYON_UNIT = new ProtyonUnit(new FabricItemSettings());
     public static final Item RAW_EXITONIC_CIRCUIT = new Item(new FabricItemSettings());
     public static final Item EXITONIC_CIRCUIT = new ExitonicCircuit(new FabricItemSettings());
