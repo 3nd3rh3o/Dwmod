@@ -14,6 +14,7 @@ import net.minecraft.nbt.NbtString;
 public class Circuit {
     private final NAME name;
     private final LOCATION loc;
+    private static final List<NAME> rotor = new ArrayList<>();
 
     public enum LOCATION {
         ROTOR_BASE;
@@ -91,18 +92,8 @@ public class Circuit {
 
     public static boolean contains(NbtCompound circuits, Circuit circuit) {
         List<Circuit> list = readFromNbt(circuits);
-        if (circuit.getName().equals(nameToStr(NAME.DEFAULT_ROTOR))) {
-            List<NAME> rotor = new ArrayList<>();
-            rotor.add(NAME.DEFAULT_ROTOR);
-            for (Circuit c : list) {
-                if (c.getLoc().equals(locToStr(LOCATION.ROTOR_BASE)) && rotor.contains(strToName(c.getName()))) {
-                    return true;
-                }
-            }
-            return false;
-        }
         for (Circuit c : list) {
-            if (c.getName().equals(circuit.getName()) && c.getLoc().equals(circuit.getLoc())) {
+            if ((c.getName().equals(circuit.getName()) && c.getLoc().equals(circuit.getLoc())) || (Circuit.isRotor(circuit.getName()) && isRotor(c.getName()))) {
                 return true;
             }
         }
@@ -123,11 +114,19 @@ public class Circuit {
                 switch (strToName(name)) {
                     case LLO_ENERGY_CONNECTOR -> poseStack.translate(0.25, 0.5625, 0.375);
                     case MAIN_SPACE_TIME_ELEMENT -> poseStack.translate(-0.0635, 0.5625, 0);
-                    case DEFAULT_ROTOR -> poseStack.translate(0f, 0.5f, 0f);
+                    case DEFAULT_ROTOR -> poseStack.translate(0f, 1f, 0f);
                     default -> {}
                 }
             }
             default -> {}
         }
+    }
+
+    public static boolean isRotor(String name2) {
+        return rotor.contains(strToName(name2));
+    }
+
+    static {
+        rotor.add(NAME.DEFAULT_ROTOR);
     }
 }

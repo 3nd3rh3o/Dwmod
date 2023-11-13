@@ -40,7 +40,9 @@ public class RotorBaseBERenderer extends GeoBlockRenderer<RotorBaseBE> {
             list.forEach((name) -> {
                 poseStack.push();
                 Circuit.renderPos(poseStack, name, Circuit.LOCATION.ROTOR_BASE);
-                poseStack.scale(0.125f, 0.125f, 0.125f);
+                if (!Circuit.isRotor(name)) {
+                    poseStack.scale(0.125f, 0.125f, 0.125f);
+                }
                 MinecraftClient.getInstance().getItemRenderer().renderItem(Circuit.getItemForName(name),
                         ModelTransformationMode.NONE, packedLight, packedOverlay, poseStack, bufferSource,
                         animatable.getWorld(), 0);
