@@ -40,6 +40,7 @@ public class RegisterItemGroups {
             .displayName(Text.of("DwMod - Tools")).entries((context, entries) -> {
                 entries.add(RegisterItems.FREQUENCY_DETECTOR);
                 entries.add(RegisterItems.SCREWDRIVER);
+                entries.add(RegisterItems.WRENCH);
             }).build();
 
     public static void register() {
