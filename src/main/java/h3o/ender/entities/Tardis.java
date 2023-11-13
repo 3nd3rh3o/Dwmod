@@ -375,8 +375,11 @@ public class Tardis extends LivingEntity implements GeoEntity {
         for (Circuit circuit : circuits) {
             if (circuit.getLoc().equals(Circuit.locToStr(loc))) {
                 ItemStack item = Circuit.getItemForName(circuit.getName());
-                if (!player.giveItemStack(item)) {
+                if (item != null && !player.giveItemStack(item)) {
                     player.getWorld().spawnEntity(new ItemEntity(player.getWorld(), player.getX(), player.getY(), player.getZ(), item));
+                }
+                if (item == null) {
+                    //TODO open console panels here!!!!
                 }
                 
                 circuits.remove(circuit);
