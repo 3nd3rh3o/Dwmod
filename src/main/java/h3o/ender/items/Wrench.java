@@ -22,7 +22,7 @@ public class Wrench extends Item {
     public ActionResult useOnBlock(ItemUsageContext context) {
         if (!context.getWorld().isClient()) {
             if (BLOCKS.containsKey(context.getWorld().getBlockState(context.getBlockPos()).getBlock())) {
-                DimensionalStorageHelper.getTardis(context.getWorld().getServer(), context.getBlockPos()).popCircuit((ServerPlayerEntity)context.getPlayer(), BLOCKS.get(context.getWorld().getBlockState(context.getBlockPos()).getBlock()));
+                DimensionalStorageHelper.getTardis(context.getWorld().getServer(), context.getBlockPos()).removeRotor((ServerPlayerEntity)context.getPlayer(), BLOCKS.get(context.getWorld().getBlockState(context.getBlockPos()).getBlock()));
                 return ActionResult.SUCCESS;
             }
             return ActionResult.PASS;

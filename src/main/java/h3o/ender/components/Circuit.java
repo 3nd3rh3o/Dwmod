@@ -93,7 +93,8 @@ public class Circuit {
     public static boolean contains(NbtCompound circuits, Circuit circuit) {
         List<Circuit> list = readFromNbt(circuits);
         for (Circuit c : list) {
-            if ((c.getName().equals(circuit.getName()) && c.getLoc().equals(circuit.getLoc())) || (Circuit.isRotor(circuit.getName()) && isRotor(c.getName()))) {
+            if ((c.getName().equals(circuit.getName()) && c.getLoc().equals(circuit.getLoc()))
+                    || (Circuit.isRotor(circuit.getName()) && isRotor(c.getName()))) {
                 return true;
             }
         }
@@ -115,10 +116,12 @@ public class Circuit {
                     case LLO_ENERGY_CONNECTOR -> poseStack.translate(0.25, 0.5625, 0.375);
                     case MAIN_SPACE_TIME_ELEMENT -> poseStack.translate(-0.0635, 0.5625, 0);
                     case DEFAULT_ROTOR -> poseStack.translate(0f, 1f, 0f);
-                    default -> {}
+                    default -> {
+                    }
                 }
             }
-            default -> {}
+            default -> {
+            }
         }
     }
 
@@ -128,5 +131,17 @@ public class Circuit {
 
     static {
         rotor.add(NAME.DEFAULT_ROTOR);
+    }
+
+    public static boolean containsRotor(NbtCompound nbt, LOCATION loc) {
+        if (loc.equals(LOCATION.ROTOR_BASE)) {
+            List<Circuit> list = readFromNbt(nbt);
+            for (Circuit c : list) {
+                if (Circuit.isRotor(c.getName())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
