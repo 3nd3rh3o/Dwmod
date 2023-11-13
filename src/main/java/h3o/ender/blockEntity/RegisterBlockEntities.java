@@ -3,6 +3,7 @@ package h3o.ender.blockEntity;
 import h3o.ender.DwMod;
 import h3o.ender.blockEntity.tardis.RotorBaseBE;
 import h3o.ender.blockEntity.tardis.TerminalBE;
+import h3o.ender.blockEntity.tardis.console_panel.CommunicationConsolePanelBE;
 import h3o.ender.blockEntity.tardis.console_panel.FabricationConsolePanelBE;
 import h3o.ender.blocks.RegisterBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -24,5 +25,12 @@ public class RegisterBlockEntities {
                                         FabricBlockEntityTypeBuilder
                                                         .create(FabricationConsolePanelBE::new,
                                                                         RegisterBlocks.FABRICATION_CONSOLE_PANEL)
+                                                        .build());
+        public static final BlockEntityType<CommunicationConsolePanelBE> COMMUNICATION_CONSOLE_PANEL_BE = Registry
+                        .register(Registries.BLOCK_ENTITY_TYPE,
+                                        new Identifier(DwMod.MODID, "tardis.console_panel.communication"),
+                                        FabricBlockEntityTypeBuilder
+                                                        .create(CommunicationConsolePanelBE::new,
+                                                                        RegisterBlocks.COMMUNICATION_CONSOLE_PANEL)
                                                         .build());
 }

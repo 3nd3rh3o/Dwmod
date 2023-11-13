@@ -43,7 +43,8 @@
             "dwmod:2lo_energy_distributor",
             "dwmod:rift_stimulator",
             "dwmod:main_space_time_element",
-            "dwmod:screwdriver"
+            "dwmod:screwdriver",
+            "dwmod:wrench"
         ]
     }
 }
