@@ -17,7 +17,7 @@ public class Circuit {
     private static final List<NAME> rotor = new ArrayList<>();
 
     public enum LOCATION {
-        ROTOR_BASE;
+        ROTOR_BASE, COMMUNICATION_CONSOLE_PANEL;
     }
 
     public enum NAME {
@@ -27,6 +27,7 @@ public class Circuit {
     public static LOCATION strToLoc(String loc) {
         return switch (loc) {
             case "rotor_base" -> LOCATION.ROTOR_BASE;
+            case "communication_console_panel" -> LOCATION.COMMUNICATION_CONSOLE_PANEL;
             default -> null;
         };
     }
@@ -56,6 +57,7 @@ public class Circuit {
     public static String locToStr(LOCATION loc) {
         return switch (loc) {
             case ROTOR_BASE -> "rotor_base";
+            case COMMUNICATION_CONSOLE_PANEL -> "communication_console_panel";
         };
     }
 
