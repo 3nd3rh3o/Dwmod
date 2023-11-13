@@ -8,6 +8,7 @@ import h3o.ender.blocks.tardis.GrowingTardis;
 import h3o.ender.blocks.tardis.RotorBase;
 import h3o.ender.blocks.tardis.TardisDefaultHitbox;
 import h3o.ender.blocks.tardis.Terminal;
+import h3o.ender.blocks.tardis.console_panel.FabricationConsolePanel;
 import h3o.ender.blocks.tardis.exoshellIntDoor.TardisDefaultExtDoorHitBox;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
@@ -24,7 +25,7 @@ public class RegisterBlocks {
     public static final Block GROWING_TARDIS = new GrowingTardis(FabricBlockSettings.create().strength(-1f));
     public static final Block ROTOR_BASE = new RotorBase(FabricBlockSettings.create().strength(-1f));
     public static final Block TERMINAL = new Terminal(FabricBlockSettings.create().strength(-1f));
-
+    public static final Block FABRICATION_CONSOLE_PANEL = new FabricationConsolePanel(FabricBlockSettings.create().strength(-1f).nonOpaque());
 
     public static void register() {
         DwMod.LOGGER.info("Registering Blocks");
@@ -36,6 +37,7 @@ public class RegisterBlocks {
         Registry.register(Registries.BLOCK, new Identifier(DwMod.MODID, "growing_tardis"), GROWING_TARDIS);
         Registry.register(Registries.BLOCK, new Identifier(DwMod.MODID, "tardis.console.rotor_base"), ROTOR_BASE);
         Registry.register(Registries.BLOCK, new Identifier(DwMod.MODID, "tardis.console.terminal"), TERMINAL);
+        Registry.register(Registries.BLOCK, new Identifier(DwMod.MODID, "tardis.console.fabrication"), FABRICATION_CONSOLE_PANEL);
     }
     
 }

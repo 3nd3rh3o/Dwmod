@@ -1,6 +1,6 @@
-package h3o.ender.blocks.tardis;
+package h3o.ender.blocks.tardis.console_panel;
 
-import h3o.ender.blockEntity.tardis.RotorBaseBE;
+import h3o.ender.blockEntity.tardis.console_panel.FabricationConsolePanelBE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockRenderType;
@@ -12,26 +12,34 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
-public class RotorBase extends HorizontalFacingBlock implements BlockEntityProvider {
+public class FabricationConsolePanel extends HorizontalFacingBlock implements BlockEntityProvider {
 
-    public RotorBase(Settings settings) {
-        super(settings.nonOpaque());
+    public FabricationConsolePanel(Settings settings) {
+        super(settings);
         setDefaultState(getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
     }
+
+    
 
     @Override
     protected void appendProperties(Builder<Block, BlockState> builder) {
         builder.add(Properties.HORIZONTAL_FACING);
-    }    
+    }
+
+    
+
+
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
+
+
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new RotorBaseBE(pos, state);
+        return new FabricationConsolePanelBE(pos, state);
     }
 
 }

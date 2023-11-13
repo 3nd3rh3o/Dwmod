@@ -3,6 +3,7 @@ package h3o.ender;
 
 import h3o.ender.blockEntity.RegisterBlockEntities;
 import h3o.ender.blocks.RegisterBlocks;
+import h3o.ender.client.blockEntities.renderer.FabricationConsolePanelRenderer;
 import h3o.ender.client.blockEntities.renderer.RotorBaseBERenderer;
 import h3o.ender.client.blockEntities.renderer.TerminalBERenderer;
 import h3o.ender.client.entities.renderer.TardisDefaultExtDoorRenderer;
@@ -28,6 +29,7 @@ public class DwModClient implements ClientModInitializer {
         // This entrypoint is suitable for setting up client-specific logic, such as rendering.
         BlockEntityRendererFactories.register(RegisterBlockEntities.ROTOR_BASE_BE, RotorBaseBERenderer::new);
         BlockEntityRendererFactories.register(RegisterBlockEntities.TERMINAL_BE, TerminalBERenderer::new);
+        BlockEntityRendererFactories.register(RegisterBlockEntities.FABRICATION_CONSOLE_PANEL_BE, FabricationConsolePanelRenderer::new);
         EntityRendererRegistry.register(RegisterEntities.TARDIS, TardisRenderer::new);
         EntityRendererRegistry.register(RegisterEntities.TARDIS_EXT_DOOR_DEFAULT, TardisDefaultExtDoorRenderer::new);
         EntityRendererRegistry.register(RegisterEntities.TARDIS_PORTAL, TardisPortalRenderer::new);
