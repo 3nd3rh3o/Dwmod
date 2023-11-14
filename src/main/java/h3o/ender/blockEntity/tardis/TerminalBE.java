@@ -2,6 +2,7 @@ package h3o.ender.blockEntity.tardis;
 
 import h3o.ender.blockEntity.RegisterBlockEntities;
 import h3o.ender.entities.Tardis;
+import h3o.ender.screenHandler.AstralMapScreenHandler;
 import h3o.ender.screenHandler.TardisTerminalScreenHandler;
 import h3o.ender.structures.tardis.DimensionalStorageHelper;
 import h3o.ender.tardisOs.FormattedText;
@@ -38,6 +39,7 @@ public class TerminalBE extends BlockEntity
     private Tardis trds;
     private String prompt = ">";
     private MutableText text = Text.empty();
+    private int menu = 0;
 
     public TerminalBE(BlockPos pos, BlockState state) {
         super(RegisterBlockEntities.TERMINAL_BE, pos, state);
@@ -108,7 +110,15 @@ public class TerminalBE extends BlockEntity
 
     @Override
     public ScreenHandler createMenu(int var1, PlayerInventory var2, PlayerEntity var3) {
-        return new TardisTerminalScreenHandler(var1, var2, var2, getPos());
+        if (menu == 0) {
+            return new TardisTerminalScreenHandler(var1, var2, var2, getPos());
+        }
+        if (menu == 1) {
+            menu = 0;
+            return new AstralMapScreenHandler(var1, var2, var2, getPos());
+
+        }
+        return null;
     }
 
     @Override
@@ -166,7 +176,7 @@ public class TerminalBE extends BlockEntity
 
     public void addChar(String str) {
         String[] words = prompt.split(" ");
-        if (words[words.length - 1].length()>20 || prompt.length() > 80) {
+        if (words[words.length - 1].length() > 20 || prompt.length() > 80) {
             return;
         }
         this.prompt += str;
@@ -177,7 +187,8 @@ public class TerminalBE extends BlockEntity
     public void optPacket(String readString) {
         if (readString.equals("exec")) {
             this.text = (FormattedText.empty().normal(prompt).endLine().assemble());
-            this.text.append(TardisOs.execute(prompt.substring(1)));
+            this.text.append(TardisOs.execute(prompt.substring(1), (ServerPlayerEntity) world
+                    .getClosestPlayer((double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), 10, false), this));
             this.prompt = ">";
             this.markDirty();
             ((ServerWorld) getWorld()).getChunkManager().markForUpdate(getPos());
@@ -189,6 +200,10 @@ public class TerminalBE extends BlockEntity
                 ((ServerWorld) getWorld()).getChunkManager().markForUpdate(getPos());
             }
         }
+    }
+
+    public void switchMenu(int i) {
+        this.menu = i;
     }
 
 }
