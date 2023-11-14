@@ -7,6 +7,7 @@ import h3o.ender.blockEntity.tardis.TerminalBE;
 import h3o.ender.tardisOs.Command;
 import h3o.ender.tardisOs.FormattedText;
 import h3o.ender.tardisOs.help.circuits.Circuits;
+import h3o.ender.tardisOs.help.commands.Commands;
 import h3o.ender.tardisOs.help.consolePanel.ConsolePanel;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
@@ -39,6 +40,7 @@ public class Help implements Command {
         commandMap.put("", new HelpEmpty());
         commandMap.put("circuits", new Circuits());
         commandMap.put("console_panel", new ConsolePanel());
+        commandMap.put("commands", new Commands());
     }
 
 }
