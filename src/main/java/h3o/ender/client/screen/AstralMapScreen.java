@@ -70,7 +70,6 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
                 bufferBuilder
                         .vertex(context.getMatrices().peek().getPositionMatrix(), (float) x2, (float) y2, (float) z2)
                         .color(color).next();
-
             }
             Tessellator.getInstance().draw();
             context.getMatrices().pop();
