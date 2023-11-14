@@ -38,20 +38,20 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
         // ??
         bufferBuilder.begin(DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
         int segments = 100;
-        int radius = 10;
+        int radius = (int) Math.round((width / 2) * 0.9);
         for (int i = 0; i < segments; i++) {
             // gen the two points of the line
             double sig1 = (double) i / segments * 2.0 * Math.PI;
             double sig2 = (double) (i + 1) / segments * 2.0 * Math.PI;
-            double tet = (double) 0.0; 
+            double tet = (double) Math.toRadians(45);
 
             double x1 = Math.sin(sig1) * radius + (width / 2);
             double y1 = (height / 2) - Math.cos(sig1) * Math.sin(tet) * radius;
-            double z1 = Math.cos(sig1) * Math.cos(tet) * radius;
+            double z1 = Math.cos(sig1) * Math.cos(tet) * radius + radius;
 
             double x2 = Math.sin(sig2) * radius + (width / 2);
             double y2 = (height / 2) - Math.cos(sig2) * Math.sin(tet) * radius;
-            double z2 = Math.cos(sig2) * Math.cos(tet) * radius;
+            double z2 = Math.cos(sig2) * Math.cos(tet) * radius + radius;
             int color = ColorHelper.Argb.getArgb(1, 245, 66, 66);
 
             bufferBuilder.vertex(context.getMatrices().peek().getPositionMatrix(), (float) x1, (float) y1, (float) z1)
