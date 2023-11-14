@@ -57,7 +57,7 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
         MatrixStack stack = context.getMatrices();
         stack.push();
         stack.translate((width / 2), (height / 2), ((int) Math.round(((width / 2)) * zoom)));
-        stack.scale(-20, -20, -20);
+        stack.scale((float)(-20 * zoom), (float)(-20 * zoom), (float)(-20 * zoom));
         stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) tilt));
         stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float) yaw));
         ItemStack itemStack = new ItemStack(RegisterItems.TARDIS_DEFAULT_WALL_LAMP, 1);
@@ -115,6 +115,23 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
             context.drawTexture(this.texture, 0, 14, 175, 15, 14, 14);
         }
         stack.pop();
+    }
+
+    
+
+    
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (button == 1 && mouseX <= 13 && mouseX >= 0 && mouseY <= 13 && mouseY >= 0 && zoom < 5) {
+            zoom+=0.1;
+            return true;
+        }
+        if (button == 1 && mouseX <= 13 && mouseX >= 0 && mouseY <= 26 && mouseY >= 14 && zoom > 0.9) {
+            zoom-=0.1;
+            return true;
+        }
+        return false;
     }
 
     @Override
