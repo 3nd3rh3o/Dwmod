@@ -5,7 +5,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 import h3o.ender.DwMod;
-import h3o.ender.items.RegisterItems;
+import h3o.ender.dimensions.CoordinatesIndex;
+import h3o.ender.dimensions.GalacticCoordinate;
 import h3o.ender.screenHandler.AstralMapScreenHandler;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -28,13 +29,17 @@ import net.minecraft.util.math.RotationAxis;
 public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
     private final Identifier texture = new Identifier(DwMod.MODID, "textures/gui/astralmap.png");
 
-    private static final List<Integer> planets = new ArrayList<>();
+
     private double zoom = 0.9;
-    private double tilt = -215;
+    private double tilt = -35;
     private double yaw = 0;
+    private List<Integer> coords = new ArrayList<>();
+    private int segments = 100;
 
     public AstralMapScreen(AstralMapScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
+        //TODO remove its temp
+        coords.add(0);
     }
 
     @Override
@@ -54,31 +59,63 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
     }
 
     private void renderPlanets(DrawContext context) {
+        List<GalacticCoordinate> map = CoordinatesIndex.getIndex();
+        List<Integer> coordsR = List.copyOf(coords);
+        for (Integer n : coordsR) {
+            map = map.get(n).getChildrens();
+        }
         MatrixStack stack = context.getMatrices();
         stack.push();
         stack.translate((width / 2), (height / 2), ((int) Math.round(((width / 2)) * zoom)));
-        stack.scale((float)(-20 * zoom), (float)(-20 * zoom), (float)(-20 * zoom));
+        stack.scale((float) (-20 * zoom), (float) (-20 * zoom), (float) (-20 * zoom));
         stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) tilt));
         stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float) yaw));
-        ItemStack itemStack = new ItemStack(RegisterItems.TARDIS_DEFAULT_WALL_LAMP, 1);
-        // context.drawItem(itemStack, titleX, playerInventoryTitleX);
+        ItemStack itemStack = new ItemStack(map.get(0).getItem(), 1);
         BakedModel model = client.getItemRenderer().getModels().getModel(itemStack);
         client.getItemRenderer().renderItem(itemStack, ModelTransformationMode.NONE, false, stack,
                 ((VertexConsumerProvider) context.getVertexConsumers()), 0xF000F0, OverlayTexture.DEFAULT_UV, model);
         context.draw();
         stack.pop();
+
+        for (int i = 1; i < map.size(); i++) {
+            //replace 0 by 1 * orbit time
+            double sig = (double) 0 / segments * 2.0 * Math.PI + Math.toRadians(yaw) + Math.toRadians(map.get(i).getInitAngle());
+            double tet = (double) Math.toRadians(tilt % 360);
+            int radius = ((int) Math.round((i * (width / 2) / (map.size() - 1)) * zoom));
+            double x = Math.sin(sig) * radius + (width / 2);
+            double y = (height / 2) - Math.cos(sig) * Math.sin(tet) * radius;
+            double z = Math.cos(sig) * Math.cos(tet) * radius + ((int) Math.round(((width / 2)) * zoom));
+            stack = context.getMatrices();
+            stack.push();
+            stack.translate(x, y, z);
+            stack.scale((float) (-15 * zoom), (float) (-15 * zoom), (float) (-15 * zoom));
+            stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) tilt));
+            //replace 0 by 1 * orbit time
+            stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float)Math.toDegrees(sig)));
+            itemStack = new ItemStack(map.get(i).getItem(), 1);
+            model = client.getItemRenderer().getModels().getModel(itemStack);
+            client.getItemRenderer().renderItem(itemStack, ModelTransformationMode.NONE, false, stack,
+                    ((VertexConsumerProvider) context.getVertexConsumers()), 0xF000F0, OverlayTexture.DEFAULT_UV,
+                    model);
+            context.draw();
+            stack.pop();
+        }
     }
 
     private void renderOrbitsAndButton(DrawContext context, int mouseX, int mouseY) {
+        List<GalacticCoordinate> map = CoordinatesIndex.getIndex();
+        List<Integer> coordsR = List.copyOf(coords);
+        for (Integer n : coordsR) {
+            map = map.get(n).getChildrens();
+        }
         MatrixStack stack = context.getMatrices();
         stack.push();
         BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
         bufferBuilder.begin(DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
-        for (int s = 1; s <= planets.size(); s++) {
-            int segments = 100;
+        for (int s = 1; s < map.size(); s++) {
 
             // deg
-            int radius = ((int) Math.round((s * (width / 2) / planets.size()) * zoom));
+            int radius = ((int) Math.round((s * (width / 2) / map.size() - 1) * zoom));
             for (int i = 0; i < segments; i++) {
                 double sig1 = (double) i / segments * 2.0 * Math.PI + Math.toRadians(yaw);
                 double sig2 = (double) (i + 1) / segments * 2.0 * Math.PI + Math.toRadians(yaw);
@@ -93,7 +130,7 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
                 double z2 = Math.cos(sig2) * Math.cos(tet) * radius + ((int) Math.round(((width / 2)) * zoom));
 
                 // color
-                int color = ColorHelper.Argb.getArgb(1, 245, 66, 66);
+                int color = ColorHelper.Argb.getArgb(1, 223, 233, 243);
                 bufferBuilder
                         .vertex(context.getMatrices().peek().getPositionMatrix(), (float) x1, (float) y1, (float) z1)
                         .color(color).next();
@@ -117,18 +154,14 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
         stack.pop();
     }
 
-    
-
-    
-
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == 1 && mouseX <= 13 && mouseX >= 0 && mouseY <= 13 && mouseY >= 0 && zoom < 5) {
-            zoom+=0.1;
+        if (button == 0 && mouseX <= 13 && mouseX >= 0 && mouseY <= 13 && mouseY >= 0 && zoom < 5) {
+            zoom += 0.1;
             return true;
         }
-        if (button == 1 && mouseX <= 13 && mouseX >= 0 && mouseY <= 26 && mouseY >= 14 && zoom > 0.9) {
-            zoom-=0.1;
+        if (button == 0 && mouseX <= 13 && mouseX >= 0 && mouseY <= 26 && mouseY >= 14 && zoom > 0.9) {
+            zoom -= 0.1;
             return true;
         }
         return false;
@@ -153,12 +186,5 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
             return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
-    }
-
-
-
-    static {
-        planets.add(Integer.valueOf(1));
-        planets.add(Integer.valueOf(2));
     }
 }
