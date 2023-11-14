@@ -29,7 +29,6 @@ import net.minecraft.util.math.RotationAxis;
 public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
     private final Identifier texture = new Identifier(DwMod.MODID, "textures/gui/astralmap.png");
 
-
     private double zoom = 0.9;
     private double tilt = -35;
     private double yaw = 0;
@@ -38,7 +37,7 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
 
     public AstralMapScreen(AstralMapScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
-        //TODO remove its temp
+        // TODO remove its temp
         coords.add(0);
     }
 
@@ -78,8 +77,9 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
         stack.pop();
 
         for (int i = 1; i < map.size(); i++) {
-            //replace 0 by 1 * orbit time
-            double sig = (double) 0 / segments * 2.0 * Math.PI + Math.toRadians(yaw) + Math.toRadians(map.get(i).getInitAngle());
+            // replace 0 by 1 * orbit time
+            double sig = (double) 0 / segments * 2.0 * Math.PI + Math.toRadians(yaw)
+                    + Math.toRadians(map.get(i).getInitAngle());
             double tet = (double) Math.toRadians(tilt % 360);
             int radius = ((int) Math.round((i * (width / 2) / (map.size() - 1)) * zoom));
             double x = Math.sin(sig) * radius + (width / 2);
@@ -90,8 +90,8 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
             stack.translate(x, y, z);
             stack.scale((float) (-15 * zoom), (float) (-15 * zoom), (float) (-15 * zoom));
             stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees((float) tilt));
-            //replace 0 by 1 * orbit time
-            stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float)Math.toDegrees(sig)));
+            // replace 0 by 1 * orbit time
+            stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float) Math.toDegrees(sig)));
             itemStack = new ItemStack(map.get(i).getItem(), 1);
             model = client.getItemRenderer().getModels().getModel(itemStack);
             client.getItemRenderer().renderItem(itemStack, ModelTransformationMode.NONE, false, stack,
@@ -115,7 +115,7 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
         for (int s = 1; s < map.size(); s++) {
 
             // deg
-            int radius = ((int) Math.round((s * (width / 2) / map.size() - 1) * zoom));
+            int radius = ((int) Math.round((s * (width / 2) / (map.size() - 1)) * zoom));
             for (int i = 0; i < segments; i++) {
                 double sig1 = (double) i / segments * 2.0 * Math.PI + Math.toRadians(yaw);
                 double sig2 = (double) (i + 1) / segments * 2.0 * Math.PI + Math.toRadians(yaw);
