@@ -34,6 +34,7 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
     private double yaw = 0;
     private List<Integer> coords = new ArrayList<>();
     private int segments = 100;
+    private int[] trajectory;
 
     public AstralMapScreen(AstralMapScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
@@ -55,6 +56,7 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
         super.render(context, mouseX, mouseY, delta);
         renderOrbitsAndButton(context, mouseX, mouseY);
         renderPlanets(context);
+
     }
 
     private void renderPlanets(DrawContext context) {
@@ -108,6 +110,7 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
         for (Integer n : coordsR) {
             map = map.get(n).getChildrens();
         }
+
         MatrixStack stack = context.getMatrices();
         stack.push();
         BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
@@ -138,6 +141,29 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
                         .vertex(context.getMatrices().peek().getPositionMatrix(), (float) x2, (float) y2, (float) z2)
                         .color(color).next();
             }
+
+        }
+        if (trajectory != null) {
+            double sig1 = (double) 0 / segments * 2.0 * Math.PI + Math.toRadians(yaw)
+                    + Math.toRadians(map.get(trajectory[0]).getInitAngle());
+            double sig2 = (double) 0 / segments * 2.0 * Math.PI + Math.toRadians(yaw)
+                    + Math.toRadians(map.get(trajectory[1]).getInitAngle());
+            int radius1 = ((int) Math.round((trajectory[0] * (width / 2) / (map.size() - 1)) * zoom));
+            int radius2 = ((int) Math.round((trajectory[1] * (width / 2) / (map.size() - 1)) * zoom));
+            double tet = (double) Math.toRadians(tilt % 360);
+            double x1 = Math.sin(sig1) * radius1 + (width / 2);
+            double y1 = (height / 2) - Math.cos(sig1) * Math.sin(tet) * radius1;
+            double z1 = Math.cos(sig1) * Math.cos(tet) * radius1 + ((int) Math.round(((width / 2)) * zoom));
+            double x2 = Math.sin(sig2) * radius2 + (width / 2);
+            double y2 = (height / 2) - Math.cos(sig2) * Math.sin(tet) * radius2;
+            double z2 = Math.cos(sig2) * Math.cos(tet) * radius2 + ((int) Math.round(((width / 2)) * zoom));
+            int color = ColorHelper.Argb.getArgb(1, 223, 233, 243);
+            bufferBuilder
+                    .vertex(context.getMatrices().peek().getPositionMatrix(), (float) x1, (float) y1, (float) z1)
+                    .color(color).next();
+            bufferBuilder
+                    .vertex(context.getMatrices().peek().getPositionMatrix(), (float) x2, (float) y2, (float) z2)
+                    .color(color).next();
 
         }
         Tessellator.getInstance().draw();

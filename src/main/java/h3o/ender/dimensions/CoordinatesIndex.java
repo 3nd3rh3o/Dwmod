@@ -19,5 +19,6 @@ public class CoordinatesIndex {
         map.get(0).putChildren(new GalacticCoordinate(RegisterItems.ASTRALMAP_0_0, 90, 0.5));
         //temp
         map.get(0).putChildren(new GalacticCoordinate(RegisterItems.ASTRALMAP_0_0, 180, 0.5));
+        map.get(0).putChildren(new GalacticCoordinate(RegisterItems.ASTRALMAP_0, 0, 1));
     }
 }
