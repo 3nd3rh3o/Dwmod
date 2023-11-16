@@ -1,0 +1,35 @@
+{
+    "display": {
+        "icon": {
+            "item": "dwmod:wrench"
+        },
+        "title": "K-9 favorite bone",
+        "description": "With this wrench, you can open console panels, and remove the rotor of your tardis. You'll need that to add circuits in your TARDIS",
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "parent": "dwmod:dwmod/bigger_on_the_inside",
+    "criteria": {
+        "wrench": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "player": [
+                    {
+                        "condition": "minecraft:entity_properties",
+                        "entity": "this",
+                        "predicate": {
+                            "nbt": "{Inventory:[{id:\"dwmod:wrench\"}]}"
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "wrench"
+        ]
+    ]
+}
