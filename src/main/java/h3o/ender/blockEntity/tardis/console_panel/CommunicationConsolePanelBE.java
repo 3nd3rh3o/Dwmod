@@ -2,6 +2,7 @@ package h3o.ender.blockEntity.tardis.console_panel;
 
 import h3o.ender.blockEntity.RegisterBlockEntities;
 import h3o.ender.blockEntity.tardis.TardisBentDependant;
+import h3o.ender.blocks.tardis.console_panel.CommunicationConsolePanel;
 import h3o.ender.entities.Tardis;
 import h3o.ender.structures.tardis.DimensionalStorageHelper;
 import net.minecraft.block.BlockState;
@@ -13,7 +14,10 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.animation.AnimatableManager.ControllerRegistrar;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class CommunicationConsolePanelBE extends BlockEntity implements GeoBlockEntity, TardisBentDependant {
@@ -27,7 +31,20 @@ public class CommunicationConsolePanelBE extends BlockEntity implements GeoBlock
 
     @Override
     public void registerControllers(ControllerRegistrar controllers) {
-        return;
+        controllers.add(new AnimationController<>(this, (animationState) -> {
+            if (this.world.getBlockState(pos).get(CommunicationConsolePanel.OPENNED)) {
+                if (animationState.getController().getCurrentAnimation() == null || !animationState.getController()
+                        .getCurrentAnimation().animation().name().equals("open_panel")) {
+                    return animationState.setAndContinue(RawAnimation.begin().thenPlayAndHold("open_panel"));
+                }
+            } else {
+                if (animationState.getController().getCurrentAnimation() == null || !animationState.getController()
+                        .getCurrentAnimation().animation().name().equals("close_panel")) {
+                    return animationState.setAndContinue(RawAnimation.begin().thenPlayAndHold("close_panel"));
+                }
+            }
+            return PlayState.CONTINUE;
+        }));
     }
 
     @Override

@@ -14,12 +14,12 @@ public class CommunicationConsolePanelModel extends GeoModel<CommunicationConsol
 
     @Override
     public Identifier getTextureResource(CommunicationConsolePanelBE animatable) {
-        return new Identifier(DwMod.MODID, "textures/block_entities/communication.png");
+        return new Identifier(DwMod.MODID, "textures/block_entities/tardis.console.communication.png");
     }
 
     @Override
     public Identifier getAnimationResource(CommunicationConsolePanelBE animatable) {
-        return null;
+        return new Identifier(DwMod.MODID, "animations/block_entities/tardis.console_panel.communication.animation.json");
     }
     
 }
