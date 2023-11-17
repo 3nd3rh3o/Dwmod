@@ -34,7 +34,7 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
     private double yaw = 0;
     private List<Integer> coords = new ArrayList<>();
     private int segments = 100;
-    private int[] trajectory;
+    private int[] trajectory = { 1, 2 };
 
     public AstralMapScreen(AstralMapScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
@@ -59,8 +59,9 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
 
     }
 
-    private void genTrajectory(BufferBuilder bufferbuilder, int planet1, int planet2, List<GalacticCoordinate> map, DrawContext ctx) {
-        //TODO fix me (nearly there)
+    private void genTrajectory(BufferBuilder bufferbuilder, int planet1, int planet2, List<GalacticCoordinate> map,
+            DrawContext ctx) {
+        // TODO fixme
         int r1 = ((int) Math.round((planet1 * (width / 2) / (map.size() - 1)) * zoom));
         int r2 = ((int) Math.round((planet2 * (width / 2) / (map.size() - 1)) * zoom));
         double tet1 = (double) 0 / segments * 2.0 * Math.PI + Math.toRadians(yaw)
@@ -68,63 +69,41 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
         double tet2 = (double) 0 / segments * 2.0 * Math.PI + Math.toRadians(yaw)
                 + Math.toRadians(map.get(planet2).getInitAngle());
 
-        double x1 = r1 * Math.cos(tet1);
-        double y1 = r1 * Math.sin(tet1);
+        double xa = r1 * Math.cos(tet1);
+        double ya = r1 * Math.sin(tet1);
+        double xm = (xa + (r2 * Math.cos(tet2) / 2.0));
+        double ym = (ya + (r2 * Math.sin(tet2) / 2.0));
 
-        double x2 = r2 * Math.cos(tet2);
-        double y2 = r2 * Math.sin(tet2);
+        double xap = xa - xm;
+        double yap = ya - ym;
 
-        double x1p = x1 - (x1 + x2 / 2.0);
-        double x2p = x2 - (x1 + x2 / 2.0);
-        double y1p = y1 - (y1 + y2 / 2.0);
-        double y2p = y2 - (y1 + y2 / 2.0);
+        double distance = Math.sqrt(Math.pow(xap, 2) + Math.pow(yap, 2));
+        double angle = Math.atan2(yap, xap);
+        double xmpp = distance * Math.cos(angle + Math.PI / 2.0);
+        double ympp = distance * Math.sin(angle + Math.PI / 2.0);
 
-        double r1p = Math.sqrt(Math.pow(x1p, 2) + Math.pow(y1p, 2));
-        double r2p = Math.sqrt(Math.pow(x2p, 2) + Math.pow(y2p, 2));
+        double initAngle = Math.atan2(yap - ympp, xap - xmpp);
 
-        double tet1p = Math.atan2(x1p, y1p);
-        double tet2p = Math.atan2(x2p, y2p);
-
-        double tetmp = (tet1p + tet2p) / 2.0;
-        double rmp = r1p;
-
-        double xmp = rmp * Math.cos(tetmp);
-        double ymp = rmp * Math.sin(tetmp);
-
-        double x1pp = r1p * Math.cos(tet1p) - xmp;
-        double x2pp = r2p * Math.cos(tet2p) - xmp;
-        double y1pp = r1p * Math.sin(tet1p) - ymp;
-        double y2pp = r2p * Math.sin(tet2p) - ymp;
-
-        double r1pp = Math.sqrt(Math.pow(x1pp, 2) + Math.pow(y1pp, 2));
-        //double r2pp = Math.sqrt(Math.pow(x2pp, 2) + Math.pow(y2pp, 2));
-
-        double tet1pp = Math.atan2(x1pp, y1pp);
-        double tet2pp = Math.atan2(x2pp, y2pp);
-
-        double deltaAngle = (tet2pp - tet1pp) / segments;
-        double sig = (double) Math.toRadians(tilt % 360);
+        double dangle = angle > Math.PI ? 2 * Math.PI - angle / segments : angle / segments;
+        double radius = Math.sqrt(Math.pow(xap - xmpp, 2) + Math.pow(yap - ympp, 2));
+        double tet = (double) Math.toRadians(tilt % 360);
         for (int i = 0; i < segments; i++) {
-            double angle = tet1pp + i * deltaAngle;
-            double angleb = tet1pp + (i + 1) * deltaAngle;
-            double radius = r1pp;
+            double a1 = initAngle + i * dangle;
+            double a2 = initAngle + (i + 1) * dangle;
 
-            double x_1 = Math.sin(angle) * radius + (width / 2) + xmp + (x1 + x2 / 2.0);
-            double y_1 = (height / 2) - Math.cos(angle) * Math.sin(sig) * radius;
-            double z_1 = Math.cos(angle) * Math.cos(sig) * radius + ((int) Math.round(((width / 2)) * zoom)) + ymp
-                    + (y1 + y2 / 2.0);
+            double x1 = Math.sin(a1) * radius + (width / 2) + xm + xmpp;
+            double y1 = (height / 2) - Math.cos(a1) * Math.sin(tet) * radius;
+            double z1 = Math.cos(a1) * Math.cos(tet) * radius + ((int) Math.round(((width / 2)) * zoom) + ym + ympp);
+            double x2 = Math.sin(a2) * radius + (width / 2) + xm + xmpp;
+            double y2 = (height / 2) - Math.cos(a2) * Math.sin(tet) * radius;
+            double z2 = Math.cos(a2) * Math.cos(tet) * radius + ((int) Math.round(((width / 2)) * zoom) + ym + ympp);
 
-            double x_2 = Math.sin(angleb) * radius + (width / 2) + xmp + (x1 + x2 / 2.0);
-            double y_2 = (height / 2) - Math.cos(angleb) * Math.sin(sig) * radius;
-            double z_2 = Math.cos(angleb) * Math.cos(sig) * radius + ((int) Math.round(((width / 2)) * zoom)) + ymp
-                    + (y1 + y2 / 2.0);
-
-            int color = ColorHelper.Argb.getArgb(1, 223, 233, 243);
+            int color = ColorHelper.Argb.getArgb(1, 223, 120, 120);
             bufferbuilder
-                    .vertex(ctx.getMatrices().peek().getPositionMatrix(), (float) x_1, (float) y_1, (float) z_1)
+                    .vertex(ctx.getMatrices().peek().getPositionMatrix(), (float) x1, (float) y1, (float) z1)
                     .color(color).next();
             bufferbuilder
-                    .vertex(ctx.getMatrices().peek().getPositionMatrix(), (float) x_2, (float) y_2, (float) z_2)
+                    .vertex(ctx.getMatrices().peek().getPositionMatrix(), (float) x2, (float) y2, (float) z2)
                     .color(color).next();
         }
 
@@ -214,7 +193,7 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
 
         }
         if (trajectory != null) {
-            genTrajectory(bufferBuilder, trajectory[0], trajectory[1], map, context);
+            //genTrajectory(bufferBuilder, trajectory[0], trajectory[1], map, context);
         }
         Tessellator.getInstance().draw();
         if (mouseX <= 13 && mouseX >= 0 && mouseY <= 13 && mouseY >= 0) {
