@@ -62,12 +62,11 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
 
     private void genTrajectory(BufferBuilder bufferbuilder, int planet1, int planet2, List<GalacticCoordinate> map,
             DrawContext ctx) {
-        double sig1 = Math.toRadians(yaw+0.5) + Math.toRadians(map.get(planet1).getInitAngle());
-        double sig2 = Math.toRadians(yaw+0.5) + Math.toRadians(map.get(planet2).getInitAngle());
+        double sig1 = Math.toRadians(yaw) + Math.toRadians(map.get(planet1).getInitAngle());
+        double sig2 = Math.toRadians(yaw) + Math.toRadians(map.get(planet2).getInitAngle());
         
         double r1 = ((int) Math.round((planet1 * (width / 2) / (map.size() - 1)) * zoom));
         double r2 = ((int) Math.round((planet2 * (width / 2) / (map.size() - 1)) * zoom));
-
         double tet = Math.toRadians(tilt % 360);
         
         
@@ -76,7 +75,7 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
         float rOffset = 0.5f;
         float tOffset = 0.5f;
         
-
+        //TODO redo P1 gen, it come from a sphere, then you offset
         Vec3d P0 = new Vec3d(
                 Math.sin(sig1) * r1,
                 - Math.cos(sig1) * Math.sin(tet) * r1,
@@ -85,17 +84,14 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
                 Math.sin(sig2) * r2,
                 - Math.cos(sig2) * Math.sin(tet) * r2,
                 Math.cos(sig2) * Math.cos(tet) * r2);
-        
-        Vec3d D = P2.subtract(P0); // Vecteur directeur
-        Vec3d ex = new Vec3d(1, 0, 0);
-        
-        // Calcul du produit vectoriel pour obtenir un vecteur perpendiculaire
-        Vec3d P = D.crossProduct(ex).normalize();
-
-        // Placer le point de contrôle 
-        Vec3d M = P0.add(P2).multiply(0.5); // Milieu entre P0 et P2
-        double distance = M.length() * rOffset;
-        Vec3d P1 = M.add(P.multiply(distance)); 
+        double rm = P0.distanceTo(P2) / 2.0;
+        Vec3d PM = P0.add(P2).multiply(0.5);
+        double r = Math.sqrt(Math.pow(rm * rOffset, 2) + Math.pow(rm * tOffset, 2));
+        Vec3d P1 = new Vec3d(
+                Math.sin(Math.PI/2.0 + Math.toRadians(yaw)) * r,
+                - Math.cos(Math.PI/2.0 + Math.toRadians(yaw)) * Math.sin(tet + Math.PI / 2.0) * r,
+                Math.cos(Math.PI/2.0 + Math.toRadians(yaw)) * Math.cos(tet + Math.PI / 2.0) * r
+        ).subtract(PM);
 
 
         Vec3d translate = new Vec3d((width / 2), (height / 2), ((int) Math.round((width / 2) * zoom)));
