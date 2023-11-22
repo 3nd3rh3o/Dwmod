@@ -25,6 +25,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 
 public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
     private final Identifier texture = new Identifier(DwMod.MODID, "textures/gui/astralmap.png");
@@ -61,42 +62,58 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
 
     private void genTrajectory(BufferBuilder bufferbuilder, int planet1, int planet2, List<GalacticCoordinate> map,
             DrawContext ctx) {
-        // TODO fixme
-        int r1 = ((int) Math.round((planet1 * (width / 2) / (map.size() - 1)) * zoom));
-        int r2 = ((int) Math.round((planet2 * (width / 2) / (map.size() - 1)) * zoom));
-        double tet1 = (double) 0 / segments * 2.0 * Math.PI + Math.toRadians(yaw)
-                + Math.toRadians(map.get(planet1).getInitAngle());
-        double tet2 = (double) 0 / segments * 2.0 * Math.PI + Math.toRadians(yaw)
-                + Math.toRadians(map.get(planet2).getInitAngle());
+        double sig1 = Math.toRadians(yaw+0.5) + Math.toRadians(map.get(planet1).getInitAngle());
+        double sig2 = Math.toRadians(yaw+0.5) + Math.toRadians(map.get(planet2).getInitAngle());
+        
+        double r1 = ((int) Math.round((planet1 * (width / 2) / (map.size() - 1)) * zoom));
+        double r2 = ((int) Math.round((planet2 * (width / 2) / (map.size() - 1)) * zoom));
 
-        double xa = r1 * Math.cos(tet1);
-        double ya = r1 * Math.sin(tet1);
-        double xm = (xa + (r2 * Math.cos(tet2) / 2.0));
-        double ym = (ya + (r2 * Math.sin(tet2) / 2.0));
+        double tet = Math.toRadians(tilt % 360);
+        
+        
 
-        double xap = xa - xm;
-        double yap = ya - ym;
+        //params (-0.5 : 0.5)
+        float rOffset = 0.5f;
+        float tOffset = 0.5f;
+        
 
-        double distance = Math.sqrt(Math.pow(xap, 2) + Math.pow(yap, 2));
-        double angle = Math.atan2(yap, xap);
-        double xmpp = distance * Math.cos(angle + Math.PI / 2.0);
-        double ympp = distance * Math.sin(angle + Math.PI / 2.0);
+        Vec3d P0 = new Vec3d(
+                Math.sin(sig1) * r1,
+                - Math.cos(sig1) * Math.sin(tet) * r1,
+                Math.cos(sig1) * Math.cos(tet) * r1);
+        Vec3d P2 = new Vec3d(
+                Math.sin(sig2) * r2,
+                - Math.cos(sig2) * Math.sin(tet) * r2,
+                Math.cos(sig2) * Math.cos(tet) * r2);
+        
+        Vec3d D = P2.subtract(P0); // Vecteur directeur
+        Vec3d ex = new Vec3d(1, 0, 0);
+        
+        // Calcul du produit vectoriel pour obtenir un vecteur perpendiculaire
+        Vec3d P = D.crossProduct(ex).normalize();
 
-        double initAngle = Math.atan2(yap - ympp, xap - xmpp);
+        // Placer le point de contrôle 
+        Vec3d M = P0.add(P2).multiply(0.5); // Milieu entre P0 et P2
+        double distance = M.length() * rOffset;
+        Vec3d P1 = M.add(P.multiply(distance)); 
 
-        double dangle = angle > Math.PI ? 2 * Math.PI - angle / segments : angle / segments;
-        double radius = Math.sqrt(Math.pow(xap - xmpp, 2) + Math.pow(yap - ympp, 2));
-        double tet = (double) Math.toRadians(tilt % 360);
-        for (int i = 0; i < segments; i++) {
-            double a1 = initAngle + i * dangle;
-            double a2 = initAngle + (i + 1) * dangle;
 
-            double x1 = Math.sin(a1) * radius + (width / 2) + xm + xmpp;
-            double y1 = (height / 2) - Math.cos(a1) * Math.sin(tet) * radius;
-            double z1 = Math.cos(a1) * Math.cos(tet) * radius + ((int) Math.round(((width / 2)) * zoom) + ym + ympp);
-            double x2 = Math.sin(a2) * radius + (width / 2) + xm + xmpp;
-            double y2 = (height / 2) - Math.cos(a2) * Math.sin(tet) * radius;
-            double z2 = Math.cos(a2) * Math.cos(tet) * radius + ((int) Math.round(((width / 2)) * zoom) + ym + ympp);
+        Vec3d translate = new Vec3d((width / 2), (height / 2), ((int) Math.round((width / 2) * zoom)));
+
+
+        P0 = P0.add(translate);
+        P1 = P1.add(translate);
+        P2 = P2.add(translate);
+        
+        for (double t = 0; t < 1; t += 0.01) {
+            
+            double x1 = (1 - t) * (1 - t) * P0.getX() + 2 * (1 - t) * t * P1.getX() + t * t * P2.getX();
+            double y1 = (1 - t) * (1 - t) * P0.getY() + 2 * (1 - t) * t * P1.getY() + t * t * P2.getY();
+            double z1 = (1 - t) * (1 - t) * P0.getZ() + 2 * (1 - t) * t * P1.getZ() + t * t * P2.getZ();
+
+            double x2 = (1 - (t + 0.01)) * (1 - (t + 0.01)) * P0.getX() + 2 * (1 - (t + 0.01)) * (t + 0.01) * P1.getX() + (t + 0.01) * (t + 0.01) * P2.getX();
+            double y2 = (1 - (t + 0.01)) * (1 - (t + 0.01)) * P0.getY() + 2 * (1 - (t + 0.01)) * (t + 0.01) * P1.getY() + (t + 0.01) * (t + 0.01) * P2.getY();
+            double z2 = (1 - (t + 0.01)) * (1 - (t + 0.01)) * P0.getZ() + 2 * (1 - (t + 0.01)) * (t + 0.01) * P1.getZ() + (t + 0.01) * (t + 0.01) * P2.getZ();
 
             int color = ColorHelper.Argb.getArgb(1, 223, 120, 120);
             bufferbuilder
@@ -193,7 +210,7 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
 
         }
         if (trajectory != null) {
-            //genTrajectory(bufferBuilder, trajectory[0], trajectory[1], map, context);
+            genTrajectory(bufferBuilder, trajectory[0], trajectory[1], map, context);
         }
         Tessellator.getInstance().draw();
         if (mouseX <= 13 && mouseX >= 0 && mouseY <= 13 && mouseY >= 0) {

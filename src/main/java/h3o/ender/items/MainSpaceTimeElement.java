@@ -66,7 +66,7 @@ public class MainSpaceTimeElement extends Item implements GeoItem {
             BlockPos pos = context.getBlockPos();
             ServerWorld world = ((ServerWorld) context.getWorld());
             Tardis tardis = DimensionalStorageHelper.getTardis(world.getServer(), pos);
-            Circuit circuit = new Circuit(Circuit.NAME.MAIN_SPACE_TIME_ELEMENT, LOCATION.ROTOR_BASE);
+            Circuit circuit = new Circuit(Circuit.NAME.MAIN_SPACE_TIME_ELEMENT, LOCATION.ROTOR_BASE, 0f);
             if (world.getBlockState(pos).getBlock().equals(RegisterBlocks.ROTOR_BASE) && !Circuit.contains(tardis.getDataTracker().get(Tardis.CIRCUITS), circuit) && !Circuit.containsRotor(tardis.getDataTracker().get(Tardis.CIRCUITS), Circuit.strToLoc(circuit.getLoc()))) {
                 tardis.addCircuit(circuit);
                 ItemStack stack = context.getPlayer().getStackInHand(context.getHand());

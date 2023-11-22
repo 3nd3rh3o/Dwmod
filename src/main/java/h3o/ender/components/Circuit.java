@@ -4,16 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import h3o.ender.items.RegisterItems;
+import h3o.ender.tardisOs.FormattedText;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtFloat;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
+import net.minecraft.text.MutableText;
 
 public class Circuit {
     private final NAME name;
     private final LOCATION loc;
+    private float setting;
     private static final List<NAME> rotor = new ArrayList<>();
 
     public enum LOCATION {
@@ -41,10 +45,13 @@ public class Circuit {
         };
     }
 
-    public Circuit(NAME name, LOCATION loc) {
+    public Circuit(NAME name, LOCATION loc, float setting) {
         this.name = name;
         this.loc = loc;
+        this.setting = 0;
     }
+
+
 
     public static String nameToStr(NAME name) {
         return switch (name) {
@@ -69,12 +76,21 @@ public class Circuit {
         return locToStr(loc);
     }
 
+    public MutableText getParamDesc(NAME name) {
+        return switch(name) {
+            case LLO_ENERGY_CONNECTOR -> FormattedText.empty().normal("none").assemble();
+            case DEFAULT_ROTOR -> FormattedText.empty().normal("position").assemble();
+            case MAIN_SPACE_TIME_ELEMENT -> FormattedText.empty().normal("energy_stored").assemble();
+        };
+    }
+
     public static NbtCompound writeNbt(List<Circuit> circuitList) {
         NbtList circuits = new NbtList();
         for (Circuit circuit : circuitList) {
             NbtList strList = new NbtList();
             strList.add(NbtString.of(circuit.getName()));
             strList.add(NbtString.of(circuit.getLoc()));
+            strList.add(NbtFloat.of(circuit.getSetting()));
             circuits.add(strList);
         }
         NbtCompound nbt = new NbtCompound();
@@ -82,12 +98,16 @@ public class Circuit {
         return nbt;
     }
 
+    private float getSetting() {
+        return this.setting;
+    }
+
     public static List<Circuit> readFromNbt(NbtCompound nbt) {
         List<Circuit> circuits = new ArrayList<>();
         NbtList circuitsNbt = nbt.getList("Circuits", NbtElement.LIST_TYPE);
         for (int i = 0; i < circuitsNbt.size(); i++) {
             circuits.add(new Circuit(Circuit.strToName(circuitsNbt.getList(i).getString(0)),
-                    Circuit.strToLoc(circuitsNbt.getList(i).getString(1))));
+                    Circuit.strToLoc(circuitsNbt.getList(i).getString(1)), circuitsNbt.getList(i).getFloat(2)));
         }
         return circuits;
     }

@@ -66,7 +66,7 @@ public class Rotor extends Item implements GeoItem {
             BlockPos pos = context.getBlockPos();
             ServerWorld world = ((ServerWorld) context.getWorld());
             Tardis tardis = DimensionalStorageHelper.getTardis(world.getServer(), pos);
-            Circuit circuit = new Circuit(Circuit.NAME.DEFAULT_ROTOR, LOCATION.ROTOR_BASE);
+            Circuit circuit = new Circuit(Circuit.NAME.DEFAULT_ROTOR, LOCATION.ROTOR_BASE, 1f);
             if (world.getBlockState(pos).getBlock().equals(RegisterBlocks.ROTOR_BASE) && !Circuit.contains(tardis.getDataTracker().get(Tardis.CIRCUITS), circuit)) {
                 tardis.addCircuit(circuit);
                 ItemStack stack = context.getPlayer().getStackInHand(context.getHand());
