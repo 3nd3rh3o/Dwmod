@@ -89,8 +89,8 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
         double r = Math.sqrt(Math.pow(rm * rOffset, 2) + Math.pow(rm * tOffset, 2));
         Vec3d P1 = new Vec3d(
                 Math.sin(Math.PI/2.0 + Math.toRadians(yaw)) * r,
-                - Math.cos(Math.PI/2.0 + Math.toRadians(yaw)) * Math.sin(tet + Math.PI / 2.0) * r,
-                Math.cos(Math.PI/2.0 + Math.toRadians(yaw)) * Math.cos(tet + Math.PI / 2.0) * r
+                - Math.cos(Math.PI/2.0 + Math.toRadians(yaw)) * Math.sin(tet) * r,
+                Math.cos(Math.PI/2.0 + Math.toRadians(yaw)) * Math.cos(tet) * r
         ).subtract(PM);
 
 
