@@ -64,52 +64,48 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
             DrawContext ctx) {
         double sig1 = Math.toRadians(yaw) + Math.toRadians(map.get(planet1).getInitAngle());
         double sig2 = Math.toRadians(yaw) + Math.toRadians(map.get(planet2).getInitAngle());
-        
+
         double r1 = ((int) Math.round((planet1 * (width / 2) / (map.size() - 1)) * zoom));
         double r2 = ((int) Math.round((planet2 * (width / 2) / (map.size() - 1)) * zoom));
         double tet = Math.toRadians(tilt % 360);
-        
-        
 
-        //params (-0.5 : 0.5)
+        // param (-0.5 : 0.5)
         float rOffset = 0.5f;
         float tOffset = 0.5f;
-        
-        //TODO redo P1 gen, it come from a sphere, then you offset
+
         Vec3d P0 = new Vec3d(
                 Math.sin(sig1) * r1,
-                - Math.cos(sig1) * Math.sin(tet) * r1,
+                -Math.cos(sig1) * Math.sin(tet) * r1,
                 Math.cos(sig1) * Math.cos(tet) * r1);
         Vec3d P2 = new Vec3d(
                 Math.sin(sig2) * r2,
-                - Math.cos(sig2) * Math.sin(tet) * r2,
+                -Math.cos(sig2) * Math.sin(tet) * r2,
                 Math.cos(sig2) * Math.cos(tet) * r2);
-        double rm = P0.distanceTo(P2) / 2.0;
-        Vec3d PM = P0.add(P2).multiply(0.5);
-        double r = Math.sqrt(Math.pow(rm * rOffset, 2) + Math.pow(rm * tOffset, 2));
-        Vec3d P1 = new Vec3d(
-                Math.sin(Math.PI/2.0 + Math.toRadians(yaw)) * r,
-                - Math.cos(Math.PI/2.0 + Math.toRadians(yaw)) * Math.sin(tet) * r,
-                Math.cos(Math.PI/2.0 + Math.toRadians(yaw)) * Math.cos(tet) * r
-        ).subtract(PM);
 
+        Vec3d M = P0.add(P2).multiply(0.5).multiply(1 + tOffset);
+        double m = M.length();
+
+        Vec3d P1 = M.add(0, -(Math.sin(tet - Math.PI / 2.0) * (m * rOffset)),
+                Math.cos(tet - Math.PI / 2.0) * (m * rOffset));
 
         Vec3d translate = new Vec3d((width / 2), (height / 2), ((int) Math.round((width / 2) * zoom)));
-
 
         P0 = P0.add(translate);
         P1 = P1.add(translate);
         P2 = P2.add(translate);
-        
+
         for (double t = 0; t < 1; t += 0.01) {
-            
+
             double x1 = (1 - t) * (1 - t) * P0.getX() + 2 * (1 - t) * t * P1.getX() + t * t * P2.getX();
             double y1 = (1 - t) * (1 - t) * P0.getY() + 2 * (1 - t) * t * P1.getY() + t * t * P2.getY();
             double z1 = (1 - t) * (1 - t) * P0.getZ() + 2 * (1 - t) * t * P1.getZ() + t * t * P2.getZ();
 
-            double x2 = (1 - (t + 0.01)) * (1 - (t + 0.01)) * P0.getX() + 2 * (1 - (t + 0.01)) * (t + 0.01) * P1.getX() + (t + 0.01) * (t + 0.01) * P2.getX();
-            double y2 = (1 - (t + 0.01)) * (1 - (t + 0.01)) * P0.getY() + 2 * (1 - (t + 0.01)) * (t + 0.01) * P1.getY() + (t + 0.01) * (t + 0.01) * P2.getY();
-            double z2 = (1 - (t + 0.01)) * (1 - (t + 0.01)) * P0.getZ() + 2 * (1 - (t + 0.01)) * (t + 0.01) * P1.getZ() + (t + 0.01) * (t + 0.01) * P2.getZ();
+            double x2 = (1 - (t + 0.01)) * (1 - (t + 0.01)) * P0.getX() + 2 * (1 - (t + 0.01)) * (t + 0.01) * P1.getX()
+                    + (t + 0.01) * (t + 0.01) * P2.getX();
+            double y2 = (1 - (t + 0.01)) * (1 - (t + 0.01)) * P0.getY() + 2 * (1 - (t + 0.01)) * (t + 0.01) * P1.getY()
+                    + (t + 0.01) * (t + 0.01) * P2.getY();
+            double z2 = (1 - (t + 0.01)) * (1 - (t + 0.01)) * P0.getZ() + 2 * (1 - (t + 0.01)) * (t + 0.01) * P1.getZ()
+                    + (t + 0.01) * (t + 0.01) * P2.getZ();
 
             int color = ColorHelper.Argb.getArgb(1, 223, 120, 120);
             bufferbuilder
