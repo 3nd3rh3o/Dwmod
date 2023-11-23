@@ -15,11 +15,13 @@ public class Room {
     
 
     public enum Name {
-        DEFAULT_CONSOLE_ROOM;
+        DEFAULT_CONSOLE_ROOM, MAINTENANCE_ENTRANCE;
 
         public int getSize() {
             return switch(this) {
                 case DEFAULT_CONSOLE_ROOM -> 1;
+                //TODO
+                case MAINTENANCE_ENTRANCE -> 0;
             };
         }
     }
@@ -64,6 +66,7 @@ public class Room {
     public static String getStructName(Name name) {
         return switch (name) {
             case DEFAULT_CONSOLE_ROOM -> "dwmod:tardis/default/console_room";
+            case MAINTENANCE_ENTRANCE -> "dwmod:tardis/maintenance/entrance";
         };
     }
 
@@ -72,6 +75,9 @@ public class Room {
         switch (this.name) {
             case DEFAULT_CONSOLE_ROOM -> {
                 features.put("RealWorldInterface", new BlockPos(9, 2, 13));
+            }
+            case MAINTENANCE_ENTRANCE -> {
+                //TODO
             }
         }
         return features;

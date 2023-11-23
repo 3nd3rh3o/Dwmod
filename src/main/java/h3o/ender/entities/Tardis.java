@@ -10,6 +10,7 @@ import h3o.ender.components.Circuit.LOCATION;
 import h3o.ender.dimensions.RegisterDimensions;
 import h3o.ender.structures.tardis.DimensionalStorageHelper;
 import h3o.ender.structures.tardis.Room;
+import h3o.ender.structures.tardis.Room.Name;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
@@ -325,6 +326,9 @@ public class Tardis extends LivingEntity implements GeoEntity {
             int id = DimensionalStorageHelper.getValidPos(name.getSize(), internalScheme);
             DimensionalStorageHelper.add(name, BlockRotation.NONE, this.index, vortex, internalScheme, this);
             internalScheme.add(new Room(id, name.getSize(), 0, 0, name));
+            name = Name.MAINTENANCE_ENTRANCE;
+            DimensionalStorageHelper.add(name, BlockRotation.NONE, this.index, vortex, internalScheme, this);
+            internalScheme.add(new Room(id, name.getSize(), 0, -1, name));
         }
     }
 

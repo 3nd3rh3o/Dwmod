@@ -254,6 +254,9 @@ public class DimensionalStorageHelper {
                 portal.setOrientationAndSize(new Vec3d(-1, 0, 0), new Vec3d(0, 1, 0), 1, 2);
                 portal.getWorld().spawnEntity(portal);
             }
+            case MAINTENANCE_ENTRANCE -> {
+                //TODO 
+            }
         }
     }
 

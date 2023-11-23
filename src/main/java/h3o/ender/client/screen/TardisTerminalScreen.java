@@ -19,7 +19,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class TardisTerminalScreen extends HandledScreen<TardisTerminalScreenHandler> {
-    private final Identifier texture = new Identifier(DwMod.MODID, "textures/gui/frequency_detector_screen.png");
+    private final Identifier texture = new Identifier(DwMod.MODID, "textures/gui/astralmap.png");
     private String prompt;
     private NbtList nbt;
 
