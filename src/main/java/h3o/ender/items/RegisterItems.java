@@ -40,10 +40,15 @@ public class RegisterItems {
         public static final Item RIFT_STIMULATOR = new Item(new FabricItemSettings());
         public static final Item ENERGY_CONDENSER = new Item(new FabricItemSettings());
         public static final Item DEFAULT_ROTOR = new Rotor(new FabricItemSettings(), strToName("default_rotor"));
+        
+
 
         // astralMap
         public static final Item ASTRALMAP_0 = new Item(new FabricItemSettings());
         public static final Item ASTRALMAP_0_0 = new Item(new FabricItemSettings());
+        // rooms
+        public static final Item MAINTENANCE_ACCESS = new Item(new FabricItemSettings());
+
 
         public static void register() {
                 Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.default.wall.lamp"),
@@ -83,5 +88,8 @@ public class RegisterItems {
                 // ASTRAL MAP
                 Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "astralmap_0"), ASTRALMAP_0);
                 Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "astralmap_0_0"), ASTRALMAP_0_0);
+
+                // ROOMS
+                Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.room.maintenance_access"), MAINTENANCE_ACCESS);
         }
 }

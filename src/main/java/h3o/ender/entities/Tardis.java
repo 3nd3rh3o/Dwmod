@@ -318,7 +318,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
             intSh = DimensionalStorageHelper.filterEngine(internalScheme);
             id = DimensionalStorageHelper.getValidPos(name.getSize(), intSh);
             DimensionalStorageHelper.addE(name, BlockRotation.NONE, this.index, vortex, internalScheme, this);
-            internalScheme.add(new Room(id, name.getSize(), 0, 0, name));
+            internalScheme.add(new Room(id * -1, name.getSize(), 0, 0, name));
             getDataTracker().set(INTERNAL_SCHEME, Room.toNBT(internalScheme));
         }
     }

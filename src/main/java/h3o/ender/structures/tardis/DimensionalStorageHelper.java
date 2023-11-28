@@ -258,7 +258,10 @@ public class DimensionalStorageHelper {
     public static List<Room> filterNormal(List<Room> intSh) {
         List<Room> out = new ArrayList<>();
         for (Room room : intSh) {
-            if (room.getId() >= 0) {
+            if (room.getId() > 0) {
+                out.add(room);
+            }
+            if (room.getId() == 0 && !(Room.MAINTENANCE.contains(room.getName()))) {
                 out.add(room);
             }
         }
@@ -268,8 +271,11 @@ public class DimensionalStorageHelper {
     public static List<Room> filterEngine(List<Room> intSh) {
         List<Room> out = new ArrayList<>();
         for (Room room : intSh) {
-            if (room.getId() <= 0) {
+            if (room.getId() < 0) {
                 out.add(new Room((room.getId() * -1), room.getSize(), room.getOrientation().ordinal(), room.getVId(), room.getName()));
+            }
+            if (room.getId() == 0 && (Room.MAINTENANCE.contains(room.getName()))) {
+                out.add(room);
             }
         }
         return out;

@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import h3o.ender.items.RegisterItems;
+import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 
 public class Room {
+    public static final List<Name> MAINTENANCE = new ArrayList<>();
     private int id;
     private int size;
     private int orientation;
@@ -30,6 +33,13 @@ public class Room {
             return switch (this) {
                 case DEFAULT_CONSOLE_ROOM -> "dwmod:tardis/default/console_room";
                 case MAINTENANCE_ENTRANCE -> "dwmod:tardis/maintenance/entrance";
+            };
+        }
+
+        public Item getIcon() {
+            return switch (this) {
+                case DEFAULT_CONSOLE_ROOM -> null;
+                case MAINTENANCE_ENTRANCE -> RegisterItems.MAINTENANCE_ACCESS;
             };
         }
 
@@ -124,5 +134,8 @@ public class Room {
         List<Room> internalScheme = fromNBT(intSh);
         internalScheme.add(room);
         return toNBT(internalScheme);
+    }
+    static {
+        MAINTENANCE.add(Name.MAINTENANCE_ENTRANCE);
     }
 }
