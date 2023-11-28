@@ -76,5 +76,7 @@ public class TardisOs {
     static {
         commandMap.put("help", new Help());
         commandMap.put("astralmap", new AstralMap());
+        commandMap.put("engineaccess", new EngineAccess());
+        commandMap.put("mainconf", new MainConf());
     }
 }

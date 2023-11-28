@@ -1,8 +1,11 @@
 package h3o.ender.structures.tardis;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 
 public class Room {
@@ -12,17 +15,36 @@ public class Room {
     private int vId;
     private Name name;
 
-    
-
     public enum Name {
         DEFAULT_CONSOLE_ROOM, MAINTENANCE_ENTRANCE;
 
         public int getSize() {
-            return switch(this) {
+            return switch (this) {
                 case DEFAULT_CONSOLE_ROOM -> 1;
-                //TODO
-                case MAINTENANCE_ENTRANCE -> 0;
+                // TODO
+                case MAINTENANCE_ENTRANCE -> 1;
             };
+        }
+
+        public String getStructName() {
+            return switch (this) {
+                case DEFAULT_CONSOLE_ROOM -> "dwmod:tardis/default/console_room";
+                case MAINTENANCE_ENTRANCE -> "dwmod:tardis/maintenance/entrance";
+            };
+        }
+
+        public HashMap<String, BlockPos> getFeatures() {
+            HashMap<String, BlockPos> features = new HashMap<>();
+            switch (this) {
+                case DEFAULT_CONSOLE_ROOM -> {
+                    features.put("RealWorldInterface", new BlockPos(9, 2, 13));
+                    features.put("EngineAccess", new BlockPos(14, 2, 8));
+                }
+                case MAINTENANCE_ENTRANCE -> {
+                    // TODO
+                }
+            }
+            return features;
         }
     }
 
@@ -34,8 +56,6 @@ public class Room {
         this.name = name;
     }
 
-
-
     public Integer getId() {
         return id;
     }
@@ -44,46 +64,23 @@ public class Room {
         return this.name;
     }
 
-
     public int getSize() {
         return size;
     }
 
-
-
-    public int getOrientation() {
-        return orientation;
+    public BlockRotation getOrientation() {
+        return switch (orientation) {
+            case 0 -> BlockRotation.NONE;
+            case 1 -> BlockRotation.CLOCKWISE_90;
+            case 2 -> BlockRotation.CLOCKWISE_180;
+            case 3 -> BlockRotation.COUNTERCLOCKWISE_90;
+            default -> throw new IllegalArgumentException("Unexpected value: " + orientation);
+        };
     }
-
-
 
     public int getVId() {
         return vId;
     }
-
-
-
-    public static String getStructName(Name name) {
-        return switch (name) {
-            case DEFAULT_CONSOLE_ROOM -> "dwmod:tardis/default/console_room";
-            case MAINTENANCE_ENTRANCE -> "dwmod:tardis/maintenance/entrance";
-        };
-    }
-
-    public HashMap<String,BlockPos> getFeatures() {
-        HashMap<String, BlockPos> features = new HashMap<>();
-        switch (this.name) {
-            case DEFAULT_CONSOLE_ROOM -> {
-                features.put("RealWorldInterface", new BlockPos(9, 2, 13));
-            }
-            case MAINTENANCE_ENTRANCE -> {
-                //TODO
-            }
-        }
-        return features;
-    }
-
-
 
     public static Room getById(List<Room> internalScheme, Integer id) {
         for (Room room : internalScheme) {
@@ -92,5 +89,40 @@ public class Room {
             }
         }
         return null;
+    }
+
+    public static NbtCompound toNBT(List<Room> intSh) {
+        NbtCompound rooms = new NbtCompound();
+        for (Room room : intSh) {
+            NbtCompound tupple = new NbtCompound();
+
+            tupple.putString("Name", room.getName().toString());
+            tupple.putInt("Id", room.getId());
+            tupple.putInt("Size", room.getSize());
+            tupple.putInt("Rot", room.getOrientation().ordinal());
+            tupple.putInt("vId", room.getVId());
+            rooms.put(String.valueOf(intSh.indexOf(room)), tupple);
+        }
+        return rooms;
+    }
+
+    public static List<Room> fromNBT(NbtCompound nbt) {
+        List<Room> internalScheme = new ArrayList<>();
+        nbt.getKeys().forEach((key) -> {
+            NbtCompound tupple = nbt.getCompound(key);
+            int id = tupple.getInt("Id");
+            int size = tupple.getInt("Size");
+            int rot = tupple.getInt("Rot");
+            int vId = tupple.getInt("vId");
+            Room.Name name = Room.Name.valueOf(tupple.getString("Name"));
+            internalScheme.add(new Room(id, size, rot, vId, name));
+        });
+        return internalScheme;
+    }
+
+    public static NbtCompound addRoom(NbtCompound intSh, Room room) {
+        List<Room> internalScheme = fromNBT(intSh);
+        internalScheme.add(room);
+        return toNBT(internalScheme);
     }
 }

@@ -206,14 +206,14 @@ public class AstralMapScreen extends HandledScreen<AstralMapScreenHandler> {
         }
         Tessellator.getInstance().draw();
         if (mouseX <= 13 && mouseX >= 0 && mouseY <= 13 && mouseY >= 0) {
-            context.drawTexture(this.texture, 0, 0, 189, 1, 14, 14);
+            context.drawTexture(this.texture, 0, 0, 190, 1, 14, 14);
         } else {
-            context.drawTexture(this.texture, 0, 0, 175, 1, 14, 14);
+            context.drawTexture(this.texture, 0, 0, 176, 1, 14, 14);
         }
         if (mouseX <= 13 && mouseX >= 0 && mouseY <= 26 && mouseY >= 14) {
-            context.drawTexture(this.texture, 0, 14, 189, 15, 14, 14);
+            context.drawTexture(this.texture, 0, 14, 190, 15, 14, 14);
         } else {
-            context.drawTexture(this.texture, 0, 14, 175, 15, 14, 14);
+            context.drawTexture(this.texture, 0, 14, 176, 15, 14, 14);
         }
         stack.pop();
     }

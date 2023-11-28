@@ -13,6 +13,7 @@ import h3o.ender.client.entities.renderer.TardisPortalRenderer;
 import h3o.ender.client.entities.renderer.TardisRenderer;
 import h3o.ender.client.screen.AstralMapScreen;
 import h3o.ender.client.screen.FrequencyDetectorScreen;
+import h3o.ender.client.screen.MaintenanceConfigScreen;
 import h3o.ender.client.screen.TardisTerminalScreen;
 import h3o.ender.entities.RegisterEntities;
 import h3o.ender.screenHandler.RegisterScreenHandler;
@@ -42,5 +43,6 @@ public class DwModClient implements ClientModInitializer {
         HandledScreens.register(RegisterScreenHandler.FREQUENCY_DETECTOR_SCREEN_HANDLER, FrequencyDetectorScreen::new);
         HandledScreens.register(RegisterScreenHandler.TARDIS_TERMINAL_SCREEN_HANDLER, TardisTerminalScreen::new);
         HandledScreens.register(RegisterScreenHandler.ASTRAL_MAP_SCREEN_HANDLER, AstralMapScreen::new);
+        HandledScreens.register(RegisterScreenHandler.MAINTENANCE_CONF_SCREEN_HANDLER, MaintenanceConfigScreen::new);
     }
 }

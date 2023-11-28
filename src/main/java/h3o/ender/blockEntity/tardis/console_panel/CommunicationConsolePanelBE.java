@@ -6,6 +6,7 @@ import h3o.ender.blocks.tardis.console_panel.CommunicationConsolePanel;
 import h3o.ender.entities.Tardis;
 import h3o.ender.structures.tardis.DimensionalStorageHelper;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -32,7 +33,7 @@ public class CommunicationConsolePanelBE extends BlockEntity implements GeoBlock
     @Override
     public void registerControllers(ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, (animationState) -> {
-            if (this.world.getBlockState(pos).get(CommunicationConsolePanel.OPENNED)) {
+            if (!this.world.getBlockState(pos).getBlock().equals(Blocks.AIR) && this.world.getBlockState(pos).get(CommunicationConsolePanel.OPENNED)) {
                 if (animationState.getController().getCurrentAnimation() == null || !animationState.getController()
                         .getCurrentAnimation().animation().name().equals("open_panel")) {
                     return animationState.setAndContinue(RawAnimation.begin().thenPlayAndHold("open_panel"));

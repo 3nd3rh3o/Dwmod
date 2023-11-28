@@ -48,6 +48,12 @@ public class DimensionalStorageHelper {
                 Math.round(index / (max_x * max_z)) * 16,
                 Math.round(index / max_x) % max_z * 16);
     }
+    public static BlockPos getRoomPosFromRoomIndexE(int index) {
+        return new BlockPos(
+                (index % max_x) * 16,
+                Math.round(index / (max_x * max_z)) * 16 - 128,
+                Math.round(index / max_x) % max_z * 16);
+    }
 
     public static void loadStructure(ServerWorld world, BlockPos pos, String structName, BlockRotation rot) {
         loadStructure(world, pos, structName, new StructurePlacementData().setMirror(BlockMirror.NONE)
@@ -231,13 +237,44 @@ public class DimensionalStorageHelper {
         }
     }
 
-    public static void add(Name name, BlockRotation rot, int index, ServerWorld vortex,
+    public static void addN(Name name, BlockRotation rot, int index, ServerWorld vortex,
             List<Room> intSh, Tardis tardis) {
         BlockPos basePos = getBasePosFromTardisIndex(index);
-        int id = getValidPos(name.getSize(), intSh);
+        List<Room> internalScheme = filterNormal(intSh);
+        int id = getValidPos(name.getSize(), internalScheme);
         summonPortals(vortex, name, basePos.add(getRoomPosFromRoomIndex(id)), tardis);
-        loadStructure(vortex, basePos.add(getRoomPosFromRoomIndex(id)), Room.getStructName(name), rot);
+        loadStructure(vortex, basePos.add(getRoomPosFromRoomIndex(id)), name.getStructName(), rot);
     }
+
+    public static void addE(Name name, BlockRotation rot, int index, ServerWorld vortex,
+            List<Room> intSh, Tardis tardis) {
+        BlockPos basePos = getBasePosFromTardisIndex(index);
+        List<Room> internalScheme = filterEngine(intSh);
+        int id = getValidPos(name.getSize(), internalScheme);
+        summonPortals(vortex, name, basePos.add(getRoomPosFromRoomIndexE(id)), tardis);
+        loadStructure(vortex, basePos.add(getRoomPosFromRoomIndexE(id)), name.getStructName(), rot);
+    }
+
+    public static List<Room> filterNormal(List<Room> intSh) {
+        List<Room> out = new ArrayList<>();
+        for (Room room : intSh) {
+            if (room.getId() >= 0) {
+                out.add(room);
+            }
+        }
+        return out;
+    }
+
+    public static List<Room> filterEngine(List<Room> intSh) {
+        List<Room> out = new ArrayList<>();
+        for (Room room : intSh) {
+            if (room.getId() <= 0) {
+                out.add(new Room((room.getId() * -1), room.getSize(), room.getOrientation().ordinal(), room.getVId(), room.getName()));
+            }
+        }
+        return out;
+    }
+
 
     private static void summonPortals(ServerWorld vortex, Name name, BlockPos origin, Tardis tardis) {
         switch (name) {

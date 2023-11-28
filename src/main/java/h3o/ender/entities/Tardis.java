@@ -11,6 +11,7 @@ import h3o.ender.dimensions.RegisterDimensions;
 import h3o.ender.structures.tardis.DimensionalStorageHelper;
 import h3o.ender.structures.tardis.Room;
 import h3o.ender.structures.tardis.Room.Name;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
@@ -68,18 +69,21 @@ public class Tardis extends LivingEntity implements GeoEntity {
             TrackedDataHandlerRegistry.INTEGER);
     public static final TrackedData<NbtCompound> CIRCUITS = DataTracker.registerData(Tardis.class,
             TrackedDataHandlerRegistry.NBT_COMPOUND);
+    public static final TrackedData<NbtCompound> INTERNAL_SCHEME = DataTracker.registerData(Tardis.class,
+            TrackedDataHandlerRegistry.NBT_COMPOUND);
 
+    
     private boolean leftOpen = false;
     private boolean rightOpen = false;
 
     private int index = -1;
-    private List<Room> internalScheme = new ArrayList<>();
     private TardisPortal portal;
     private int activeConsId = 0;
 
     protected final float[] handDropChances;
     private final DefaultedList<ItemStack> armorItems;
     private final DefaultedList<ItemStack> handItems;
+    private boolean engineAccess = false;
 
     protected Tardis(EntityType<? extends LivingEntity> entityType, World world) {
         super(RegisterEntities.TARDIS, world);
@@ -100,20 +104,10 @@ public class Tardis extends LivingEntity implements GeoEntity {
         if (nbt.contains("Index")) {
             this.index = nbt.getInt("Index");
         }
-        NbtCompound room = nbt.getCompound("InternalScheme");
-        room.getKeys().forEach((key) -> {
-            this.internalScheme = new ArrayList<>();
-            NbtCompound tupple = room.getCompound(key);
-            int id = tupple.getInt("Id");
-            int size = tupple.getInt("Size");
-            int rot = tupple.getInt("Rot");
-            int vId = tupple.getInt("vId");
-            Room.Name name = Room.Name.valueOf(tupple.getString("Name"));
-
-            internalScheme.add(new Room(id, size, rot, vId, name));
-        });
+        getDataTracker().set(INTERNAL_SCHEME, nbt.getCompound("InternalScheme"));
         getDataTracker().set(DOORS, getDoorsOpenned());
         getDataTracker().set(CIRCUITS, nbt.getCompound("Circuits"));
+        this.engineAccess = nbt.getBoolean("EngineAccess");
         super.readCustomDataFromNbt(nbt);
     }
 
@@ -124,19 +118,9 @@ public class Tardis extends LivingEntity implements GeoEntity {
         if (this.index != -1) {
             nbt.putInt("Index", this.index);
         }
-        NbtCompound rooms = new NbtCompound();
-        for (Room room : internalScheme) {
-            NbtCompound tupple = new NbtCompound();
-
-            tupple.putString("Name", room.getName().toString());
-            tupple.putInt("Id", room.getId());
-            tupple.putInt("Size", room.getSize());
-            tupple.putInt("Rot", room.getOrientation());
-            tupple.putInt("vId", room.getVId());
-            rooms.put(String.valueOf(internalScheme.indexOf(room)), tupple);
-        }
-        nbt.put("InternalScheme", rooms);
+        nbt.put("InternalScheme", getDataTracker().get(INTERNAL_SCHEME));
         nbt.put("Circuits", getDataTracker().get(CIRCUITS));
+        nbt.putBoolean("EngineAccess", engineAccess);
         super.writeCustomDataToNbt(nbt);
     }
 
@@ -160,10 +144,12 @@ public class Tardis extends LivingEntity implements GeoEntity {
         if (!getWorld().isClient()) {
             if (getWorld().getEntitiesByClass(TardisPortal.class, this.getBoundingBox().expand(1), entity -> true)
                     .isEmpty()) {
+                List<Room> internalScheme = Room.fromNBT(getDataTracker().get(INTERNAL_SCHEME));
                 if (DimensionalStorageHelper.contain(internalScheme, activeConsId)) {
                     BlockPos dest = DimensionalStorageHelper.getRoomPosFromRoomIndex(activeConsId);
                     dest = dest.add(DimensionalStorageHelper.getBasePosFromTardisIndex(this.index));
-                    dest = dest.add(Room.getById(internalScheme, activeConsId).getFeatures().get("RealWorldInterface"));
+                    dest = dest.add(Room.getById(internalScheme, activeConsId).getName().getFeatures().get("RealWorldInterface")
+                            .rotate(Room.getById(internalScheme, activeConsId).getOrientation()));
                     this.portal = TardisPortal.entityType.create(this.getWorld());
                     this.portal.setOriginPos(this.getBlockPos().toCenterPos().add(0, 0.5, 0));
                     this.portal.setDestinationDimension(RegisterDimensions.VORTEX);
@@ -264,6 +250,7 @@ public class Tardis extends LivingEntity implements GeoEntity {
         this.dataTracker.startTracking(DOORS, (boolean) false);
         this.dataTracker.startTracking(EXOSHELL_ROT, (int) 0);
         this.dataTracker.startTracking(CIRCUITS, new NbtCompound());
+        this.dataTracker.startTracking(INTERNAL_SCHEME, new NbtCompound());
     }
 
     @Override
@@ -320,19 +307,24 @@ public class Tardis extends LivingEntity implements GeoEntity {
 
     public void structureInit() {
         if (!getWorld().isClient()) {
-            internalScheme = new ArrayList<>();
+            List<Room> internalScheme = new ArrayList<>();
             Room.Name name = Room.Name.DEFAULT_CONSOLE_ROOM;
             ServerWorld vortex = getWorld().getServer().getWorld(RegisterDimensions.VORTEX);
-            int id = DimensionalStorageHelper.getValidPos(name.getSize(), internalScheme);
-            DimensionalStorageHelper.add(name, BlockRotation.NONE, this.index, vortex, internalScheme, this);
+            List<Room> intSh = DimensionalStorageHelper.filterNormal(internalScheme);
+            int id = DimensionalStorageHelper.getValidPos(name.getSize(), intSh);
+            DimensionalStorageHelper.addN(name, BlockRotation.NONE, this.index, vortex, internalScheme, this);
             internalScheme.add(new Room(id, name.getSize(), 0, 0, name));
             name = Name.MAINTENANCE_ENTRANCE;
-            DimensionalStorageHelper.add(name, BlockRotation.NONE, this.index, vortex, internalScheme, this);
-            internalScheme.add(new Room(id, name.getSize(), 0, -1, name));
+            intSh = DimensionalStorageHelper.filterEngine(internalScheme);
+            id = DimensionalStorageHelper.getValidPos(name.getSize(), intSh);
+            DimensionalStorageHelper.addE(name, BlockRotation.NONE, this.index, vortex, internalScheme, this);
+            internalScheme.add(new Room(id, name.getSize(), 0, 0, name));
+            getDataTracker().set(INTERNAL_SCHEME, Room.toNBT(internalScheme));
         }
     }
 
     public void purgeIntPortals() {
+        List<Room> internalScheme = Room.fromNBT(getDataTracker().get(INTERNAL_SCHEME));
         internalScheme.forEach(room -> {
             DimensionalStorageHelper.removeRoom(index, room.getId(), room.getSize(),
                     getServer().getWorld(RegisterDimensions.VORTEX));
@@ -366,7 +358,8 @@ public class Tardis extends LivingEntity implements GeoEntity {
     private void updateDependantBlocks() {
         depEntities.forEach((bEnt) -> {
             bEnt.markDirty();
-            ((ServerWorld)bEnt.getWorld()).getChunkManager().markForUpdate(bEnt.getPos());;
+            ((ServerWorld) bEnt.getWorld()).getChunkManager().markForUpdate(bEnt.getPos());
+            ;
         });
     }
 
@@ -380,7 +373,8 @@ public class Tardis extends LivingEntity implements GeoEntity {
             if (Circuit.isRotor(circuit.getName())) {
                 ItemStack item = Circuit.getItemForName(circuit.getName());
                 if (item != null && !player.giveItemStack(item)) {
-                    player.getWorld().spawnEntity(new ItemEntity(player.getWorld(), player.getX(), player.getY(), player.getZ(), item));
+                    player.getWorld().spawnEntity(
+                            new ItemEntity(player.getWorld(), player.getX(), player.getY(), player.getZ(), item));
                 }
                 circuits.remove(circuit);
                 break;
@@ -404,7 +398,8 @@ public class Tardis extends LivingEntity implements GeoEntity {
             if (!Circuit.isRotor(circuit.getName()) && circuit.getLoc().equals(Circuit.locToStr(loc))) {
                 ItemStack item = Circuit.getItemForName(circuit.getName());
                 if (item != null && !player.giveItemStack(item)) {
-                    player.getWorld().spawnEntity(new ItemEntity(player.getWorld(), player.getX(), player.getY(), player.getZ(), item));
+                    player.getWorld().spawnEntity(
+                            new ItemEntity(player.getWorld(), player.getX(), player.getY(), player.getZ(), item));
                 }
                 circuits.remove(circuit);
                 break;
@@ -415,4 +410,23 @@ public class Tardis extends LivingEntity implements GeoEntity {
         updateDependantBlocks();
     }
 
+    public void switchEngineAccess() {
+        engineAccess = !engineAccess;
+        List<Room> internalScheme = Room.fromNBT(getDataTracker().get(INTERNAL_SCHEME));
+        Room consRoom = internalScheme.get(activeConsId);
+        BlockPos pos = DimensionalStorageHelper.getBasePosFromTardisIndex(this.index)
+                .add(consRoom.getName().getFeatures().get("EngineAccess").add(-8, -8, -8).rotate(consRoom.getOrientation()).add(8, 8, 8))
+                .add(DimensionalStorageHelper.getRoomPosFromRoomIndex(activeConsId));
+        if (engineAccess) {
+            getServer().getWorld(RegisterDimensions.VORTEX).setBlockState(pos, Blocks.AIR.getDefaultState(),
+                    Block.NOTIFY_ALL);
+            getServer().getWorld(RegisterDimensions.VORTEX).setBlockState(pos.up(), Blocks.AIR.getDefaultState(),
+                    Block.NOTIFY_ALL);
+        } else {
+            getServer().getWorld(RegisterDimensions.VORTEX).setBlockState(pos, RegisterBlocks.TARDIS_DEFAULT_WALL_LAMP.getDefaultState(),
+                    Block.NOTIFY_ALL);
+            getServer().getWorld(RegisterDimensions.VORTEX).setBlockState(pos.up(), RegisterBlocks.TARDIS_DEFAULT_WALL_LAMP.getDefaultState(),
+                    Block.NOTIFY_ALL);
+        }
+    }
 }

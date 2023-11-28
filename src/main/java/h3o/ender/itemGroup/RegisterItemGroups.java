@@ -16,6 +16,10 @@ public class RegisterItemGroups {
             .displayName(Text.of("DwMod - Tardis building block")).entries((context, entries) -> {
                 entries.add(RegisterItems.TARDIS_DEFAULT_WALL_LAMP);
                 entries.add(RegisterItems.TARDIS_DEFAULT_FLOOR);
+                entries.add(RegisterItems.TARDIS_MAINTENANCE_WALL_LOWER);
+                entries.add(RegisterItems.TARDIS_MAINTENANCE_WALL_FRAME_LOWER);
+                entries.add(RegisterItems.TARDIS_MAINTENANCE_WALL);
+                entries.add(RegisterItems.TARDIS_MAINTENANCE_WALL_FRAME);
             }).build();
     private static final ItemGroup COMPONENT = FabricItemGroup.builder()
             .icon(() -> new ItemStack(RegisterItems.CRYSTAL_RESONATOR))

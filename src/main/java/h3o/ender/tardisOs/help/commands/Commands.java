@@ -13,6 +13,7 @@ public class Commands implements Command {
         return FormattedText.empty().normal("LIST OF COMMANDS :").endLine()
                 .normal("-HELP").endLine()
                 .normal("-ASTRALMAP").endLine()
+                .normal("-MAINCONF").endLine()
                 .assemble();
     }
 

@@ -15,6 +15,14 @@ public class RegisterItems {
                         new FabricItemSettings());
         public static final Item TARDIS_DEFAULT_FLOOR = new BlockItem(RegisterBlocks.TARDIS_DEFAULT_FLOOR,
                         new FabricItemSettings());
+        public static final Item TARDIS_MAINTENANCE_WALL_LOWER = new BlockItem(RegisterBlocks.TARDIS_MAINTENANCE_WALL_LOWER,
+                        new FabricItemSettings());
+        public static final Item TARDIS_MAINTENANCE_WALL_FRAME_LOWER = new BlockItem(RegisterBlocks.TARDIS_MAINTENANCE_WALL_FRAME_LOWER,
+                        new FabricItemSettings());
+        public static final Item TARDIS_MAINTENANCE_WALL = new BlockItem(RegisterBlocks.TARDIS_MAINTENANCE_WALL,
+                        new FabricItemSettings());
+        public static final Item TARDIS_MAINTENANCE_WALL_FRAME = new BlockItem(RegisterBlocks.TARDIS_MAINTENANCE_WALL_FRAME,
+                        new FabricItemSettings());
         public static final Item GRAY_PRING = new BlockItem(RegisterBlocks.GRAY_PRINT, new FabricItemSettings());
         public static final Item CRYSTAL_RESONATOR = new Item(new FabricItemSettings());
         public static final Item TOOL_BASE = new Item(new FabricItemSettings());
@@ -42,6 +50,14 @@ public class RegisterItems {
                                 TARDIS_DEFAULT_WALL_LAMP);
                 Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.default.floor"),
                                 TARDIS_DEFAULT_FLOOR);
+                Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.maintenance.wall.lower"),
+                                TARDIS_MAINTENANCE_WALL_LOWER);
+                Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.maintenance.wall.frame.lower"),
+                                TARDIS_MAINTENANCE_WALL_FRAME_LOWER);
+                Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.maintenance.wall"),
+                                TARDIS_MAINTENANCE_WALL);
+                Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.maintenance.wall.frame"),
+                                TARDIS_MAINTENANCE_WALL_FRAME);
                 Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "gray_print"), GRAY_PRING);
                 Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "crystal_resonator"), CRYSTAL_RESONATOR);
                 Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tool_base"), TOOL_BASE);

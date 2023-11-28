@@ -9,7 +9,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtFloat;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.text.MutableText;
@@ -90,7 +89,7 @@ public class Circuit {
             NbtList strList = new NbtList();
             strList.add(NbtString.of(circuit.getName()));
             strList.add(NbtString.of(circuit.getLoc()));
-            strList.add(NbtFloat.of(circuit.getSetting()));
+            strList.add(NbtString.of(String.valueOf(circuit.getSetting())));
             circuits.add(strList);
         }
         NbtCompound nbt = new NbtCompound();
@@ -107,7 +106,7 @@ public class Circuit {
         NbtList circuitsNbt = nbt.getList("Circuits", NbtElement.LIST_TYPE);
         for (int i = 0; i < circuitsNbt.size(); i++) {
             circuits.add(new Circuit(Circuit.strToName(circuitsNbt.getList(i).getString(0)),
-                    Circuit.strToLoc(circuitsNbt.getList(i).getString(1)), circuitsNbt.getList(i).getFloat(2)));
+                    Circuit.strToLoc(circuitsNbt.getList(i).getString(1)), Float.valueOf(circuitsNbt.getList(i).getString(2))));
         }
         return circuits;
     }

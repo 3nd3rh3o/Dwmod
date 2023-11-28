@@ -1,10 +1,14 @@
 package h3o.ender.blockEntity.tardis;
 
+import java.util.List;
+
 import h3o.ender.blockEntity.RegisterBlockEntities;
 import h3o.ender.entities.Tardis;
 import h3o.ender.screenHandler.AstralMapScreenHandler;
+import h3o.ender.screenHandler.MaintenanceConfigScreenHandler;
 import h3o.ender.screenHandler.TardisTerminalScreenHandler;
 import h3o.ender.structures.tardis.DimensionalStorageHelper;
+import h3o.ender.structures.tardis.Room;
 import h3o.ender.tardisOs.FormattedText;
 import h3o.ender.tardisOs.TardisOs;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
@@ -36,6 +40,7 @@ public class TerminalBE extends BlockEntity
         implements GeoBlockEntity, TardisBentDependant, ExtendedScreenHandlerFactory, Inventory {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private NbtCompound tardisCircuits;
+    private NbtCompound tardisInternalScheme;
     private Tardis trds;
     private String prompt = ">";
     private MutableText text = Text.empty();
@@ -69,6 +74,7 @@ public class TerminalBE extends BlockEntity
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
         this.tardisCircuits = nbt.getCompound("Circuits");
+        this.tardisInternalScheme = nbt.getCompound("InternalScheme");
         this.prompt = nbt.getString("Prompt");
         this.text = FormattedText.fromNbt((NbtList) (nbt.get("Text")));
     }
@@ -78,6 +84,7 @@ public class TerminalBE extends BlockEntity
         Tardis tardis = DimensionalStorageHelper.getTardis(world.getServer(), pos);
         if (tardis != null) {
             nbt.put("Circuits", tardis.getDataTracker().get(Tardis.CIRCUITS));
+            nbt.put("InternalScheme", tardis.getDataTracker().get(Tardis.INTERNAL_SCHEME));
         }
         nbt.putString("Prompt", this.prompt);
         nbt.put("Text", FormattedText.toNbt(this.text));
@@ -86,6 +93,10 @@ public class TerminalBE extends BlockEntity
 
     public NbtList getTardisCircuits() {
         return tardisCircuits.getList("Circuits", NbtElement.LIST_TYPE);
+    }
+
+    public List<Room> getTardisInternalScheme() {
+        return Room.fromNBT(tardisInternalScheme);
     }
 
     @Override
@@ -116,7 +127,10 @@ public class TerminalBE extends BlockEntity
         if (menu == 1) {
             menu = 0;
             return new AstralMapScreenHandler(var1, var2, var2, getPos());
-
+        }
+        if (menu == 2) {
+            menu = 0;
+            return new MaintenanceConfigScreenHandler(var1, var2, var2, getPos());
         }
         return null;
     }
@@ -204,6 +218,10 @@ public class TerminalBE extends BlockEntity
 
     public void switchMenu(int i) {
         this.menu = i;
+    }
+
+    public void switchEngineAccess() {
+        trds.switchEngineAccess();
     }
 
 }

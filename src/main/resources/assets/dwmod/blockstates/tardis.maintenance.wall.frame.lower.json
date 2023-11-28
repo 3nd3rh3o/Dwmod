@@ -1,0 +1,8 @@
+{
+    "variants" : {
+        "facing=north" : { "model" : "dwmod:block/tardis.maintenance.wall.frame.lower", "y" : 90},
+        "facing=east" : { "model" : "dwmod:block/tardis.maintenance.wall.frame.lower", "y" : 180},
+        "facing=south" : { "model" : "dwmod:block/tardis.maintenance.wall.frame.lower", "y" : 270},
+        "facing=west" : { "model" : "dwmod:block/tardis.maintenance.wall.frame.lower", "y" : 0}
+    }
+}
