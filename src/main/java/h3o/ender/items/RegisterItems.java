@@ -41,11 +41,10 @@ public class RegisterItems {
         public static final Item ENERGY_CONDENSER = new Item(new FabricItemSettings());
         public static final Item DEFAULT_ROTOR = new Rotor(new FabricItemSettings(), strToName("default_rotor"));
         
-
-
         // astralMap
         public static final Item ASTRALMAP_0 = new Item(new FabricItemSettings());
         public static final Item ASTRALMAP_0_0 = new Item(new FabricItemSettings());
+
         // rooms
         public static final Item MAINTENANCE_ACCESS = new Item(new FabricItemSettings());
 

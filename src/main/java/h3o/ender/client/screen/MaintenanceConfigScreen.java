@@ -18,12 +18,14 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 
 public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScreenHandler> {
     private final Identifier texture = new Identifier(DwMod.MODID, "textures/gui/ars.png");
     private List<Room> intSh;
+    private int selectedFloor = 0;
 
     @SuppressWarnings("resource")
     public MaintenanceConfigScreen(MaintenanceConfigScreenHandler handler, PlayerInventory inventory, Text title) {
@@ -46,16 +48,15 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
         renderRoomIcons(context, mouseX, mouseY, delta);
-        renderMapTooltip(context, mouseX, mouseY, delta);
+        renderFloorNumber(context, mouseX, mouseY, delta);
     }
 
     private void renderRoomIcons(DrawContext context, int mouseX, int mouseY, float delta) {
-        int y = 0;
         int startX = (width - backgroundWidth) / 2;
         int startY = (height - backgroundHeight) / 2;
         for (int x = 0; x < 5; x++) {
             for (int z = 0; z < 5; z++) {
-                int id = x + y * 5 + z * 25;
+                int id = x + selectedFloor * 5 + z * 25;
                 for (Room room : intSh) {
                     if (room.getVId() == id) {
                         if (mouseX > x * 15 + startX + 7 && mouseX <= (x + 1) * 15 + startX + 7
@@ -82,7 +83,9 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
         }
     }
 
-    private void renderMapTooltip(DrawContext context, int mouseX, int mouseY, float delta) {
-        // TODO finish that
+    private void renderFloorNumber(DrawContext context, int mouseX, int mouseY, float delta) {
+        int startX = (width - backgroundWidth) / 2;
+        int startY = (height - backgroundHeight) / 2;
+        context.drawText(client.textRenderer, Text.of(String.valueOf(selectedFloor - 2) + "F"), startX + 37, startY + 86, Colors.WHITE, false);
     }
 }
