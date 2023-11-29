@@ -5,9 +5,12 @@ import java.util.List;
 
 import h3o.ender.DwMod;
 import h3o.ender.blockEntity.tardis.TerminalBE;
+import h3o.ender.networking.ModMessages;
 import h3o.ender.screenHandler.MaintenanceConfigScreenHandler;
 import h3o.ender.structures.tardis.DimensionalStorageHelper;
 import h3o.ender.structures.tardis.Room;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -19,6 +22,7 @@ import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
@@ -37,6 +41,8 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
     private List<ButtonWidget> invScroll = new ArrayList<>();
     private int invCursorLoc = 0;
     private List<ButtonWidget> invGrid = new ArrayList<>();
+    private ButtonWidget constructRoom;
+    private ButtonWidget destroyRoom;
 
     private enum CATEGORY {
         ALL,
@@ -73,7 +79,6 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
     protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
     }
 
-    
     @SuppressWarnings("resource")
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
@@ -185,7 +190,12 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
         if (mouseX < startX + 157 && mouseX >= startX + 100 && mouseY < startY + 109 && mouseY >= startY + 101) {
             context.drawTexture(texture, startX + 100, startY + 101, 191, 47, 57, 8);
         }
-
+        if (mouseX < startX + 100 && mouseX >= startX + 89 && mouseY < startY + 108 && mouseY >= startY + 101) {
+            context.drawTexture(texture, startX + 89, startY + 101, 211, 28, 11, 7);
+        }
+        if (mouseX < startX + 168 && mouseX >= startX + 157 && mouseY < startY + 108 && mouseY >= startY + 101) {
+            context.drawTexture(texture, startX + 157, startY + 101, 222, 28, 11, 7);
+        }
     }
 
     @Override
@@ -264,11 +274,45 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
             }).dimensions(i * 15 + startX + 91, i * 25 + startY + 25, 16, 16).build());
         }
 
+        // TODO add build, remove, toggle, rotate buttons (Packet already done)
+        constructRoom = ButtonWidget.builder(Text.empty(), button -> {
+            for (Room room : intSh) {
+                if (room.getVId() == roomLocCursor) {
+                    return;
+                }
+            }
+            NbtCompound nbt = new NbtCompound();
+            nbt.putInt("Type", 0);
+            nbt.putString("Name", CATEGORY.values()[selectedCategory % CATEGORY.values().length].getRooms()
+                    .get(invCursorLoc).toString());
+            nbt.putInt("Rotation", 0);
+            nbt.putInt("VID", roomLocCursor);
+            ClientPlayNetworking.send(ModMessages.TARDIS_MAIN_CONF_ID,
+                    PacketByteBufs.create().writeNbt(nbt));
+        }).dimensions(startX + 89, startY + 101, 11, 7).build();
+        addSelectableChild(constructRoom);
+
+        destroyRoom = ButtonWidget.builder(Text.empty(), button -> {
+            if (roomLocCursor == 0) {
+                return;
+            }
+            for (Room room : intSh) {
+                if (room.getVId() == roomLocCursor) {
+                    NbtCompound nbt = new NbtCompound();
+                    nbt.putInt("Type", 1);
+                    nbt.putInt("VID", roomLocCursor);
+                    ClientPlayNetworking.send(ModMessages.TARDIS_MAIN_CONF_ID,
+                            PacketByteBufs.create().writeNbt(nbt));
+                    return;
+                }
+            }
+        }).dimensions(startX + 157, startY + 101, 11, 7).build();
+        addSelectableChild(destroyRoom);
+
         mapGrid.forEach(but -> addSelectableChild(but));
         mapScroll.forEach(but -> addSelectableChild(but));
         categoryScroll.forEach(but -> addSelectableChild(but));
         invScroll.forEach(but -> addSelectableChild(but));
         invGrid.forEach(but -> addSelectableChild(but));
     }
-
 }

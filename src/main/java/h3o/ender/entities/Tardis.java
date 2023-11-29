@@ -72,7 +72,6 @@ public class Tardis extends LivingEntity implements GeoEntity {
     public static final TrackedData<NbtCompound> INTERNAL_SCHEME = DataTracker.registerData(Tardis.class,
             TrackedDataHandlerRegistry.NBT_COMPOUND);
 
-    
     private boolean leftOpen = false;
     private boolean rightOpen = false;
 
@@ -148,8 +147,9 @@ public class Tardis extends LivingEntity implements GeoEntity {
                 if (DimensionalStorageHelper.contain(internalScheme, activeConsId)) {
                     BlockPos dest = DimensionalStorageHelper.getRoomPosFromRoomIndex(activeConsId);
                     dest = dest.add(DimensionalStorageHelper.getBasePosFromTardisIndex(this.index));
-                    dest = dest.add(Room.getById(internalScheme, activeConsId).getName().getFeatures().get("RealWorldInterface")
-                            .rotate(Room.getById(internalScheme, activeConsId).getOrientation()));
+                    dest = dest.add(
+                            Room.getById(internalScheme, activeConsId).getName().getFeatures().get("RealWorldInterface")
+                                    .rotate(Room.getById(internalScheme, activeConsId).getOrientation()));
                     this.portal = TardisPortal.entityType.create(this.getWorld());
                     this.portal.setOriginPos(this.getBlockPos().toCenterPos().add(0, 0.5, 0));
                     this.portal.setDestinationDimension(RegisterDimensions.VORTEX);
@@ -320,7 +320,33 @@ public class Tardis extends LivingEntity implements GeoEntity {
             DimensionalStorageHelper.addE(name, BlockRotation.NONE, this.index, vortex, internalScheme, this);
             internalScheme.add(new Room(id * -1, name.getSize(), 0, 0, name));
             getDataTracker().set(INTERNAL_SCHEME, Room.toNBT(internalScheme));
+            updateDependantBlocks();
         }
+    }
+
+    public void addRoomE(Name name, BlockRotation rot, int vId) {
+        List<Room> internalScheme = Room.fromNBT(getDataTracker().get(INTERNAL_SCHEME));
+        List<Room> intSh = DimensionalStorageHelper.filterEngine(internalScheme);
+        int id = DimensionalStorageHelper.getValidPos(name.getSize(), intSh);
+        ServerWorld vortex = getWorld().getServer().getWorld(RegisterDimensions.VORTEX);
+        DimensionalStorageHelper.addE(name, rot, this.index, vortex, internalScheme, this);
+        internalScheme.add(new Room(id * -1, name.getSize(), rot.ordinal(), vId, name));
+        getDataTracker().set(INTERNAL_SCHEME, Room.toNBT(internalScheme));
+        updateDependantBlocks();
+    }
+
+    public void removeRoomE(int vid) {
+        List<Room> internalScheme = Room.fromNBT(getDataTracker().get(INTERNAL_SCHEME));
+        for (Room room : internalScheme) {
+            if (room.getVId() == vid) {
+                internalScheme.remove(room);
+                DimensionalStorageHelper.removeRoomE(index, room.getId() * -1, room.getSize(),
+                        getServer().getWorld(RegisterDimensions.VORTEX));
+                break;
+            }
+        }
+        getDataTracker().set(INTERNAL_SCHEME, Room.toNBT(internalScheme));
+        updateDependantBlocks();
     }
 
     public void purgeIntPortals() {
@@ -415,7 +441,8 @@ public class Tardis extends LivingEntity implements GeoEntity {
         List<Room> internalScheme = Room.fromNBT(getDataTracker().get(INTERNAL_SCHEME));
         Room consRoom = internalScheme.get(activeConsId);
         BlockPos pos = DimensionalStorageHelper.getBasePosFromTardisIndex(this.index)
-                .add(consRoom.getName().getFeatures().get("EngineAccess").add(-8, -8, -8).rotate(consRoom.getOrientation()).add(8, 8, 8))
+                .add(consRoom.getName().getFeatures().get("EngineAccess").add(-8, -8, -8)
+                        .rotate(consRoom.getOrientation()).add(8, 8, 8))
                 .add(DimensionalStorageHelper.getRoomPosFromRoomIndex(activeConsId));
         if (engineAccess) {
             getServer().getWorld(RegisterDimensions.VORTEX).setBlockState(pos, Blocks.AIR.getDefaultState(),
@@ -423,9 +450,11 @@ public class Tardis extends LivingEntity implements GeoEntity {
             getServer().getWorld(RegisterDimensions.VORTEX).setBlockState(pos.up(), Blocks.AIR.getDefaultState(),
                     Block.NOTIFY_ALL);
         } else {
-            getServer().getWorld(RegisterDimensions.VORTEX).setBlockState(pos, RegisterBlocks.TARDIS_DEFAULT_WALL_LAMP.getDefaultState(),
+            getServer().getWorld(RegisterDimensions.VORTEX).setBlockState(pos,
+                    RegisterBlocks.TARDIS_DEFAULT_WALL_LAMP.getDefaultState(),
                     Block.NOTIFY_ALL);
-            getServer().getWorld(RegisterDimensions.VORTEX).setBlockState(pos.up(), RegisterBlocks.TARDIS_DEFAULT_WALL_LAMP.getDefaultState(),
+            getServer().getWorld(RegisterDimensions.VORTEX).setBlockState(pos.up(),
+                    RegisterBlocks.TARDIS_DEFAULT_WALL_LAMP.getDefaultState(),
                     Block.NOTIFY_ALL);
         }
     }

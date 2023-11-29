@@ -334,6 +334,29 @@ public class DimensionalStorageHelper {
         }
     }
 
+    public static void removeRoomE(int tardisIndex, int roomIndex, int roomSize, ServerWorld world) {
+        BlockPos pos = getBasePosFromTardisIndex(tardisIndex).add(getRoomPosFromRoomIndexE(roomIndex));
+        for (int x = 0; x < roomSize; x++) {
+            for (int y = 0; y < roomSize; y++) {
+                for (int z = 0; z < roomSize; z++) {
+                    world.getEntitiesByClass(TardisInternalPortal.class,
+                            new Box(pos.getX() + 16 * x, pos.getY() + 16 * y, pos.getZ() + 16 * z,
+                                    pos.getX() + 16 * x + 16, pos.getY() + 16 * y + 16, pos.getZ() + 16 * z + 16),
+                            entity -> true).forEach(ent -> {
+                                ent.kill();
+                                ent.reloadAndSyncToClient();
+                            });
+                    world.getEntitiesByClass(TardisExtDoor.class,
+                            new Box(pos.getX() + 16 * x, pos.getY() + 16 * y, pos.getZ() + 16 * z,
+                                    pos.getX() + 16 * x + 16, pos.getY() + 16 * y + 16, pos.getZ() + 16 * z + 16),
+                            entity -> true).forEach(ent -> {
+                                ent.kill();
+                            });
+                }
+            }
+        }
+    }
+
     public static int getIndex(Vec3d originPos) {
         int x = (int) Math.round(originPos.getX());
         int y = (int) Math.round(originPos.getY());
