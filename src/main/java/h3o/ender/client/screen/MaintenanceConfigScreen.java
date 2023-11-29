@@ -66,7 +66,9 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
                         if (mouseX > x * 15 + startX + 7 && mouseX <= (x + 1) * 15 + startX + 7
                                 && mouseY > z * 15 + startY + 7 && mouseY <= (z + 1) * 15 + startY + 7) {
                             context.drawTooltip(client.textRenderer,
-                                    Text.of(room.getName().toString().replace("_", " ")), x * 15 + startX + 16,
+                                    Text.of(room.getName().toString().replace("_", " ") + " - " + x + " "
+                                            + selectedFloor + " " + z),
+                                    x * 15 + startX + 16,
                                     z * 15 + startY + 16);
                         }
                         MatrixStack stack = context.getMatrices();
@@ -86,7 +88,8 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
                 }
             }
         }
-        context.drawTexture(this.texture,(roomLocCursor % 5) * 15 + 8 + startX , Math.round(roomLocCursor / 25f) * 15 + 8 + startY, 176, 0, 15, 15);
+        context.drawTexture(this.texture, (roomLocCursor % 5) * 15 + 8 + startX,
+                Math.round(roomLocCursor / 25f) * 15 + 8 + startY, 176, 0, 15, 15);
     }
 
     private void renderFloorNumber(DrawContext context, int mouseX, int mouseY, float delta) {
@@ -98,19 +101,23 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
 
     @Override
     protected void init() {
-        super.init();
+        
         for (int x = 0; x < 5; x++) {
             for (int z = 0; z < 5; z++) {
                 int startX = (width - backgroundWidth) / 2;
                 int startY = (height - backgroundHeight) / 2;
                 mapGrid.add(ButtonWidget.builder(Text.literal(""), button -> {
-                    this.roomLocCursor = ((button.getX() - startX - 7) / 15) + (selectedFloor * 5) + ((button.getY() - startY - 7) / 15) * 25;
+                    int startX1 = (width - backgroundWidth) / 2;
+                    int startY1 = (height - backgroundHeight) / 2;
+                    this.roomLocCursor = ((button.getX() - startX1 - 7) / 15) + (selectedFloor * 5)
+                            + ((button.getY() - startY1 - 7) / 15) * 25;
                 }).dimensions(startX + 15 * x + 7, startY + 15 * z + 7, 16, 16).build());
             }
         }
         mapGrid.forEach(but -> {
             addSelectableChild(but);
         });
+        super.init();
     }
 
 }
