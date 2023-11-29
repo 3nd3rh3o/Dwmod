@@ -101,7 +101,7 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
 
     @Override
     protected void init() {
-        
+        //FIXME don't work properly when screen is resized
         for (int x = 0; x < 5; x++) {
             for (int z = 0; z < 5; z++) {
                 int startX = (width - backgroundWidth) / 2;
