@@ -1,7 +1,7 @@
 package h3o.ender.client.screen;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import h3o.ender.DwMod;
 import h3o.ender.blockEntity.tardis.TerminalBE;
@@ -29,6 +29,7 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
     private List<Room> intSh;
     private int selectedFloor = 0;
     private List<ButtonWidget> mapGrid = new ArrayList<>();
+    private List<ButtonWidget> mapScroll = new ArrayList<>();
     private int roomLocCursor;
 
     @SuppressWarnings("resource")
@@ -58,19 +59,14 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
     private void renderRoomIcons(DrawContext context, int mouseX, int mouseY, float delta) {
         int startX = (width - backgroundWidth) / 2;
         int startY = (height - backgroundHeight) / 2;
+
         for (int x = 0; x < 5; x++) {
             for (int z = 0; z < 5; z++) {
                 int id = x + selectedFloor * 5 + z * 25;
                 for (Room room : intSh) {
+                    context.drawTexture(this.texture, (roomLocCursor % 5) * 15 + 8 + startX,
+                            Math.round(roomLocCursor / 25) * 15 + 8 + startY, 176, 0, 15, 15);
                     if (room.getVId() == id) {
-                        if (mouseX > x * 15 + startX + 7 && mouseX <= (x + 1) * 15 + startX + 7
-                                && mouseY > z * 15 + startY + 7 && mouseY <= (z + 1) * 15 + startY + 7) {
-                            context.drawTooltip(client.textRenderer,
-                                    Text.of(room.getName().toString().replace("_", " ") + " - " + x + " "
-                                            + selectedFloor + " " + z),
-                                    x * 15 + startX + 16,
-                                    z * 15 + startY + 16);
-                        }
                         MatrixStack stack = context.getMatrices();
                         stack.push();
                         stack.translate(x * 15 + startX + 15.5f, z * 15 + startY + 15.5f, 16);
@@ -84,12 +80,18 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
                                 ((VertexConsumerProvider) context.getVertexConsumers()), 0xF000F0,
                                 OverlayTexture.DEFAULT_UV, model);
                         stack.pop();
+                        if (mouseX > x * 15 + startX + 7 && mouseX <= (x + 1) * 15 + startX + 7
+                                && mouseY > z * 15 + startY + 7 && mouseY <= (z + 1) * 15 + startY + 7) {
+                            context.drawTooltip(client.textRenderer,
+                                    Text.of(room.getName().toString().replace("_", " ") + " - " + x + " "
+                                            + selectedFloor + " " + z),
+                                    x * 15 + startX + 16,
+                                    z * 15 + startY + 16);
+                        }
                     }
                 }
             }
         }
-        context.drawTexture(this.texture, (roomLocCursor % 5) * 15 + 8 + startX,
-                Math.round(roomLocCursor / 25f) * 15 + 8 + startY, 176, 0, 15, 15);
     }
 
     private void renderFloorNumber(DrawContext context, int mouseX, int mouseY, float delta) {
@@ -101,23 +103,35 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
 
     @Override
     protected void init() {
-        //FIXME don't work properly when screen is resized
+        super.init();
+        mapGrid = new ArrayList<>();
+        mapScroll = new ArrayList<>();
+        int startX = (width - backgroundWidth) / 2;
+        int startY = (height - backgroundHeight) / 2;
         for (int x = 0; x < 5; x++) {
             for (int z = 0; z < 5; z++) {
-                int startX = (width - backgroundWidth) / 2;
-                int startY = (height - backgroundHeight) / 2;
-                mapGrid.add(ButtonWidget.builder(Text.literal(""), button -> {
-                    int startX1 = (width - backgroundWidth) / 2;
-                    int startY1 = (height - backgroundHeight) / 2;
-                    this.roomLocCursor = ((button.getX() - startX1 - 7) / 15) + (selectedFloor * 5)
-                            + ((button.getY() - startY1 - 7) / 15) * 25;
+                mapGrid.add(ButtonWidget.builder(Text.empty(), button -> {
+                    this.roomLocCursor = ((button.getX() - startX - 7) / 15) + (selectedFloor * 5)
+                            + ((button.getY() - startY - 7) / 15) * 25;
                 }).dimensions(startX + 15 * x + 7, startY + 15 * z + 7, 16, 16).build());
             }
         }
-        mapGrid.forEach(but -> {
-            addSelectableChild(but);
-        });
-        super.init();
+        mapScroll.add(ButtonWidget.builder(Text.empty(), button -> {
+            if (selectedFloor > 0) {
+                selectedFloor--;
+                roomLocCursor -= 5;
+            }
+        }).dimensions(startX + 9, startY + 94, 35, 14).build());
+
+        mapScroll.add(ButtonWidget.builder(Text.empty(), button -> {
+            if (selectedFloor < 4) {
+                selectedFloor++;
+                roomLocCursor += 5;
+            }
+        }).dimensions(startX + 45, startY + 94, 35, 14).build());
+
+        mapGrid.forEach(but -> addSelectableChild(but));
+        mapScroll.forEach(but -> addSelectableChild(but));
     }
 
 }
