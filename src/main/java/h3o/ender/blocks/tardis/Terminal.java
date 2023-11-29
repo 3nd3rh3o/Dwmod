@@ -36,7 +36,7 @@ public class Terminal extends HorizontalFacingBlock implements BlockEntityProvid
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
             BlockHitResult hit) {
-        if (!world.isClient()) {
+        if (!world.isClient() && player.getWorld().equals(world) && player.getBlockPos().getSquaredDistance(pos) < 8) {
             player.openHandledScreen((TerminalBE)world.getBlockEntity(pos));
             return ActionResult.SUCCESS;
         }

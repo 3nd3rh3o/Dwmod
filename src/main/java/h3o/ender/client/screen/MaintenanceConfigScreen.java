@@ -19,15 +19,18 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.RotationAxis;
 
 public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScreenHandler> {
-    private final Identifier texture = new Identifier(DwMod.MODID, "textures/gui/astralmap.png");
+    private final Identifier texture = new Identifier(DwMod.MODID, "textures/gui/ars.png");
     private List<Room> intSh;
 
     @SuppressWarnings("resource")
     public MaintenanceConfigScreen(MaintenanceConfigScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
-        this.intSh = DimensionalStorageHelper.filterEngine(((TerminalBE) MinecraftClient.getInstance().world.getBlockEntity(handler.getPos())).getTardisInternalScheme());
+        this.intSh = DimensionalStorageHelper
+                .filterEngine(((TerminalBE) MinecraftClient.getInstance().world.getBlockEntity(handler.getPos()))
+                        .getTardisInternalScheme());
     }
 
     @Override
@@ -42,20 +45,36 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-        int y = 0;
+        renderRoomIcons(context, mouseX, mouseY, delta);
+        renderMapTooltip(context, mouseX, mouseY, delta);
+    }
 
-        for (int x = 0 ; x < 5; x++) {
+    private void renderRoomIcons(DrawContext context, int mouseX, int mouseY, float delta) {
+        int y = 0;
+        int startX = (width - backgroundWidth) / 2;
+        int startY = (height - backgroundHeight) / 2;
+        for (int x = 0; x < 5; x++) {
             for (int z = 0; z < 5; z++) {
                 int id = x + y * 5 + z * 25;
                 for (Room room : intSh) {
                     if (room.getVId() == id) {
+                        if (mouseX > x * 15 + startX + 7 && mouseX <= (x + 1) * 15 + startX + 7
+                                && mouseY > z * 15 + startY + 7 && mouseY <= (z + 1) * 15 + startY + 7) {
+                            context.drawTooltip(client.textRenderer, Text.of(room.getName().toString().replace("_", " ")), x * 15 + startX + 16,
+                                    z * 15 + startY + 16);
+                        }
                         MatrixStack stack = context.getMatrices();
                         stack.push();
-                        stack.translate(x*16 + width / 2, z*16 + height/2, 16);
-                        stack.scale(-20, -20, -20);
+                        stack.translate(x * 15 + startX + 15.5f, z * 15 + startY + 15.5f, 16);
+                        int scale = -15;
+                        stack.scale(scale, scale, scale);
+                        stack.multiply(RotationAxis.POSITIVE_Z
+                                .rotationDegrees((float) 90 * room.getOrientation().ordinal()));
                         ItemStack itemStack = new ItemStack(room.getName().getIcon());
                         BakedModel model = client.getItemRenderer().getModels().getModel(itemStack);
-                        client.getItemRenderer().renderItem(itemStack, ModelTransformationMode.GUI, false, stack, ((VertexConsumerProvider) context.getVertexConsumers()), 0xF000F0, OverlayTexture.DEFAULT_UV, model);
+                        client.getItemRenderer().renderItem(itemStack, ModelTransformationMode.GUI, false, stack,
+                                ((VertexConsumerProvider) context.getVertexConsumers()), 0xF000F0,
+                                OverlayTexture.DEFAULT_UV, model);
                         stack.pop();
                     }
                 }
@@ -63,5 +82,7 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
         }
     }
 
-    
+    private void renderMapTooltip(DrawContext context, int mouseX, int mouseY, float delta) {
+        // TODO finish that
+    }
 }
