@@ -37,6 +37,7 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -439,23 +440,38 @@ public class Tardis extends LivingEntity implements GeoEntity {
     public void switchEngineAccess() {
         engineAccess = !engineAccess;
         List<Room> internalScheme = Room.fromNBT(getDataTracker().get(INTERNAL_SCHEME));
-        Room consRoom = internalScheme.get(activeConsId);
-        BlockPos pos = DimensionalStorageHelper.getBasePosFromTardisIndex(this.index)
-                .add(consRoom.getName().getFeatures().get("EngineAccess").add(-8, -8, -8)
-                        .rotate(consRoom.getOrientation()).add(8, 8, 8))
-                .add(DimensionalStorageHelper.getRoomPosFromRoomIndex(activeConsId));
-        if (engineAccess) {
-            getServer().getWorld(RegisterDimensions.VORTEX).setBlockState(pos, Blocks.AIR.getDefaultState(),
-                    Block.NOTIFY_ALL);
-            getServer().getWorld(RegisterDimensions.VORTEX).setBlockState(pos.up(), Blocks.AIR.getDefaultState(),
-                    Block.NOTIFY_ALL);
-        } else {
-            getServer().getWorld(RegisterDimensions.VORTEX).setBlockState(pos,
-                    RegisterBlocks.TARDIS_DEFAULT_WALL_LAMP.getDefaultState(),
-                    Block.NOTIFY_ALL);
-            getServer().getWorld(RegisterDimensions.VORTEX).setBlockState(pos.up(),
-                    RegisterBlocks.TARDIS_DEFAULT_WALL_LAMP.getDefaultState(),
-                    Block.NOTIFY_ALL);
-        }
+        List<Room> maintenanceAccess = new ArrayList<>();
+        maintenanceAccess.add(internalScheme.get(activeConsId));
+        internalScheme.forEach(room -> {
+            if (room.getName().equals(Name.MAINTENANCE_ENTRANCE)) {
+                maintenanceAccess.add(room);
+            }
+        });
+        maintenanceAccess.forEach(room -> {
+            BlockPos pos = DimensionalStorageHelper.getFeaturePos("EngineAccess", index, room);
+            if (engineAccess) {
+                getServer().getWorld(RegisterDimensions.VORTEX).setBlockState(pos, Blocks.AIR.getDefaultState(),
+                        Block.NOTIFY_ALL);
+                getServer().getWorld(RegisterDimensions.VORTEX).setBlockState(pos.up(), Blocks.AIR.getDefaultState(),
+                        Block.NOTIFY_ALL);
+                //TODO summon portal
+                if (Room.MAINTENANCE.contains(room.getName())) {
+                    DimensionalStorageHelper.summonPortal(getServer().getWorld(RegisterDimensions.VORTEX), pos, DimensionalStorageHelper.getFeaturePos("EngineAccess", index, internalScheme.get(activeConsId)), room.getOrientation().ordinal()*90 - 90, internalScheme.get(activeConsId).getOrientation().ordinal() * 90 + room.getOrientation().ordinal()*90 + 180);
+                } else {
+                    if (room.getName() == Name.DEFAULT_CONSOLE_ROOM) {
+                        DimensionalStorageHelper.summonPortal(getServer().getWorld(RegisterDimensions.VORTEX), pos, DimensionalStorageHelper.getFeaturePos("EngineAccess", index, Room.getById(DimensionalStorageHelper.filterEngine(internalScheme), 0)), internalScheme.get(activeConsId).getOrientation().ordinal() * 90 - 90, room.getOrientation().ordinal()*90 + 180);
+                    }
+                }
+            } else {
+                getServer().getWorld(RegisterDimensions.VORTEX).setBlockState(pos,
+                        RegisterBlocks.TARDIS_DEFAULT_WALL_LAMP.getDefaultState(),
+                        Block.NOTIFY_ALL);
+                getServer().getWorld(RegisterDimensions.VORTEX).setBlockState(pos.up(),
+                        RegisterBlocks.TARDIS_DEFAULT_WALL_LAMP.getDefaultState(),
+                        Block.NOTIFY_ALL);
+                //TODO kill portal
+                getServer().getWorld(RegisterDimensions.VORTEX).getEntitiesByClass(TardisPathwayPortal.class, new Box(pos).expand(1), entity -> true).forEach(ent -> ent.kill());
+            }
+        });
     }
 }

@@ -24,16 +24,21 @@ public class Room {
         public int getSize() {
             return switch (this) {
                 case DEFAULT_CONSOLE_ROOM -> 1;
-                // TODO
-                case MAINTENANCE_ENTRANCE -> 1;
+                case MAINTENANCE_ENTRANCE -> 2;
             };
         }
 
-        public String getStructName() {
-            return switch (this) {
-                case DEFAULT_CONSOLE_ROOM -> "dwmod:tardis/default/console_room";
-                case MAINTENANCE_ENTRANCE -> "dwmod:tardis/maintenance/entrance";
+        public HashMap<String, BlockPos> getStructName() {
+            HashMap<String, BlockPos> structNames = new HashMap<>();
+            switch (this) {
+                case DEFAULT_CONSOLE_ROOM -> structNames.put("dwmod:tardis/default/console_room", new BlockPos(0, 0, 0));
+                case MAINTENANCE_ENTRANCE -> {
+                    structNames.put("dwmod:tardis/maintenance/entrance", new BlockPos(0, 0, 0));
+                    structNames.put("dwmod:tardis/maintenance/entrance1", new BlockPos(0, 0, 16));
+                }
             };
+            return structNames;
+
         }
 
         public Item getIcon() {
@@ -51,7 +56,7 @@ public class Room {
                     features.put("EngineAccess", new BlockPos(14, 2, 8));
                 }
                 case MAINTENANCE_ENTRANCE -> {
-                    // TODO
+                     features.put("EngineAccess", new BlockPos(7,1,5));
                 }
             }
             return features;

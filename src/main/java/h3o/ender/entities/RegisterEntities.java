@@ -19,6 +19,7 @@ public class RegisterEntities {
     public static final EntityType<TardisDefaultExtDoor> TARDIS_EXT_DOOR_DEFAULT = Registry.register(Registries.ENTITY_TYPE, new Identifier(DwMod.MODID, "tardis_default_ext_door"), TardisDefaultExtDoor.entityType);
     public static final EntityType<TardisPortal> TARDIS_PORTAL = Registry.register(Registries.ENTITY_TYPE, new Identifier(DwMod.MODID, "tardis_portal"), TardisPortal.entityType);
     public static final EntityType<TardisInternalPortal> TARDIS_INT_PORTAL = Registry.register(Registries.ENTITY_TYPE, new Identifier(DwMod.MODID, "tardis_internal_portal"), TardisInternalPortal.entityType);
+    public static final EntityType<TardisPathwayPortal> TARDIS_PATHWAY_PORTAL = Registry.register(Registries.ENTITY_TYPE, new Identifier(DwMod.MODID, "tardis_pathway_portal"), TardisPathwayPortal.entityType);
 
     public static void register() {
         FabricDefaultAttributeRegistry.register(RegisterEntities.TARDIS, Tardis.createLivingAttributes());

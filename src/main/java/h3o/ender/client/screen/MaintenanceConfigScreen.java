@@ -43,7 +43,8 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
     private List<ButtonWidget> invGrid = new ArrayList<>();
     private ButtonWidget constructRoom;
     private ButtonWidget destroyRoom;
-
+    private int roomOrientation = 0;
+    private ButtonWidget rotateRoom;
     private enum CATEGORY {
         ALL,
         CORRIDORS;
@@ -196,6 +197,21 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
         if (mouseX < startX + 168 && mouseX >= startX + 157 && mouseY < startY + 108 && mouseY >= startY + 101) {
             context.drawTexture(texture, startX + 157, startY + 101, 222, 28, 11, 7);
         }
+        if (mouseX < startX + 100 && mouseX >= startX + 89 && mouseY < startY + 24 && mouseY >= startY + 17) {
+            switch(roomOrientation) {
+                case 0 -> context.drawTexture(texture, startX + 89, startY + 17, 237, 0, 11, 7);
+                case 1 -> context.drawTexture(texture, startX + 89, startY + 17, 237, 7, 11, 7);
+                case 2 -> context.drawTexture(texture, startX + 89, startY + 17, 237, 14, 11, 7);
+                case 3 -> context.drawTexture(texture, startX + 89, startY + 17, 237, 21, 11, 7);
+            }
+        } else {
+            switch(roomOrientation) {
+                case 0 -> context.drawTexture(texture, startX + 89, startY + 17, 226, 0, 11, 7);
+                case 1 -> context.drawTexture(texture, startX + 89, startY + 17, 226, 7, 11, 7);
+                case 2 -> context.drawTexture(texture, startX + 89, startY + 17, 226, 14, 11, 7);
+                case 3 -> context.drawTexture(texture, startX + 89, startY + 17, 226, 21, 11, 7);
+            }
+        }
     }
 
     @Override
@@ -285,7 +301,7 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
             nbt.putInt("Type", 0);
             nbt.putString("Name", CATEGORY.values()[selectedCategory % CATEGORY.values().length].getRooms()
                     .get(invCursorLoc).toString());
-            nbt.putInt("Rotation", 0);
+            nbt.putInt("Rotation", roomOrientation);
             nbt.putInt("VID", roomLocCursor);
             ClientPlayNetworking.send(ModMessages.TARDIS_MAIN_CONF_ID,
                     PacketByteBufs.create().writeNbt(nbt));
@@ -309,6 +325,14 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
         }).dimensions(startX + 157, startY + 101, 11, 7).build();
         addSelectableChild(destroyRoom);
 
+        rotateRoom = ButtonWidget.builder(Text.empty(), button -> {
+            roomOrientation++;
+            if (roomOrientation == 4) {
+                roomOrientation=0;
+            }
+        }).dimensions(startX + 89, startY + 17, 11, 7).build();
+        addSelectableChild(rotateRoom);
+
         mapGrid.forEach(but -> addSelectableChild(but));
         mapScroll.forEach(but -> addSelectableChild(but));
         categoryScroll.forEach(but -> addSelectableChild(but));
@@ -316,3 +340,4 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
         invGrid.forEach(but -> addSelectableChild(but));
     }
 }
+ 

@@ -9,6 +9,7 @@ import h3o.ender.client.blockEntities.renderer.RotorBaseBERenderer;
 import h3o.ender.client.blockEntities.renderer.TerminalBERenderer;
 import h3o.ender.client.entities.renderer.TardisDefaultExtDoorRenderer;
 import h3o.ender.client.entities.renderer.TardisIntPortalRenderer;
+import h3o.ender.client.entities.renderer.TardisPathwayPortalRenderer;
 import h3o.ender.client.entities.renderer.TardisPortalRenderer;
 import h3o.ender.client.entities.renderer.TardisRenderer;
 import h3o.ender.client.screen.AstralMapScreen;
@@ -38,6 +39,7 @@ public class DwModClient implements ClientModInitializer {
         EntityRendererRegistry.register(RegisterEntities.TARDIS_EXT_DOOR_DEFAULT, TardisDefaultExtDoorRenderer::new);
         EntityRendererRegistry.register(RegisterEntities.TARDIS_PORTAL, TardisPortalRenderer::new);
         EntityRendererRegistry.register(RegisterEntities.TARDIS_INT_PORTAL, TardisIntPortalRenderer::new);
+        EntityRendererRegistry.register(RegisterEntities.TARDIS_PATHWAY_PORTAL, TardisPathwayPortalRenderer::new);
         BlockRenderLayerMap.INSTANCE.putBlock(RegisterBlocks.TARDIS_DEFAULT_HITBOX, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(RegisterBlocks.TARDIS_EXT_DOOR_DEFAULT_HITBOX, RenderLayer.getTranslucent());
         HandledScreens.register(RegisterScreenHandler.FREQUENCY_DETECTOR_SCREEN_HANDLER, FrequencyDetectorScreen::new);

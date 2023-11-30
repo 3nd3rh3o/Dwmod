@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.joml.Math;
 
+import h3o.ender.dimensions.RegisterDimensions;
 import h3o.ender.entities.Tardis;
 import h3o.ender.entities.TardisInternalPortal;
+import h3o.ender.entities.TardisPathwayPortal;
 import h3o.ender.entities.tardis.TardisExtDoor;
 import h3o.ender.structures.tardis.Room.Name;
 import net.minecraft.client.MinecraftClient;
@@ -48,6 +50,7 @@ public class DimensionalStorageHelper {
                 Math.round(index / (max_x * max_z)) * 16,
                 Math.round(index / max_x) % max_z * 16);
     }
+
     public static BlockPos getRoomPosFromRoomIndexE(int index) {
         return new BlockPos(
                 (index % max_x) * 16,
@@ -55,67 +58,126 @@ public class DimensionalStorageHelper {
                 Math.round(index / max_x) % max_z * 16);
     }
 
-    public static void loadStructure(ServerWorld world, BlockPos pos, String structName, BlockRotation rot) {
-        loadStructure(world, pos, structName, new StructurePlacementData().setMirror(BlockMirror.NONE)
+    private static void loadStructure(ServerWorld world, BlockPos pos, String structName, BlockRotation rot,
+            BlockPos offset, int size) {
+        BlockPos nPos = offset.add(-(8 * size) + 8, -(8 * size) + 8, -(8 * size) + 8).rotate(rot).add((8 * size) - 8,
+                (8 * size) - 8, (8 * size) - 8);
+        BlockPos fPos = switch (rot) {
+            case CLOCKWISE_180 -> pos.add(nPos).add(15, 0, 15);
+            case CLOCKWISE_90 -> pos.add(nPos).add(15, 0, 0);
+            case COUNTERCLOCKWISE_90 -> pos.add(nPos).add(0, 0, 15);
+            case NONE -> pos.add(nPos);
+        };
+        loadStructure(world, fPos, structName, new StructurePlacementData().setMirror(BlockMirror.NONE)
                 .setRotation(rot)
-                .setIgnoreEntities(false));
+                .setIgnoreEntities(false), new BlockPos(8, 8, 8));
+    }
+
+    public static BlockPos getFeaturePos(String featureName, int tardisIndex, Room room) {
+        BlockPos pos = DimensionalStorageHelper.getBasePosFromTardisIndex(tardisIndex)
+                .add(room.getName().getFeatures().get(featureName)
+                        .add(-8 * room.getSize(), -8 * room.getSize(), -8 * room.getSize())
+                        .rotate(room.getOrientation())
+                        .add(8 * room.getSize(), 8 * room.getSize(), 8 * room.getSize()))
+                .add(Room.MAINTENANCE.contains(room.getName())
+                        ? DimensionalStorageHelper.getRoomPosFromRoomIndexE(room.getId() * -1)
+                        : DimensionalStorageHelper.getRoomPosFromRoomIndex(room.getId()));
+        switch (room.getOrientation()) {
+            case NONE -> {
+            }
+            case CLOCKWISE_90 -> pos = pos.add(-1, 0, 0);
+            case CLOCKWISE_180 -> pos = pos.add(-1, 0, -1);
+            case COUNTERCLOCKWISE_90 -> pos = pos.add(0, 0, -1);
+        }
+        return pos;
     }
 
     private static void loadStructure(ServerWorld level, BlockPos bPos, String structureName,
-            StructurePlacementData settings) {
+            StructurePlacementData settings, BlockPos pivot) {
         StructureTemplateManager structureTemplateManager = level.getStructureTemplateManager();
         StructureTemplate struct = structureTemplateManager.getTemplate(Identifier.tryParse(structureName)).get();
-        struct.place(level, bPos, bPos, settings, Random.create(Util.getEpochTimeMs()), 2);
+        struct.place(level, bPos, pivot, settings, Random.create(Util.getEpochTimeMs()), 2);
+    }
+
+    public static void summonPortal(ServerWorld world, BlockPos origin, BlockPos dest, double originRotDeg,
+            double destRotDeg) {
+        TardisPathwayPortal portal = TardisPathwayPortal.entityType.create(world);
+        portal.setOriginPos(origin.toCenterPos().add(0, 0.5, 0));
+        portal.setDestinationDimension(RegisterDimensions.VORTEX);
+        portal.setDestination(dest.toCenterPos().add(0, 0.5, 0));
+        portal.setRotationTransformation(
+                DQuaternion.fromEulerAngle(new Vec3d(0, destRotDeg, 0)));
+        portal.setOrientationAndSize(
+                new Vec3d(1, 0, 0).rotateY((float) (originRotDeg * Math.PI / 180f)),
+                new Vec3d(0, 1, 0), 1, 2);
+        portal.getWorld().spawnEntity(portal);
     }
 
     public static int getValidPos(int size, List<Room> intSh) {
+        // FIXME something weird append here :/
         for (int n = 0; n < 73727; n++) {
             List<Integer> mask = new ArrayList<>();
             boolean valid = true;
             if (roomIdToX(n) + size < max_x && roomIdToY(n) + size < max_y && roomIdToZ(n) + size < max_z) {
-                for (int y = 0; y < size; y++) {
-                    for (int z = 0; z < size; z++) {
-                        for (int x = 0; x < size; x++) {
-                            int computedId = x_p(y_p(z_p(n, z), y), x);
-                            mask.add(computedId);
-                            if (x == 0) {
-                                if (noOverLap(0, computedId, intSh)) {
-                                    break;
+                boolean overlapp = false;
+                for (int s = 7; s > 0; s--) {
+
+                    int bn = x_m(y_m(z_m(n, s), s), s);
+                    // plane x, y (z)
+                    for (int x = 0; x < s + 1 + size; x++) {
+                        for (int y = 0; y < s + 1 + size; y++) {
+                            for (Room room : intSh) {
+                                if (room.getId().equals(x_p(y_p(bn, y), x)) && room.getSize() >= s + 1) {
+                                    overlapp = true;
                                 }
-                            }
-                            if (y == 0) {
-                                if (noOverLap(1, computedId, intSh)) {
-                                    break;
-                                }
-                            }
-                            if (z == 0) {
-                                if (noOverLap(2, computedId, intSh)) {
-                                    break;
-                                }
-                            }
-                            if (!valid) {
-                                break;
                             }
                         }
-                        if (!valid) {
-                            break;
+                    }
+                    if (!overlapp) {
+                        // plane x, z , (y)
+                        for (int x = 0; x < s + 1 + size; x++) {
+                            for (int z = 1; z < s + 1 + size; z++) {
+                                for (Room room : intSh) {
+                                    if (room.getId().equals(x_p(z_p(bn, z), x)) && room.getSize() >= s + 1) {
+                                        overlapp = true;
+                                    }
+                                }
+                            }
+                        }
+                        if (!overlapp) {
+                            for (int z = 1; z < s + 1 + size; z++) {
+                                for (int y = 1; y < s + 1 + size; y++) {
+                                    for (Room room : intSh) {
+                                        if (room.getId().equals(y_p(z_p(bn, z), y)) && room.getSize() >= s + 1) {
+                                            overlapp = true;
+                                        }
+                                    }
+                                }
+                            }
+
                         }
                     }
-                    if (!valid) {
-                        break;
-                    }
+
                 }
-                if (valid) {
+                if (!overlapp) {
+                    // gen mask
+                    for (int y = 0; y < size; y++) {
+                        for (int z = 0; z < size; z++) {
+                            for (int x = 0; x < size; x++) {
+                                mask.add(x_p(y_p(z_p(n, z), y), x));
+                            }
+                        }
+                    }
                     for (Integer val : mask) {
-                        valid = !contain(intSh, val);
-                        if (!valid) {
-                            break;
+                        if (contain(intSh, val)) {
+                            valid = false;
                         }
                     }
                     if (valid) {
                         return n;
                     }
                 }
+
             }
         }
         return -1;
@@ -128,52 +190,6 @@ public class DimensionalStorageHelper {
             }
         }
         return false;
-    }
-
-    private static int getSize(List<Room> intSh, Integer id) {
-        for (Room room : intSh) {
-            if (room.getId() == id) {
-                return room.getSize();
-            }
-        }
-        return -1;
-    }
-
-    private static boolean noOverLap(int axis, int index, List<Room> intSh) {
-        switch (axis) {
-            default:
-            case 0:
-                for (int x = 1; x < 8; x++) {
-                    if (x_m(index, x) < 0) {
-                        return true;
-                    }
-                    if (contain(intSh, x_m(index, x)) && getSize(intSh, x_m(index, x)) > x) {
-                        return false;
-                    }
-                }
-                return true;
-            case 1:
-                for (int y = 1; y < 8; y++) {
-                    if (y_m(index, y) < 0) {
-                        return true;
-                    }
-                    if (contain(intSh, y_m(index, y)) && getSize(intSh, y_m(index, y)) > y) {
-                        return false;
-                    }
-                }
-                return true;
-            case 2:
-                for (int z = 1; z < 8; z++) {
-                    if (z_m(index, z) < 0) {
-                        return true;
-                    }
-                    if (contain(intSh, z_m(index, z)) && getSize(intSh, z_m(index, z)) > z) {
-                        return false;
-                    }
-                }
-                return true;
-        }
-
     }
 
     public static int roomIdToX(int id) {
@@ -243,7 +259,8 @@ public class DimensionalStorageHelper {
         List<Room> internalScheme = filterNormal(intSh);
         int id = getValidPos(name.getSize(), internalScheme);
         summonPortals(vortex, name, basePos.add(getRoomPosFromRoomIndex(id)), tardis);
-        loadStructure(vortex, basePos.add(getRoomPosFromRoomIndex(id)), name.getStructName(), rot);
+        name.getStructName().forEach((n, loc) -> loadStructure(vortex, basePos.add(getRoomPosFromRoomIndex(id)), n, rot,
+                loc, name.getStructName().size()));
     }
 
     public static void addE(Name name, BlockRotation rot, int index, ServerWorld vortex,
@@ -252,7 +269,8 @@ public class DimensionalStorageHelper {
         List<Room> internalScheme = filterEngine(intSh);
         int id = getValidPos(name.getSize(), internalScheme);
         summonPortals(vortex, name, basePos.add(getRoomPosFromRoomIndexE(id)), tardis);
-        loadStructure(vortex, basePos.add(getRoomPosFromRoomIndexE(id)), name.getStructName(), rot);
+        name.getStructName().forEach((n, loc) -> loadStructure(vortex, basePos.add(getRoomPosFromRoomIndexE(id)), n,
+                rot, loc, name.getStructName().size()));
     }
 
     public static List<Room> filterNormal(List<Room> intSh) {
@@ -272,7 +290,8 @@ public class DimensionalStorageHelper {
         List<Room> out = new ArrayList<>();
         for (Room room : intSh) {
             if (room.getId() < 0) {
-                out.add(new Room((room.getId() * -1), room.getSize(), room.getOrientation().ordinal(), room.getVId(), room.getName()));
+                out.add(new Room((room.getId() * -1), room.getSize(), room.getOrientation().ordinal(), room.getVId(),
+                        room.getName()));
             }
             if (room.getId() == 0 && (Room.MAINTENANCE.contains(room.getName()))) {
                 out.add(room);
@@ -280,7 +299,6 @@ public class DimensionalStorageHelper {
         }
         return out;
     }
-
 
     private static void summonPortals(ServerWorld vortex, Name name, BlockPos origin, Tardis tardis) {
         switch (name) {
@@ -298,7 +316,7 @@ public class DimensionalStorageHelper {
                 portal.getWorld().spawnEntity(portal);
             }
             case MAINTENANCE_ENTRANCE -> {
-                //TODO 
+                // TODO
             }
         }
     }
@@ -379,16 +397,16 @@ public class DimensionalStorageHelper {
     }
 
     public static Tardis getTardis(MinecraftClient client, BlockPos pos) {
-        
-            List<Tardis> trds = client.world.getEntitiesByClass(Tardis.class,
-                    Box.of(new Vec3d(0, 0, 0), World.HORIZONTAL_LIMIT * 2, World.MAX_Y - World.MIN_Y,
-                            World.HORIZONTAL_LIMIT * 2),
-                    (entities) -> ((Tardis) entities).getIndex() == DimensionalStorageHelper
-                            .getIndex(pos));
-            if (trds.size() != 0) {
-                return trds.get(0);
-            }
-        
+
+        List<Tardis> trds = client.world.getEntitiesByClass(Tardis.class,
+                Box.of(new Vec3d(0, 0, 0), World.HORIZONTAL_LIMIT * 2, World.MAX_Y - World.MIN_Y,
+                        World.HORIZONTAL_LIMIT * 2),
+                (entities) -> ((Tardis) entities).getIndex() == DimensionalStorageHelper
+                        .getIndex(pos));
+        if (trds.size() != 0) {
+            return trds.get(0);
+        }
+
         return null;
     }
 }
