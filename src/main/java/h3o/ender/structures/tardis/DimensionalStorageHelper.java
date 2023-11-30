@@ -1,6 +1,7 @@
 package h3o.ender.structures.tardis;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.joml.Math;
@@ -10,6 +11,7 @@ import h3o.ender.entities.Tardis;
 import h3o.ender.entities.TardisInternalPortal;
 import h3o.ender.entities.TardisPathwayPortal;
 import h3o.ender.entities.tardis.TardisExtDoor;
+import h3o.ender.structures.tardis.Room.Features;
 import h3o.ender.structures.tardis.Room.Name;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
@@ -44,6 +46,13 @@ public class DimensionalStorageHelper {
                 (Math.round(index / maxTx) % maxTz) * 2536);
     }
 
+    public static Vec3d getBasePosFromTardisIndexVec(int index) {
+        return new Vec3d(
+                (index % maxTx) * 2536,
+                64,
+                (Math.round(index / maxTx) % maxTz) * 2536);
+    }
+
     public static BlockPos getRoomPosFromRoomIndex(int index) {
         return new BlockPos(
                 (index % max_x) * 16,
@@ -73,15 +82,15 @@ public class DimensionalStorageHelper {
                 .setIgnoreEntities(false), new BlockPos(8, 8, 8));
     }
 
-    public static BlockPos getFeaturePos(String featureName, int tardisIndex, Room room) {
-        BlockPos pos = DimensionalStorageHelper.getBasePosFromTardisIndex(tardisIndex)
+    public static Vec3d getFeaturePos(Features featureName, int tardisIndex, Room room) {
+        Vec3d pos = DimensionalStorageHelper.getBasePosFromTardisIndexVec(tardisIndex)
                 .add(room.getName().getFeatures().get(featureName)
                         .add(-8 * room.getSize(), -8 * room.getSize(), -8 * room.getSize())
-                        .rotate(room.getOrientation())
+                        .rotateY(Math.toRadians(room.getOrientation().ordinal() * 90))
                         .add(8 * room.getSize(), 8 * room.getSize(), 8 * room.getSize()))
                 .add(Room.MAINTENANCE.contains(room.getName())
-                        ? DimensionalStorageHelper.getRoomPosFromRoomIndexE(room.getId() * -1)
-                        : DimensionalStorageHelper.getRoomPosFromRoomIndex(room.getId()));
+                        ? DimensionalStorageHelper.getRoomPosFromRoomIndexE(room.getId() * -1).toCenterPos()
+                        : DimensionalStorageHelper.getRoomPosFromRoomIndex(room.getId()).toCenterPos());
         switch (room.getOrientation()) {
             case NONE -> {
             }
@@ -99,18 +108,23 @@ public class DimensionalStorageHelper {
         struct.place(level, bPos, pivot, settings, Random.create(Util.getEpochTimeMs()), 2);
     }
 
-    public static void summonPortal(ServerWorld world, BlockPos origin, BlockPos dest, double originRotDeg,
-            double destRotDeg) {
+    public static void summonPortal(ServerWorld world, Vec3d origin, Vec3d dest, double originRotDeg,
+            double destRotDeg, double width, double height) {
         TardisPathwayPortal portal = TardisPathwayPortal.entityType.create(world);
-        portal.setOriginPos(origin.toCenterPos().add(0, 0.5, 0));
+        portal.setOriginPos(origin.add(0, 0.5, 0));
         portal.setDestinationDimension(RegisterDimensions.VORTEX);
-        portal.setDestination(dest.toCenterPos().add(0, 0.5, 0));
+        portal.setDestination(dest.add(0, 0.5, 0));
         portal.setRotationTransformation(
                 DQuaternion.fromEulerAngle(new Vec3d(0, destRotDeg, 0)));
         portal.setOrientationAndSize(
                 new Vec3d(1, 0, 0).rotateY((float) (originRotDeg * Math.PI / 180f)),
-                new Vec3d(0, 1, 0), 1, 2);
+                new Vec3d(0, 1, 0), width, height);
         portal.getWorld().spawnEntity(portal);
+    }
+
+    public static void removePortal(ServerWorld world, Vec3d pos) {
+        world.getEntitiesByClass(TardisPathwayPortal.class, new Box(new BlockPos(Math.round((float)pos.getX()), Math.round((float)pos.getY()), Math.round((float)pos.getZ()))).expand(1), ent -> true)
+                .forEach(ent -> ent.kill());
     }
 
     public static int getValidPos(int size, List<Room> intSh) {
@@ -254,21 +268,21 @@ public class DimensionalStorageHelper {
     }
 
     public static void addN(Name name, BlockRotation rot, int index, ServerWorld vortex,
-            List<Room> intSh, Tardis tardis) {
+            List<Room> intSh, Tardis tardis, Room room) {
         BlockPos basePos = getBasePosFromTardisIndex(index);
         List<Room> internalScheme = filterNormal(intSh);
         int id = getValidPos(name.getSize(), internalScheme);
-        summonPortals(vortex, name, basePos.add(getRoomPosFromRoomIndex(id)), tardis);
+        summonPortals(vortex, name, basePos.add(getRoomPosFromRoomIndex(id)), tardis, room);
         name.getStructName().forEach((n, loc) -> loadStructure(vortex, basePos.add(getRoomPosFromRoomIndex(id)), n, rot,
                 loc, name.getStructName().size()));
     }
 
     public static void addE(Name name, BlockRotation rot, int index, ServerWorld vortex,
-            List<Room> intSh, Tardis tardis) {
+            List<Room> intSh, Tardis tardis, Room room) {
         BlockPos basePos = getBasePosFromTardisIndex(index);
         List<Room> internalScheme = filterEngine(intSh);
         int id = getValidPos(name.getSize(), internalScheme);
-        summonPortals(vortex, name, basePos.add(getRoomPosFromRoomIndexE(id)), tardis);
+        summonPortals(vortex, name, basePos.add(getRoomPosFromRoomIndexE(id)), tardis, room);
         name.getStructName().forEach((n, loc) -> loadStructure(vortex, basePos.add(getRoomPosFromRoomIndexE(id)), n,
                 rot, loc, name.getStructName().size()));
     }
@@ -300,7 +314,7 @@ public class DimensionalStorageHelper {
         return out;
     }
 
-    private static void summonPortals(ServerWorld vortex, Name name, BlockPos origin, Tardis tardis) {
+    private static void summonPortals(ServerWorld vortex, Name name, BlockPos origin, Tardis tardis, Room room) {
         switch (name) {
             case DEFAULT_CONSOLE_ROOM -> {
                 TardisInternalPortal portal;
@@ -316,9 +330,71 @@ public class DimensionalStorageHelper {
                 portal.getWorld().spawnEntity(portal);
             }
             case MAINTENANCE_ENTRANCE -> {
-                // TODO
+                linkPortalsE(vortex, name, origin, tardis, room);
             }
         }
+    }
+
+    private static void linkPortalsE(ServerWorld vortex, Name name, BlockPos origin, Tardis tardis, Room room) {
+        List<Room> intsh = filterEngine(Room.fromNBT(tardis.getDataTracker().get(Tardis.INTERNAL_SCHEME)));
+        HashMap<Features, Vec3d> feats = new HashMap<>();
+        name.getFeatures().forEach((f, p) -> {
+            if (f.isCoorLink()) {
+                feats.put(f.rotated(room.getOrientation()),
+                        DimensionalStorageHelper.getFeaturePos(f, tardis.getIndex(), room));
+            }
+        });
+        intsh.forEach(r -> {
+            // find adjacent
+            feats.forEach((f, p) -> {
+                if (r.getVId() == (f.getMatchingVIDFor(room.getVId()))) {
+                    HashMap<Features, Vec3d> featsr = new HashMap<>();
+                    name.getFeatures().forEach((fr, pr) -> {
+                        if (fr.isCoorLink()) {
+                            featsr.put(fr.rotated(r.getOrientation()),
+                                    DimensionalStorageHelper.getFeaturePos(fr, tardis.getIndex(), r));
+                        }
+                    });
+                    if (featsr.containsKey(f.complementary())) {
+                        Vec3d destPos = featsr.get(f.complementary());
+                        // summon portals
+                        summonPortal(vortex, p, destPos, f.getAngle(), f.getAngle() - f.complementary().getAngle() + 180, 2.0, 2.0);
+                        summonPortal(vortex, destPos, p, f.complementary().getAngle(), f.getAngle() - f.complementary().getAngle() + 180, 2.0, 2.0);
+                    }
+                }
+            });
+        });
+    }
+
+    public static void unlinkPortalE(ServerWorld vortex, Name name, Tardis tardis, Room room) {
+        List<Room> intsh = filterEngine(Room.fromNBT(tardis.getDataTracker().get(Tardis.INTERNAL_SCHEME)));
+        HashMap<Features, Vec3d> feats = new HashMap<>();
+        name.getFeatures().forEach((f, p) -> {
+            if (f.isCoorLink()) {
+                feats.put(f.rotated(room.getOrientation()),
+                        DimensionalStorageHelper.getFeaturePos(f, tardis.getIndex(), room));
+            }
+        });
+        intsh.forEach(r -> {
+            // find adjacent
+            feats.forEach((f, p) -> {
+                if (r.getVId() == (f.getMatchingVIDFor(room.getVId()))) {
+                    HashMap<Features, Vec3d> featsr = new HashMap<>();
+                    name.getFeatures().forEach((fr, pr) -> {
+                        if (fr.isCoorLink()) {
+                            featsr.put(fr.rotated(r.getOrientation()),
+                                    DimensionalStorageHelper.getFeaturePos(fr, tardis.getIndex(), r));
+                        }
+                    });
+                    if (featsr.containsKey(f.complementary())) {
+                        Vec3d destPos = featsr.get(f.complementary());
+                        // summon portals
+                        removePortal(vortex, destPos);
+                        removePortal(vortex, p);
+                    }
+                }
+            });
+        });
     }
 
     public static int getIndex(BlockPos pos) {
@@ -347,11 +423,20 @@ public class DimensionalStorageHelper {
                             entity -> true).forEach(ent -> {
                                 ent.kill();
                             });
+                    world.getEntitiesByClass(TardisPathwayPortal.class,
+                            new Box(pos.getX() + 16 * x, pos.getY() + 16 * y, pos.getZ() + 16 * z,
+                                    pos.getX() + 16 * x + 16, pos.getY() + 16 * y + 16, pos.getZ() + 16 * z + 16),
+                            entity -> true).forEach(ent -> {
+                                ent.kill();
+                                ent.reloadAndSyncToClient();
+                            });
                 }
             }
         }
+        
     }
 
+    // TODO remove portals in the room
     public static void removeRoomE(int tardisIndex, int roomIndex, int roomSize, ServerWorld world) {
         BlockPos pos = getBasePosFromTardisIndex(tardisIndex).add(getRoomPosFromRoomIndexE(roomIndex));
         for (int x = 0; x < roomSize; x++) {

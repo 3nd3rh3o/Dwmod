@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 public class Room {
     public static final List<Name> MAINTENANCE = new ArrayList<>();
@@ -17,6 +18,71 @@ public class Room {
     private int orientation;
     private int vId;
     private Name name;
+
+    public enum Features {
+        EngineAccess,
+        RealWorldInterface,
+        NorthCorrLink,
+        EastCorrLink,
+        SouthCorrLink,
+        WestCorrLink;
+
+        public Features rotated(BlockRotation rot){
+            if (rot.ordinal() == 0) {
+                return this;
+            } else {
+                return switch (this) {
+                    case NorthCorrLink -> EastCorrLink.rotated(BlockRotation.values()[(rot.ordinal()-1)]);
+                    case EastCorrLink -> SouthCorrLink.rotated(BlockRotation.values()[(rot.ordinal()-1)]);
+                    case SouthCorrLink -> WestCorrLink.rotated(BlockRotation.values()[rot.ordinal()-1]);
+                    case WestCorrLink -> NorthCorrLink.rotated(BlockRotation.values()[rot.ordinal()-1]);
+                    default -> throw new IllegalArgumentException("Unexpected feature: " + this + ". Should be a CorrLink.");
+                };
+            }
+        }
+        public Features complementary() {
+            return switch (this) {
+                case NorthCorrLink -> SouthCorrLink;
+                case EastCorrLink -> WestCorrLink;
+                case SouthCorrLink -> NorthCorrLink;
+                case WestCorrLink -> EastCorrLink;
+                default -> throw new IllegalArgumentException("Unexpected feature: " + this + ". Should be a CorrLink.");
+            };
+        }
+
+        public boolean isCoorLink() {
+            switch (this) {
+                case NorthCorrLink:
+                case SouthCorrLink:
+                case EastCorrLink:
+                case WestCorrLink:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        public int getMatchingVIDFor(int vId) {
+            return switch (this) {
+                case NorthCorrLink -> getZmVID(vId);
+                case SouthCorrLink -> getZpVID(vId);
+                case EastCorrLink -> getXpVID(vId);
+                case WestCorrLink -> getXmVID(vId);
+                case EngineAccess -> throw new UnsupportedOperationException("Unimplemented case: " + this);
+                case RealWorldInterface -> throw new UnsupportedOperationException("Unimplemented case: " + this);
+                default -> throw new IllegalArgumentException("Unexpected feature: " + this + ". Should be a CorrLink.");
+            };
+        }
+        public double getAngle() {
+            return switch(this) {
+                case NorthCorrLink -> 0;
+                case EastCorrLink -> 90;
+                case SouthCorrLink -> 180;
+                case WestCorrLink -> 270;
+                default -> throw new IllegalArgumentException("Unexpected feature: " + this + ". Should be a CorrLink.");
+            };
+        }
+    }
+
 
     public enum Name {
         DEFAULT_CONSOLE_ROOM, MAINTENANCE_ENTRANCE;
@@ -48,19 +114,36 @@ public class Room {
             };
         }
 
-        public HashMap<String, BlockPos> getFeatures() {
-            HashMap<String, BlockPos> features = new HashMap<>();
+        public HashMap<Features, Vec3d> getFeatures() {
+            HashMap<Features, Vec3d> features = new HashMap<>();
             switch (this) {
                 case DEFAULT_CONSOLE_ROOM -> {
-                    features.put("RealWorldInterface", new BlockPos(9, 2, 13));
-                    features.put("EngineAccess", new BlockPos(14, 2, 8));
+                    features.put(Features.RealWorldInterface, new Vec3d(9, 2, 13));
+                    features.put(Features.EngineAccess, new Vec3d(13.5, 1.5, 7.5));
                 }
                 case MAINTENANCE_ENTRANCE -> {
-                     features.put("EngineAccess", new BlockPos(7,1,5));
+                     features.put(Features.EngineAccess, new Vec3d(7.0,0.5,5.0));
+                     features.put(Features.SouthCorrLink, new Vec3d(7.5, 1, 11.5));
                 }
             }
             return features;
         }
+    }
+
+    private static int getZpVID(int vId) {
+        return vId + 5 * 5;
+    }
+
+    private static int getZmVID(int vId) {
+        return vId - 5 * 5;
+    }
+
+    private static int getXmVID(int vId) {
+        return vId - 1;
+    }
+
+    private static int getXpVID(int vId) {
+        return vId + 1;
     }
 
     public Room(int id, int size, int orientation, int vId, Name name) {
