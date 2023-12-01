@@ -21,6 +21,7 @@ import net.minecraft.util.Identifier;
 
 public class RegisterBlocks {
     public static final Block TARDIS_DEFAULT_FLOOR = new DefaultFloor(FabricBlockSettings.create().strength(-1.0f));
+    public static final Block TARDIS_WHITE_WALL = new Block(FabricBlockSettings.create().strength(-1f).nonOpaque().luminance(15));
     public static final Block TARDIS_DEFAULT_WALL_LAMP = new DefaultWallLamp(FabricBlockSettings.create().strength(-1.0f).nonOpaque().luminance(13));
     public static final Block TARDIS_MAINTENANCE_WALL_LOWER = new MaintenanceWallLower(FabricBlockSettings.create().strength(-1f).nonOpaque());
     public static final Block TARDIS_MAINTENANCE_WALL_FRAME_LOWER = new MaintenanceWallLower(FabricBlockSettings.create().strength(-1f).nonOpaque());
@@ -38,6 +39,7 @@ public class RegisterBlocks {
     public static void register() {
         DwMod.LOGGER.info("Registering Blocks");
         Registry.register(Registries.BLOCK, new Identifier(DwMod.MODID, "tardis.default.floor"), TARDIS_DEFAULT_FLOOR);
+        Registry.register(Registries.BLOCK, new Identifier(DwMod.MODID, "tardis.white_wall"), TARDIS_WHITE_WALL);
         Registry.register(Registries.BLOCK, new Identifier(DwMod.MODID, "tardis.default.hitbox"), TARDIS_DEFAULT_HITBOX);
         Registry.register(Registries.BLOCK, new Identifier(DwMod.MODID, "tardis.maintenance.wall.lower"), TARDIS_MAINTENANCE_WALL_LOWER);
         Registry.register(Registries.BLOCK, new Identifier(DwMod.MODID, "tardis.maintenance.wall.frame.lower"), TARDIS_MAINTENANCE_WALL_FRAME_LOWER);
