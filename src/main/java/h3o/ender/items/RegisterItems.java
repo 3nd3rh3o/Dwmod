@@ -49,7 +49,8 @@ public class RegisterItems {
         public static final Item MAINTENANCE_ACCESS = new Item(new FabricItemSettings());
         public static final Item MAINTENANCE_CROSS_CORRIDOR = new Item(new FabricItemSettings());
         public static final Item MAINTENANCE_TURN_CORRIDOR = new Item(new FabricItemSettings());
-
+        public static final Item MAINTENANCE_STRAIGHT_CORRIDOR = new Item(new FabricItemSettings());
+        public static final Item MAINTENANCE_T_CORRIDOR = new Item(new FabricItemSettings());
 
         public static void register() {
                 Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.default.wall.lamp"),
@@ -94,5 +95,7 @@ public class RegisterItems {
                 Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.room.maintenance_access"), MAINTENANCE_ACCESS);
                 Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.room.maintenance_cross_corridor"), MAINTENANCE_CROSS_CORRIDOR);
                 Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.room.maintenance_turn_corridor"), MAINTENANCE_TURN_CORRIDOR);
+                Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.room.maintenance_straight_corridor"), MAINTENANCE_STRAIGHT_CORRIDOR);
+                Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.room.maintenance_t_corridor"), MAINTENANCE_T_CORRIDOR);
         }
 }

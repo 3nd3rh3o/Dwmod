@@ -14,6 +14,7 @@ public class Commands implements Command {
                 .normal("-HELP").endLine()
                 .normal("-ASTRALMAP").endLine()
                 .normal("-MAINCONF").endLine()
+                .normal("-ENGINEACCESS").endLine()
                 .assemble();
     }
 

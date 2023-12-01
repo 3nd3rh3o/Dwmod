@@ -56,11 +56,15 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
                     rooms.add(Room.Name.MAINTENANCE_ENTRANCE);
                     rooms.add(Room.Name.MAINTENANCE_CROSS_CORRIDOR);
                     rooms.add(Room.Name.MAINTENANCE_TURN_CORRIDOR);
+                    rooms.add(Room.Name.MAINTENANCE_STRAIGHT_CORRIDOR);
+                    rooms.add(Room.Name.MAINTENANCE_T_CORRIDOR);
                 }
                 case CORRIDORS -> {
                     rooms.add(Room.Name.MAINTENANCE_ENTRANCE);
                     rooms.add(Room.Name.MAINTENANCE_CROSS_CORRIDOR);
                     rooms.add(Room.Name.MAINTENANCE_TURN_CORRIDOR);
+                    rooms.add(Room.Name.MAINTENANCE_STRAIGHT_CORRIDOR);
+                    rooms.add(Room.Name.MAINTENANCE_T_CORRIDOR);
                 }
             }
             return rooms;

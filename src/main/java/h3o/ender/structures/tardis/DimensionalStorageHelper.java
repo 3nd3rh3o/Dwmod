@@ -337,6 +337,12 @@ public class DimensionalStorageHelper {
             case MAINTENANCE_TURN_CORRIDOR -> {
                 linkPortalsE(vortex, name, origin, tardis, room);
             }
+            case MAINTENANCE_STRAIGHT_CORRIDOR -> {
+                linkPortalsE(vortex, name, origin, tardis, room);
+            }
+            case MAINTENANCE_T_CORRIDOR -> {
+                linkPortalsE(vortex, name, origin, tardis, room);
+            }
         }
     }
 

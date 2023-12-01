@@ -1,0 +1,36 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "dwmod:item/maintenance_straight_corridor",
+		"particle": "dwmod:item/maintenance_straight_corridor"
+	},
+	"elements": [
+		{
+			"from": [7, 0, 0],
+			"to": [9, 2, 16],
+			"faces": {
+				"north": {"uv": [2, 2, 3, 3], "texture": "#0"},
+				"east": {"uv": [0, 0, 8, 1], "texture": "#0"},
+				"south": {"uv": [2, 3, 3, 4], "texture": "#0"},
+				"west": {"uv": [0, 1, 8, 2], "texture": "#0"},
+				"up": {"uv": [1, 10, 0, 2], "texture": "#0"},
+				"down": {"uv": [2, 2, 1, 10], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"gui": {
+			"rotation": [90, 0, 180]
+		}
+	},
+	"groups": [
+		{
+			"name": "bb_main",
+			"origin": [8, 0, 8],
+			"color": 0,
+			"children": []
+		},
+		0
+	]
+}

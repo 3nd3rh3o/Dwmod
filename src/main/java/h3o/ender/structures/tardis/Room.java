@@ -85,7 +85,7 @@ public class Room {
 
 
     public enum Name {
-        DEFAULT_CONSOLE_ROOM, MAINTENANCE_ENTRANCE, MAINTENANCE_CROSS_CORRIDOR, MAINTENANCE_TURN_CORRIDOR;
+        DEFAULT_CONSOLE_ROOM, MAINTENANCE_ENTRANCE, MAINTENANCE_CROSS_CORRIDOR, MAINTENANCE_TURN_CORRIDOR, MAINTENANCE_STRAIGHT_CORRIDOR, MAINTENANCE_T_CORRIDOR;
 
         public int getSize() {
             return switch (this) {
@@ -93,6 +93,8 @@ public class Room {
                 case MAINTENANCE_ENTRANCE -> 1;
                 case MAINTENANCE_CROSS_CORRIDOR -> 1;
                 case MAINTENANCE_TURN_CORRIDOR -> 1;
+                case MAINTENANCE_STRAIGHT_CORRIDOR -> 1;
+                case MAINTENANCE_T_CORRIDOR -> 1;
             };
         }
 
@@ -109,6 +111,12 @@ public class Room {
                 case MAINTENANCE_TURN_CORRIDOR -> {
                     structNames.put("dwmod:tardis/maintenance/turn_corridor", new BlockPos(0, 0, 0));
                 }
+                case MAINTENANCE_STRAIGHT_CORRIDOR -> {
+                    structNames.put("dwmod:tardis/maintenance/straight_corridor", new BlockPos(0, 0, 0));
+                }
+                case MAINTENANCE_T_CORRIDOR -> {
+                    structNames.put("dwmod:tardis/maintenance/t_corridor", new BlockPos(0, 0, 0));
+                }
             };
             return structNames;
 
@@ -120,6 +128,8 @@ public class Room {
                 case MAINTENANCE_ENTRANCE -> RegisterItems.MAINTENANCE_ACCESS;
                 case MAINTENANCE_CROSS_CORRIDOR -> RegisterItems.MAINTENANCE_CROSS_CORRIDOR;
                 case MAINTENANCE_TURN_CORRIDOR -> RegisterItems.MAINTENANCE_TURN_CORRIDOR;
+                case MAINTENANCE_STRAIGHT_CORRIDOR -> RegisterItems.MAINTENANCE_STRAIGHT_CORRIDOR;
+                case MAINTENANCE_T_CORRIDOR -> RegisterItems.MAINTENANCE_T_CORRIDOR;
             };
         }
 
@@ -143,6 +153,15 @@ public class Room {
                 case MAINTENANCE_TURN_CORRIDOR -> {
                     features.put(Features.NorthCorrLink, new Vec3d(7.5, 1, 3.5));
                     features.put(Features.EastCorrLink, new Vec3d(11.5, 1, 7.5));
+                }
+                case MAINTENANCE_STRAIGHT_CORRIDOR -> {
+                    features.put(Features.SouthCorrLink, new Vec3d(7.5, 1, 11.5));
+                    features.put(Features.NorthCorrLink, new Vec3d(7.5, 1, 3.5));
+                }
+                case MAINTENANCE_T_CORRIDOR -> {
+                    features.put(Features.SouthCorrLink, new Vec3d(7.5, 1, 11.5));
+                    features.put(Features.WestCorrLink, new Vec3d(3.5, 1, 7.5));
+                    features.put(Features.NorthCorrLink, new Vec3d(7.5, 1, 3.5));
                 }
             }
             return features;
@@ -246,5 +265,7 @@ public class Room {
         MAINTENANCE.add(Name.MAINTENANCE_ENTRANCE);
         MAINTENANCE.add(Name.MAINTENANCE_CROSS_CORRIDOR);
         MAINTENANCE.add(Name.MAINTENANCE_TURN_CORRIDOR);
+        MAINTENANCE.add(Name.MAINTENANCE_STRAIGHT_CORRIDOR);
+        MAINTENANCE.add(Name.MAINTENANCE_T_CORRIDOR);
     }
 }
