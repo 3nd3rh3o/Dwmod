@@ -86,10 +86,10 @@ public class DimensionalStorageHelper {
         Vec3d pos = DimensionalStorageHelper.getBasePosFromTardisIndexVec(tardisIndex)
                 .add(room.getName().getFeatures().get(featureName)
                         .add(-8 * room.getSize(), -8 * room.getSize(), -8 * room.getSize())
-                        .rotateY(Math.toRadians(room.getOrientation().ordinal() * 90))
+                        .rotateY(Math.toRadians(room.getOrientation().ordinal() * -90))
                         .add(8 * room.getSize(), 8 * room.getSize(), 8 * room.getSize()))
                 .add(Room.MAINTENANCE.contains(room.getName())
-                        ? DimensionalStorageHelper.getRoomPosFromRoomIndexE(room.getId() * -1).toCenterPos()
+                        ? DimensionalStorageHelper.getRoomPosFromRoomIndexE(Math.abs(room.getId())).toCenterPos()
                         : DimensionalStorageHelper.getRoomPosFromRoomIndex(room.getId()).toCenterPos());
         switch (room.getOrientation()) {
             case NONE -> {
@@ -128,7 +128,6 @@ public class DimensionalStorageHelper {
     }
 
     public static int getValidPos(int size, List<Room> intSh) {
-        // FIXME something weird append here :/
         for (int n = 0; n < 73727; n++) {
             List<Integer> mask = new ArrayList<>();
             boolean valid = true;
@@ -332,6 +331,12 @@ public class DimensionalStorageHelper {
             case MAINTENANCE_ENTRANCE -> {
                 linkPortalsE(vortex, name, origin, tardis, room);
             }
+            case MAINTENANCE_CROSS_CORRIDOR -> {
+                linkPortalsE(vortex, name, origin, tardis, room);
+            }
+            case MAINTENANCE_TURN_CORRIDOR -> {
+                linkPortalsE(vortex, name, origin, tardis, room);
+            }
         }
     }
 
@@ -349,7 +354,7 @@ public class DimensionalStorageHelper {
             feats.forEach((f, p) -> {
                 if (r.getVId() == (f.getMatchingVIDFor(room.getVId()))) {
                     HashMap<Features, Vec3d> featsr = new HashMap<>();
-                    name.getFeatures().forEach((fr, pr) -> {
+                    r.getName().getFeatures().forEach((fr, pr) -> {
                         if (fr.isCoorLink()) {
                             featsr.put(fr.rotated(r.getOrientation()),
                                     DimensionalStorageHelper.getFeaturePos(fr, tardis.getIndex(), r));
@@ -380,7 +385,7 @@ public class DimensionalStorageHelper {
             feats.forEach((f, p) -> {
                 if (r.getVId() == (f.getMatchingVIDFor(room.getVId()))) {
                     HashMap<Features, Vec3d> featsr = new HashMap<>();
-                    name.getFeatures().forEach((fr, pr) -> {
+                    r.getName().getFeatures().forEach((fr, pr) -> {
                         if (fr.isCoorLink()) {
                             featsr.put(fr.rotated(r.getOrientation()),
                                     DimensionalStorageHelper.getFeaturePos(fr, tardis.getIndex(), r));
@@ -436,7 +441,7 @@ public class DimensionalStorageHelper {
         
     }
 
-    // TODO remove portals in the room
+
     public static void removeRoomE(int tardisIndex, int roomIndex, int roomSize, ServerWorld world) {
         BlockPos pos = getBasePosFromTardisIndex(tardisIndex).add(getRoomPosFromRoomIndexE(roomIndex));
         for (int x = 0; x < roomSize; x++) {

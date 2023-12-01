@@ -54,9 +54,13 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
             switch (this) {
                 case ALL -> {
                     rooms.add(Room.Name.MAINTENANCE_ENTRANCE);
+                    rooms.add(Room.Name.MAINTENANCE_CROSS_CORRIDOR);
+                    rooms.add(Room.Name.MAINTENANCE_TURN_CORRIDOR);
                 }
                 case CORRIDORS -> {
                     rooms.add(Room.Name.MAINTENANCE_ENTRANCE);
+                    rooms.add(Room.Name.MAINTENANCE_CROSS_CORRIDOR);
+                    rooms.add(Room.Name.MAINTENANCE_TURN_CORRIDOR);
                 }
             }
             return rooms;
@@ -287,7 +291,7 @@ public class MaintenanceConfigScreen extends HandledScreen<MaintenanceConfigScre
             invGrid.add(ButtonWidget.builder(Text.empty(), button -> {
                 invCursorLoc = ((button.getX() - startX - 91) / 15) + (selectedInvPage * 25)
                         + ((button.getY() - startY - 25) / 15) * 5;
-            }).dimensions(i * 15 + startX + 91, i * 25 + startY + 25, 16, 16).build());
+            }).dimensions(i * 15 + startX + 91, Math.round(i/5) * 15 + startY + 25, 16, 16).build());
         }
 
         // TODO add build, remove, toggle, rotate buttons (Packet already done)

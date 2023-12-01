@@ -47,6 +47,8 @@ public class RegisterItems {
 
         // rooms
         public static final Item MAINTENANCE_ACCESS = new Item(new FabricItemSettings());
+        public static final Item MAINTENANCE_CROSS_CORRIDOR = new Item(new FabricItemSettings());
+        public static final Item MAINTENANCE_TURN_CORRIDOR = new Item(new FabricItemSettings());
 
 
         public static void register() {
@@ -90,5 +92,7 @@ public class RegisterItems {
 
                 // ROOMS
                 Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.room.maintenance_access"), MAINTENANCE_ACCESS);
+                Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.room.maintenance_cross_corridor"), MAINTENANCE_CROSS_CORRIDOR);
+                Registry.register(Registries.ITEM, new Identifier(DwMod.MODID, "tardis.room.maintenance_turn_corridor"), MAINTENANCE_TURN_CORRIDOR);
         }
 }

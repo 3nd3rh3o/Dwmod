@@ -75,9 +75,9 @@ public class Room {
         public double getAngle() {
             return switch(this) {
                 case NorthCorrLink -> 0;
-                case EastCorrLink -> 90;
-                case SouthCorrLink -> 180;
-                case WestCorrLink -> 270;
+                case EastCorrLink -> -90;
+                case SouthCorrLink -> -180;
+                case WestCorrLink -> -270;
                 default -> throw new IllegalArgumentException("Unexpected feature: " + this + ". Should be a CorrLink.");
             };
         }
@@ -85,12 +85,14 @@ public class Room {
 
 
     public enum Name {
-        DEFAULT_CONSOLE_ROOM, MAINTENANCE_ENTRANCE;
+        DEFAULT_CONSOLE_ROOM, MAINTENANCE_ENTRANCE, MAINTENANCE_CROSS_CORRIDOR, MAINTENANCE_TURN_CORRIDOR;
 
         public int getSize() {
             return switch (this) {
                 case DEFAULT_CONSOLE_ROOM -> 1;
-                case MAINTENANCE_ENTRANCE -> 2;
+                case MAINTENANCE_ENTRANCE -> 1;
+                case MAINTENANCE_CROSS_CORRIDOR -> 1;
+                case MAINTENANCE_TURN_CORRIDOR -> 1;
             };
         }
 
@@ -100,7 +102,12 @@ public class Room {
                 case DEFAULT_CONSOLE_ROOM -> structNames.put("dwmod:tardis/default/console_room", new BlockPos(0, 0, 0));
                 case MAINTENANCE_ENTRANCE -> {
                     structNames.put("dwmod:tardis/maintenance/entrance", new BlockPos(0, 0, 0));
-                    structNames.put("dwmod:tardis/maintenance/entrance1", new BlockPos(0, 0, 16));
+                }
+                case MAINTENANCE_CROSS_CORRIDOR -> {
+                    structNames.put("dwmod:tardis/maintenance/cross_corridor", new BlockPos(0, 0, 0));
+                }
+                case MAINTENANCE_TURN_CORRIDOR -> {
+                    structNames.put("dwmod:tardis/maintenance/turn_corridor", new BlockPos(0, 0, 0));
                 }
             };
             return structNames;
@@ -111,6 +118,8 @@ public class Room {
             return switch (this) {
                 case DEFAULT_CONSOLE_ROOM -> null;
                 case MAINTENANCE_ENTRANCE -> RegisterItems.MAINTENANCE_ACCESS;
+                case MAINTENANCE_CROSS_CORRIDOR -> RegisterItems.MAINTENANCE_CROSS_CORRIDOR;
+                case MAINTENANCE_TURN_CORRIDOR -> RegisterItems.MAINTENANCE_TURN_CORRIDOR;
             };
         }
 
@@ -124,6 +133,16 @@ public class Room {
                 case MAINTENANCE_ENTRANCE -> {
                      features.put(Features.EngineAccess, new Vec3d(7.0,0.5,5.0));
                      features.put(Features.SouthCorrLink, new Vec3d(7.5, 1, 11.5));
+                }
+                case MAINTENANCE_CROSS_CORRIDOR -> {
+                    features.put(Features.SouthCorrLink, new Vec3d(7.5, 1, 11.5));
+                    features.put(Features.NorthCorrLink, new Vec3d(7.5, 1, 3.5));
+                    features.put(Features.WestCorrLink, new Vec3d(3.5, 1, 7.5));
+                    features.put(Features.EastCorrLink, new Vec3d(11.5, 1, 7.5));
+                }
+                case MAINTENANCE_TURN_CORRIDOR -> {
+                    features.put(Features.NorthCorrLink, new Vec3d(7.5, 1, 3.5));
+                    features.put(Features.EastCorrLink, new Vec3d(11.5, 1, 7.5));
                 }
             }
             return features;
@@ -225,5 +244,7 @@ public class Room {
     }
     static {
         MAINTENANCE.add(Name.MAINTENANCE_ENTRANCE);
+        MAINTENANCE.add(Name.MAINTENANCE_CROSS_CORRIDOR);
+        MAINTENANCE.add(Name.MAINTENANCE_TURN_CORRIDOR);
     }
 }

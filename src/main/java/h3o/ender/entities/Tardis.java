@@ -461,10 +461,10 @@ public class Tardis extends LivingEntity implements GeoEntity {
                 getServer().getWorld(RegisterDimensions.VORTEX).setBlockState(pos.up(), Blocks.AIR.getDefaultState(),
                         Block.NOTIFY_ALL);
                 if (Room.MAINTENANCE.contains(room.getName())) {
-                    DimensionalStorageHelper.summonPortal(getServer().getWorld(RegisterDimensions.VORTEX), vpos.add(0, 0.5, 0), DimensionalStorageHelper.getFeaturePos(Features.EngineAccess, index, internalScheme.get(activeConsId)).add(0.5,0.5,0.5), room.getOrientation().ordinal()*90 - 90, internalScheme.get(activeConsId).getOrientation().ordinal() * 90 + room.getOrientation().ordinal()*90 + 180, 1, 2);
+                    DimensionalStorageHelper.summonPortal(getServer().getWorld(RegisterDimensions.VORTEX), vpos.add(0, 0.5, 0), DimensionalStorageHelper.getFeaturePos(Features.EngineAccess, index, internalScheme.get(activeConsId)).add(0.5,0.5,0.5), room.getOrientation().ordinal()*-90 - 90, internalScheme.get(activeConsId).getOrientation().ordinal() * -90 + room.getOrientation().ordinal()*-90 + 180, 1, 2);
                 } else {
                     if (room.getName() == Name.DEFAULT_CONSOLE_ROOM) {
-                        DimensionalStorageHelper.summonPortal(getServer().getWorld(RegisterDimensions.VORTEX), vpos.add(0.5,0.5,0.5), DimensionalStorageHelper.getFeaturePos(Features.EngineAccess, index, Room.getById(DimensionalStorageHelper.filterEngine(internalScheme), 0)).add(0, 0.5, 0), internalScheme.get(activeConsId).getOrientation().ordinal() * 90 - 90, room.getOrientation().ordinal()*90 + 180, 1, 2);
+                        DimensionalStorageHelper.summonPortal(getServer().getWorld(RegisterDimensions.VORTEX), vpos.add(0.5,0.5,0.5), DimensionalStorageHelper.getFeaturePos(Features.EngineAccess, index, Room.getById(DimensionalStorageHelper.filterEngine(internalScheme), 0)).add(0, 0.5, 0), internalScheme.get(activeConsId).getOrientation().ordinal() * -90 - 90, room.getOrientation().ordinal()*90 + 180, 1, 2);
                     }
                 }
             } else {
