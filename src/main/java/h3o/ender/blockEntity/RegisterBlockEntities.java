@@ -5,6 +5,7 @@ import h3o.ender.blockEntity.tardis.RotorBaseBE;
 import h3o.ender.blockEntity.tardis.TerminalBE;
 import h3o.ender.blockEntity.tardis.console_panel.CommunicationConsolePanelBE;
 import h3o.ender.blockEntity.tardis.console_panel.FabricationConsolePanelBE;
+import h3o.ender.blockEntity.tardis.engine.TardisMaintenanceEngineUpperBE;
 import h3o.ender.blocks.RegisterBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.entity.BlockEntityType;
@@ -33,4 +34,7 @@ public class RegisterBlockEntities {
                                                         .create(CommunicationConsolePanelBE::new,
                                                                         RegisterBlocks.COMMUNICATION_CONSOLE_PANEL)
                                                         .build());
+        public static final BlockEntityType<TardisMaintenanceEngineUpperBE> TARDIS_MAINTENANCE_ENGINE_UPPER_BE = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+                        new Identifier(DwMod.MODID, "tardis.maintenance.engine.upper"),
+                        FabricBlockEntityTypeBuilder.create(TardisMaintenanceEngineUpperBE::new, RegisterBlocks.TARDIS_MAINTENANCE_ENGINE_UPPER).build());
 }
