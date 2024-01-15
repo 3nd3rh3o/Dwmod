@@ -35,7 +35,6 @@ public class RegisterBlocks {
     public static final Block TERMINAL = new Terminal(FabricBlockSettings.create().strength(-1f));
     public static final Block FABRICATION_CONSOLE_PANEL = new FabricationConsolePanel(FabricBlockSettings.create().strength(-1f).nonOpaque());
     public static final Block COMMUNICATION_CONSOLE_PANEL = new CommunicationConsolePanel(FabricBlockSettings.create().strength(-1f).nonOpaque());
-    //TODO texture me!
     public static final Block TARDIS_MAINTENANCE_ENGINE_UPPER = new Block(FabricBlockSettings.create().strength(-1.0f).nonOpaque());
 
 

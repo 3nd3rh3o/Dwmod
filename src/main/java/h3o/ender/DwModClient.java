@@ -6,6 +6,7 @@ import h3o.ender.blocks.RegisterBlocks;
 import h3o.ender.client.blockEntities.renderer.CommunicationConsolePanelRenderer;
 import h3o.ender.client.blockEntities.renderer.FabricationConsolePanelRenderer;
 import h3o.ender.client.blockEntities.renderer.RotorBaseBERenderer;
+import h3o.ender.client.blockEntities.renderer.TardisMaintenanceEngineUpperRenderer;
 import h3o.ender.client.blockEntities.renderer.TerminalBERenderer;
 import h3o.ender.client.entities.renderer.TardisDefaultExtDoorRenderer;
 import h3o.ender.client.entities.renderer.TardisIntPortalRenderer;
@@ -35,6 +36,7 @@ public class DwModClient implements ClientModInitializer {
         BlockEntityRendererFactories.register(RegisterBlockEntities.TERMINAL_BE, TerminalBERenderer::new);
         BlockEntityRendererFactories.register(RegisterBlockEntities.FABRICATION_CONSOLE_PANEL_BE, FabricationConsolePanelRenderer::new);
         BlockEntityRendererFactories.register(RegisterBlockEntities.COMMUNICATION_CONSOLE_PANEL_BE, CommunicationConsolePanelRenderer::new);
+        BlockEntityRendererFactories.register(RegisterBlockEntities.TARDIS_MAINTENANCE_ENGINE_UPPER_BE, TardisMaintenanceEngineUpperRenderer::new);
         EntityRendererRegistry.register(RegisterEntities.TARDIS, TardisRenderer::new);
         EntityRendererRegistry.register(RegisterEntities.TARDIS_EXT_DOOR_DEFAULT, TardisDefaultExtDoorRenderer::new);
         EntityRendererRegistry.register(RegisterEntities.TARDIS_PORTAL, TardisPortalRenderer::new);
